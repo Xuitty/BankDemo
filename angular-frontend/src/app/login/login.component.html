@@ -1,0 +1,18 @@
+<div class="allCenter">
+  帳號:　<input #uname type="text" class="input" /><br />
+  密碼:　<input #upassword type="password" class="input" /><br />
+  <input type="button" class="btn btn-primary" value="登入" />
+  <br />
+  <br />
+  <br />
+  <br />
+  <p style="font-size: 30px; font-weight: bolder; color: crimson">
+    &nbsp;{{ ticker }}&nbsp;
+  </p>
+  <input
+    type="button"
+    class="btn btn-primary"
+    value="註冊"
+    (click)="goRegisterUser()"
+  />
+</div>

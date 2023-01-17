@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "user",uniqueConstraints = {@UniqueConstraint(columnNames = "uname")})
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = "uname") })
 @Component
 public class User {
 
@@ -34,6 +34,10 @@ public class User {
 	@Column
 	private String uaddress;
 	@Column
+	private String usex;
+	@Column
+	private String udate;
+	@Column
 	private String uidentity;
 	@Column
 	private Integer uactive;
@@ -43,8 +47,11 @@ public class User {
 	public User() {
 	}
 
+
 	public User(Integer uid, String uname, String upassword, String upassword_salt, String urealname, String uemail,
-			String utelephone, String uaddress, String uidentity, Integer uactive, Integer ulevel) {
+			String utelephone, String uaddress, String usex, String udate, String uidentity, Integer uactive,
+			Integer ulevel) {
+		super();
 		this.uid = uid;
 		this.uname = uname;
 		this.upassword = upassword;
@@ -53,10 +60,13 @@ public class User {
 		this.uemail = uemail;
 		this.utelephone = utelephone;
 		this.uaddress = uaddress;
+		this.usex = usex;
+		this.udate = udate;
 		this.uidentity = uidentity;
 		this.uactive = uactive;
 		this.ulevel = ulevel;
 	}
+
 
 	public Integer getUid() {
 		return uid;
@@ -122,6 +132,24 @@ public class User {
 		this.uaddress = uaddress;
 	}
 
+	public String getUsex() {
+		return usex;
+	}
+
+	public void setUsex(String usex) {
+		this.usex = usex;
+	}
+
+	public String getUdate() {
+		return udate;
+	}
+
+
+	public void setUdate(String udate) {
+		this.udate = udate;
+	}
+
+
 	public String getUidentity() {
 		return uidentity;
 	}
@@ -146,12 +174,15 @@ public class User {
 		this.ulevel = ulevel;
 	}
 
+
 	@Override
 	public String toString() {
 		return "User [uid=" + uid + ", uname=" + uname + ", upassword=" + upassword + ", upassword_salt="
 				+ upassword_salt + ", urealname=" + urealname + ", uemail=" + uemail + ", utelephone=" + utelephone
-				+ ", uaddress=" + uaddress + ", uidentity=" + uidentity + ", uactive=" + uactive + ", ulevel=" + ulevel
-				+ "]";
+				+ ", uaddress=" + uaddress + ", usex=" + usex + ", udate=" + udate + ", uidentity=" + uidentity
+				+ ", uactive=" + uactive + ", ulevel=" + ulevel + "]";
 	}
+
+
 
 }
