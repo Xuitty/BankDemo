@@ -43,7 +43,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
         // console.log(t);
       }
-    }, 100);
+    }, 200);
   }
 
   ngOnDestroy(): void {

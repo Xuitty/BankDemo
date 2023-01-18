@@ -12,4 +12,7 @@ export class User {
   uidentity?: string;
   uactive?: number;
   ulevel?: number;
+  ucookie?: string;
+  ucookie_salt?: string;
+  uverify?: string;
 }

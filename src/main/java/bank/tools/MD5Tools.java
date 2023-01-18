@@ -6,7 +6,8 @@ import java.security.MessageDigest;
 import java.util.Base64;
 
 import org.junit.Test;
-
+import org.springframework.stereotype.Component;
+@Component
 /**
  * MD5技術加密解密
  */

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 //@ComponentScan("bank")
 //@EntityScan("bank.dao")
 public class BankDemoApplication {
+	public static final String KEY = "xomodflkihnpddug";
 
 	public static void main(String[] args) {
 		SpringApplication.run(BankDemoApplication.class, args);

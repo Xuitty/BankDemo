@@ -22,7 +22,7 @@ public class Card {
 	@Column
 	private Integer cid;
 	@Column
-	private Integer ctype;
+	private Integer ctype=1;
 	@Column
 	private String cnumber;
 	@Column
@@ -32,13 +32,13 @@ public class Card {
 	@Column
 	private String cccv_salt;
 	@Column
-	private Integer cacitve;
+	private Integer cacitve=0;
 	@Column
 	private BigDecimal ccurrent;
 	@Column
 	private BigDecimal climit;
 	@Column
-	private Integer cfailed;
+	private Integer cfailed=0;
 	@Column
 	private Integer aid;
 	@Column

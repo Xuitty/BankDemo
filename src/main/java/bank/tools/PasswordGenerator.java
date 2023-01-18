@@ -3,6 +3,8 @@ package bank.tools;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.springframework.stereotype.Component;
+@Component
 public class PasswordGenerator {
 
 	

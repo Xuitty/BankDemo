@@ -9,6 +9,9 @@ import { BgServiceService } from './bg-service.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterUserComponent } from './register-user/register-user.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MainComponent } from './main/main.component';
+import { UnknownErrorComponent } from './error/unknown-error/unknown-error.component';
+import { NotFoundComponent } from './error/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
     IndexComponent,
     LoginComponent,
     RegisterUserComponent,
+    MainComponent,
+    UnknownErrorComponent,
+    NotFoundComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [],

@@ -40,33 +40,18 @@ public class User {
 	@Column
 	private String uidentity;
 	@Column
-	private Integer uactive;
+	private Integer uactive = 0;
 	@Column
-	private Integer ulevel;
+	private Integer ulevel = 0;
+	@Column
+	private String ucookie;
+	@Column
+	private String ucookie_salt;
+	@Column
+	private String uverify;
 
 	public User() {
 	}
-
-
-	public User(Integer uid, String uname, String upassword, String upassword_salt, String urealname, String uemail,
-			String utelephone, String uaddress, String usex, String udate, String uidentity, Integer uactive,
-			Integer ulevel) {
-		super();
-		this.uid = uid;
-		this.uname = uname;
-		this.upassword = upassword;
-		this.upassword_salt = upassword_salt;
-		this.urealname = urealname;
-		this.uemail = uemail;
-		this.utelephone = utelephone;
-		this.uaddress = uaddress;
-		this.usex = usex;
-		this.udate = udate;
-		this.uidentity = uidentity;
-		this.uactive = uactive;
-		this.ulevel = ulevel;
-	}
-
 
 	public Integer getUid() {
 		return uid;
@@ -144,11 +129,9 @@ public class User {
 		return udate;
 	}
 
-
 	public void setUdate(String udate) {
 		this.udate = udate;
 	}
-
 
 	public String getUidentity() {
 		return uidentity;
@@ -174,13 +157,38 @@ public class User {
 		this.ulevel = ulevel;
 	}
 
+	public String getUcookie() {
+		return ucookie;
+	}
+
+	public void setUcookie(String ucookie) {
+		this.ucookie = ucookie;
+	}
+
+	public String getUcookie_salt() {
+		return ucookie_salt;
+	}
+
+	public void setUcookie_salt(String ucookie_salt) {
+		this.ucookie_salt = ucookie_salt;
+	}
+	
+
+	public String getUverify() {
+		return uverify;
+	}
+
+	public void setUverify(String uverify) {
+		this.uverify = uverify;
+	}
 
 	@Override
 	public String toString() {
 		return "User [uid=" + uid + ", uname=" + uname + ", upassword=" + upassword + ", upassword_salt="
 				+ upassword_salt + ", urealname=" + urealname + ", uemail=" + uemail + ", utelephone=" + utelephone
 				+ ", uaddress=" + uaddress + ", usex=" + usex + ", udate=" + udate + ", uidentity=" + uidentity
-				+ ", uactive=" + uactive + ", ulevel=" + ulevel + "]";
+				+ ", uactive=" + uactive + ", ulevel=" + ulevel + ", ucookie=" + ucookie + ", ucookie_salt="
+				+ ucookie_salt + ", uverify=" + uverify + "]";
 	}
 
 
