@@ -6,6 +6,7 @@ import { Decimal } from 'decimal.js';
 import SERVER from '../../assets/json/config.json';
 import { lastValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { Status } from '../entity/status';
 
 @Component({
   selector: 'app-register-user',
@@ -34,6 +35,8 @@ export class RegisterUserComponent {
   verify_uname: string = '';
 
   async doRegisterUser() {
+    this.message = '資料處理中請稍候...';
+
     let uname: string = this.unameNative?.nativeElement.value;
     let upassword: string = this.upasswordNative?.nativeElement.value;
     let urealname: string = this.urealnameNative?.nativeElement.value;
@@ -60,15 +63,13 @@ export class RegisterUserComponent {
       observe: 'response' as 'response',
       responseType: 'text' as 'text',
     };
-    // console.log(body);
+    console.log(body);
 
     let ajax = lastValueFrom(
-      this.http.post(this.server + 'registerUser', body, {
-        responseType: 'text',
-      })
+      this.http.post<Status>(this.server + 'registerUser', body)
     );
     let r: boolean;
-    let result: string;
+    let result: Status;
     await ajax.then(
       (res) => {
         console.log(res);
@@ -82,7 +83,13 @@ export class RegisterUserComponent {
         location.href = './500';
       }
     );
-    if (!r! || result! !== 'success') {
+    if (!r! || result!.status == 3) {
+      if (
+        result!.message == 'emailAddressError' ||
+        result!.message == 'emailError'
+      ) {
+        this.message = '信箱不正確';
+      }
       return;
     }
     this.action = 'verify';
@@ -96,9 +103,9 @@ export class RegisterUserComponent {
       uverify: this.uverifyNative?.nativeElement.value,
     };
     let r: boolean;
-    let result: User;
-    await lastValueFrom<User>(
-      this.http.post(this.server + 'verifyUser', body)
+    let result: Status;
+    await lastValueFrom(
+      this.http.post<Status>(this.server + 'verifyUser', body)
     ).then(
       (res) => {
         r = true;
@@ -110,12 +117,13 @@ export class RegisterUserComponent {
         location.href = './500';
       }
     );
-    if (!r! || result!.uid == null || result!.uid == undefined) {
-      console.log('failed');
+    if (!r! || result!.status == 3) {
+      console.log(result!.message);
 
       return;
     }
-    this.cookie.set('username', result!.ucookie!, 0.006944);
+    this.cookie.set('username', result!.message!, 0.006944);
+    location.href='./main'
   }
 
   sexSelector(sex: number) {

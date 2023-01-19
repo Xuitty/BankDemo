@@ -3,7 +3,6 @@ package bank.test;
 import org.junit.Test;
 
 import bank.tools.MD5Tools;
-import bank.tools.PasswordGenerator;
 
 public class MyTest {
 	

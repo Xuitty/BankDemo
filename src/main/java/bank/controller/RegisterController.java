@@ -1,28 +1,17 @@
 package bank.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-
-import bank.dao.AccountDAOInterface;
-import bank.dao.CardDAOInterface;
-import bank.dao.UserDAOInterface;
-import bank.entity.Account;
-import bank.entity.Card;
+import bank.entity.Status;
 import bank.entity.User;
 import bank.service.UserService;
-import bank.tools.PasswordGenerator;
+import jakarta.mail.MessagingException;
 import jakarta.mail.SendFailedException;
 
 @RestController
@@ -36,27 +25,46 @@ public class RegisterController {
 	Gson gson = new Gson();
 
 	@PostMapping("/registerUser")
-	public String registerUser(@RequestBody User user) {
-		System.out.println(user);
-		boolean result=false;
+	public Status registerUser(@RequestBody User user) {
+		boolean result = false;
+		Status status = new Status();
 		try {
 			result = userService.createUser(user);
 		} catch (SendFailedException e) {
 			e.printStackTrace();
-			System.out.println("mailfailed");
-			return "emailError";
+			status.setStatus(3);
+			status.setMessage("emailAddressError");
+			return status;
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			status.setStatus(3);
+			status.setMessage("emailError");
+			return status;
 		}
+		if (result == false) {
+			status.setStatus(3);
+			status.setMessage("failed");
+		} else {
+			status.setStatus(0);
+		}
+		return status;
 
-		return result == true ? "success" : "failed";
 	}
 
 	@PostMapping("/verifyUser")
-	public User verifyUser(@RequestBody User user) {
-		String verify = userService.queryUserByName(user.getUname()).getUverify();
-		if(user.getUverify().equals(verify)) {
-			user=userService.writeCookie(user.getUid());
-			return user;
+	public Status verifyUser(@RequestBody User user) {
+		String verify = user.getUverify();
+		Status status = new Status();
+		user = userService.queryUserByName(user.getUname());
+		System.out.println(user);
+		if (user.getUverify().equals(verify)) {
+			user = userService.writeCookie(user.getUid());
+			status.setStatus(1);
+			status.setMessage(user.getUcookie());
+			return status;
 		}
-		return new User();
+		status.setStatus(3);
+		status.setMessage("verifyError");
+		return status;
 	}
 }

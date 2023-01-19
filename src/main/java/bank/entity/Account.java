@@ -1,5 +1,6 @@
 package bank.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
@@ -15,14 +16,18 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "account", uniqueConstraints = { @UniqueConstraint(columnNames = "aaccount") })
 @Component
-public class Account {
+public class Account implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Integer aid;
 	@Column
-	private String atype;
+	private Integer atype=1;
 	@Column
 	private String aaccount;
 	@Column
@@ -31,18 +36,11 @@ public class Account {
 	private Integer aactive;
 	@Column
 	private Integer uid;
+	
+	private Integer status;
+	private String message;
 
 	public Account() {
-	}
-
-	public Account(Integer aid, String atype, String aaccount, BigDecimal abalance, Integer aactive, Integer uid) {
-		super();
-		this.aid = aid;
-		this.atype = atype;
-		this.aaccount = aaccount;
-		this.abalance = abalance;
-		this.aactive = aactive;
-		this.uid = uid;
 	}
 
 	public Integer getAid() {
@@ -53,11 +51,11 @@ public class Account {
 		this.aid = aid;
 	}
 
-	public String getAtype() {
+	public Integer getAtype() {
 		return atype;
 	}
 
-	public void setAtype(String atype) {
+	public void setAtype(Integer atype) {
 		this.atype = atype;
 	}
 
@@ -92,12 +90,30 @@ public class Account {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+	
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	@Override
 	public String toString() {
 		return "Account [aid=" + aid + ", atype=" + atype + ", aaccount=" + aaccount + ", abalance=" + abalance
-				+ ", aactive=" + aactive + ", uid=" + uid + "]";
+				+ ", aactive=" + aactive + ", uid=" + uid + ", status=" + status + ", message=" + message + "]";
 	}
+
 
 	
 

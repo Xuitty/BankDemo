@@ -1,6 +1,6 @@
 package bank.service;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import bank.entity.User;
 import bank.tools.JavaMailTools;
 import bank.tools.MD5Tools;
 import bank.tools.PasswordGenerator;
-import jakarta.mail.SendFailedException;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -28,25 +28,23 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public boolean createUser(User user) throws SendFailedException {
+	public boolean createUser(User user) throws MessagingException {
 		String salt = passwordGenerator.saltGen(32);
 		String encrypted_password = md5Tools.string2MD5(user.getUpassword() + salt);
 		String verify = passwordGenerator.verifyGen(6);
 		user.setUpassword(encrypted_password);
 		user.setUpassword_salt(salt);
 		user.setUverify(verify);
+		javaMailTools.sendVerify(user.getUname(), user.getUemail(), user.getUverify());
 		User result = userDAOInterface.save(user);
-		if (result.getUid() != null) {
-			javaMailTools.sendVerify(result.getUname(), result.getUemail(), result.getUverify());
-			return true;
-		}
-		return false;
+		return result.getUid() != null ? true : false;
 	}
 
 	@Transactional
 	@Override
 	public User queryUser(Integer uid) {
-		return null;
+		User user = userDAOInterface.findByUid(uid);
+		return user;
 	}
 
 	@Transactional
@@ -58,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public List<User> listUser() {
+	public ArrayList<User> listUser() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -84,6 +82,12 @@ public class UserServiceImpl implements UserService {
 		user.setUcookie_salt(salt);
 		user.setUcookie(md5Tools.string2MD5(user.getUname() + salt));
 		updateUser(user);
+		return user;
+	}
+	@Override
+	public User queryCookie(String ucookie) {
+		User user = userDAOInterface.findByUcookie(ucookie);
+		
 		return user;
 	}
 

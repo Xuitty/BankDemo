@@ -7,4 +7,6 @@ export class Account {
   abalance?: Decimal;
   aactive?: number;
   uid?: number;
+  status?: number;
+  message?: string;
 }

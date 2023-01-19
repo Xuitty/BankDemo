@@ -9,14 +9,13 @@ import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.SendFailedException;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 @Component
 public class JavaMailTools {
-	public void sendVerify(String name, String receiver, String verify) throws SendFailedException {
+	public void sendVerify(String name, String receiver, String verify) throws MessagingException {
 
 		String to = receiver;
 		String subject = "金發財商業銀行使用者註冊驗證碼";
@@ -54,8 +53,7 @@ public class JavaMailTools {
 			transport.connect();
 			Transport.send(message);
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		} finally {
 		}
 		try {

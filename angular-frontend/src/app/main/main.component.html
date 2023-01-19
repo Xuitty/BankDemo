@@ -1,1 +1,26 @@
-<p>main works!</p>
+<ng-container *ngIf="login == false || action == ''">
+  <div class="allCenter">
+    <h2 class="message">{{ message }}</h2>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="login == true && action == 'main'">
+  <div class="allCenter">
+    <h2 class="message">{{ message }}</h2>
+    <br /><br />
+    <div style="font-size: larger; font-weight: bold">
+      您好，{{ uname }}<br /><br />
+      您目前有有{{ accountCount }}個戶頭<br />
+      {{ creditCardCount }}張信用卡<br />
+      {{ debitCardCount }}張Debit卡<br />
+      可動用總額為{{ totalMoney }}元($NTD)<br />
+    </div>
+    <div>
+      <br /><br /><br /><br /><input
+        type="button"
+        class="btn btn-primary"
+        value="建立帳戶"
+      />
+    </div>
+  </div>
+</ng-container>

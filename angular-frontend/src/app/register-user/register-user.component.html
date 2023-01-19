@@ -1,6 +1,6 @@
 <ng-container *ngIf="action == 'register'">
   <div class="allCenter">
-    <h2 class="messege">&nbsp;{{ message }}</h2>
+    <h2 class="message">&nbsp;{{ message }}</h2>
     帳號:<input #uname class="input" type="text" /><br />
     密碼:<input #upassword class="input" type="text" /><br />
     姓名:<input #urealname class="input" type="text" /><br />
@@ -37,7 +37,7 @@
     <input
       type="button"
       class="btn btn-primary"
-      value="TEST"
+      value="送出"
       (click)="doRegisterUser()"
     />
   </div>
@@ -45,13 +45,18 @@
 
 <ng-container *ngIf="action == 'verify'">
   <div class="allCenter">
-    輸入驗證碼: <input #uverify class="input" type="text" /><br />
+    輸入驗證碼: <input #uverify id="uverify" class="input" type="text" /><br />
     <input
       type="button"
       class="btn btn-primary"
       value="驗證"
       (click)="doVerifyUser()"
     />
-    <input type="button" class="btn btn-primary" value="清除" />
+    <input
+      type="button"
+      class="btn btn-primary"
+      value="清除"
+      onclick="document.getElementById('uverify').value=''"
+    />
   </div>
 </ng-container>

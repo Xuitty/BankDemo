@@ -1,5 +1,6 @@
 package bank.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
@@ -15,8 +16,12 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "card",uniqueConstraints = {@UniqueConstraint(columnNames = "cnumber")})
 @Component
-public class Card {
+public class Card implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
@@ -43,6 +48,9 @@ public class Card {
 	private Integer aid;
 	@Column
 	private Integer uid;
+	
+	private Integer status;
+	private String message;
 
 	public Card() {
 	}
@@ -158,12 +166,31 @@ public class Card {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+	
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	@Override
 	public String toString() {
 		return "Card [cid=" + cid + ", ctype=" + ctype + ", cnumber=" + cnumber + ", cdate=" + cdate + ", cccv=" + cccv
 				+ ", cccv_salt=" + cccv_salt + ", cacitve=" + cacitve + ", ccurrent=" + ccurrent + ", climit=" + climit
-				+ ", cfailed=" + cfailed + ", aid=" + aid + ", uid=" + uid + "]";
+				+ ", cfailed=" + cfailed + ", aid=" + aid + ", uid=" + uid + ", status=" + status + ", message="
+				+ message + "]";
 	}
+
 
 }

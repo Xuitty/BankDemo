@@ -15,4 +15,6 @@ export class User {
   ucookie?: string;
   ucookie_salt?: string;
   uverify?: string;
+  status?: number;
+  message?: string;
 }

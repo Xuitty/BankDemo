@@ -1,9 +1,7 @@
 package bank.tools;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
-import org.junit.Test;
 
 public class IdVerify {
 

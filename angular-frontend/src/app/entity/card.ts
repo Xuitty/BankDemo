@@ -13,4 +13,6 @@ export class Card {
   cfailed?: number;
   aid?: number;
   uid?: number;
+  status?: number;
+  message?: string;
 }

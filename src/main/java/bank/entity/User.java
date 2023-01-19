@@ -1,5 +1,7 @@
 package bank.entity;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.Column;
@@ -13,8 +15,12 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = "uname") })
 @Component
-public class User {
+public class User implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
@@ -49,6 +55,9 @@ public class User {
 	private String ucookie_salt;
 	@Column
 	private String uverify;
+
+	private Integer status;
+	private String message;
 
 	public User() {
 	}
@@ -172,7 +181,6 @@ public class User {
 	public void setUcookie_salt(String ucookie_salt) {
 		this.ucookie_salt = ucookie_salt;
 	}
-	
 
 	public String getUverify() {
 		return uverify;
@@ -181,6 +189,24 @@ public class User {
 	public void setUverify(String uverify) {
 		this.uverify = uverify;
 	}
+	
+	
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	@Override
 	public String toString() {
@@ -188,9 +214,8 @@ public class User {
 				+ upassword_salt + ", urealname=" + urealname + ", uemail=" + uemail + ", utelephone=" + utelephone
 				+ ", uaddress=" + uaddress + ", usex=" + usex + ", udate=" + udate + ", uidentity=" + uidentity
 				+ ", uactive=" + uactive + ", ulevel=" + ulevel + ", ucookie=" + ucookie + ", ucookie_salt="
-				+ ucookie_salt + ", uverify=" + uverify + "]";
+				+ ucookie_salt + ", uverify=" + uverify + ", status=" + status + ", message=" + message + "]";
 	}
-
 
 
 }
