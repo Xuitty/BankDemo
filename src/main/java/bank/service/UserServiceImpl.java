@@ -90,6 +90,15 @@ public class UserServiceImpl implements UserService {
 		
 		return user;
 	}
+	
+	@Override
+	public boolean deleteCookie(Integer uid) {
+		User user = queryUser(uid);
+		user.setUcookie(null);
+		user.setUcookie_salt(null);
+		updateUser(user);
+		return false;
+	}
 
 	@Override
 	public boolean deleteVerify(Integer uid) {

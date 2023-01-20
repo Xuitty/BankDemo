@@ -38,6 +38,9 @@ public class MainController {
 	public Info mainGetInfo(@RequestBody User user) {
 		Info info = new Info();
 		user = userService.queryCookie(user.getUcookie());
+		if(user==null) {
+			return null;
+		}
 		ArrayList<Account> allAccount = accountService.queryAccountListByUid(user.getUid());
 		ArrayList<Card> allCreditCard = cardService.queryCardListByUid(user.getUid());
 //		ArrayList<Card> debitCardCount = ;

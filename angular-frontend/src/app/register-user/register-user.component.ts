@@ -123,7 +123,7 @@ export class RegisterUserComponent {
       return;
     }
     this.cookie.set('username', result!.message!, 0.006944);
-    location.href='./main'
+    location.href = './main';
   }
 
   sexSelector(sex: number) {

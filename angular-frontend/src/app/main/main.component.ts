@@ -1,18 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import SERVER from '../../assets/json/config.json';
 import { Info } from '../entity/Info';
 import { User } from '../entity/user';
+import { TimerService } from '../services/timer/timer.service';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
 })
-export class MainComponent implements OnInit {
-  constructor(private http: HttpClient, private cookie: CookieService) {}
+export class MainComponent implements OnInit, OnDestroy {
+  constructor(
+    private http: HttpClient,
+    private cookie: CookieService,
+    private timer: TimerService
+  ) {}
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
   login: boolean = true;
@@ -27,7 +32,7 @@ export class MainComponent implements OnInit {
 
   async ngOnInit() {
     this.message = '';
-    console.log(this.server);
+    // console.log(this.server);
 
     if (!this.cookie.check('username')) {
       this.message = '請登入金發財，共享榮華富貴';
@@ -46,11 +51,12 @@ export class MainComponent implements OnInit {
         console.log(res);
       },
       (reject) => {
+        reject = null;
         console.log(reject);
         console.log('reject');
       }
     );
-    if (result.uid == null || result.uid == undefined) {
+    if (result == null) {
       this.message = '請登入金發財，共享榮華富貴';
       return;
     }
@@ -61,6 +67,18 @@ export class MainComponent implements OnInit {
     this.accountCount = result.account;
     this.creditCardCount = result.creditCard;
     this.debitCardCount = result.debitCard;
-    this.totalMoney?.toFixed(4) = result.totalMoney.toFixed(4);
+    this.timer.deleteCookie();
+
+    // this.totalMoney?.toFixed(4) = result.totalMoney.toFixed(4);
+  }
+
+  // @HostListener('document:visibilitychange')
+  // async unloadHandler() {
+  //   // this.http.get(this.server + 'cookieDeleteService').subscribe();
+  //   debugger;
+  //   await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
+  // }
+  async ngOnDestroy() {
+    await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
   }
 }

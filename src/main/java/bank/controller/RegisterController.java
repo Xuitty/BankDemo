@@ -31,7 +31,8 @@ public class RegisterController {
 		try {
 			result = userService.createUser(user);
 		} catch (SendFailedException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("emailError");
 			status.setStatus(3);
 			status.setMessage("emailAddressError");
 			return status;
@@ -59,6 +60,9 @@ public class RegisterController {
 		System.out.println(user);
 		if (user.getUverify().equals(verify)) {
 			user = userService.writeCookie(user.getUid());
+			user.setUverify(null);
+			user.setUactive(1);
+			userService.updateUser(user);
 			status.setStatus(1);
 			status.setMessage(user.getUcookie());
 			return status;

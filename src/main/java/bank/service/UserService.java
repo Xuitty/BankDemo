@@ -23,5 +23,7 @@ public interface UserService {
 	
 	public User queryCookie(String ucookie);
 	
+	public boolean deleteCookie(Integer uid);
+	
 	public boolean deleteVerify(Integer uid);
 }

@@ -8,9 +8,6 @@ import { BgServiceService } from './bg-service.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit, OnDestroy {
- 
-  SERVER = '123';
-
   bgSubscription?: Subscription;
   title = 'angular-frontend';
   style = {
@@ -29,5 +26,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.bgService.bgPath.unsubscribe;
+  }
+
+  test() {
+    alert('123');
   }
 }

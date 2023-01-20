@@ -12,6 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MainComponent } from './main/main.component';
 import { UnknownErrorComponent } from './error/unknown-error/unknown-error.component';
 import { NotFoundComponent } from './error/not-found/not-found.component';
+import { TimerService } from './services/timer/timer.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,7 @@ import { NotFoundComponent } from './error/not-found/not-found.component';
     NotFoundComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-  providers: [],
+  providers: [TimerService,CookieService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
