@@ -28,7 +28,7 @@ export class MainComponent implements OnInit, OnDestroy {
   accountCount?: number;
   creditCardCount?: number;
   debitCardCount?: number;
-  totalMoney?: Decimal;
+  totalMoney?: string;
 
   async ngOnInit() {
     this.message = '';
@@ -67,9 +67,11 @@ export class MainComponent implements OnInit, OnDestroy {
     this.accountCount = result.account;
     this.creditCardCount = result.creditCard;
     this.debitCardCount = result.debitCard;
-    this.timer.deleteCookie();
+    Decimal.set({ precision: 50 });
+    this.totalMoney = result.totalMoney.toFixed(4);
+    console.log(result.totalMoney);
 
-    // this.totalMoney?.toFixed(4) = result.totalMoney.toFixed(4);
+    // this.timer.deleteCookie();
   }
 
   // @HostListener('document:visibilitychange')
