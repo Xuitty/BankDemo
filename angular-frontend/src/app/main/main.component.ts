@@ -81,4 +81,5 @@ export class MainComponent implements OnInit, OnDestroy {
   async ngOnDestroy() {
     await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
   }
+  //
 }
