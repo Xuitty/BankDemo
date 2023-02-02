@@ -10,4 +10,6 @@ public interface AccountDAOInterface extends JpaRepository<Account, Integer> {
 	
 	ArrayList<Account> findByUid(Integer uid);
 	
+	Account findFirstByOrderByAidDesc();
+	
 }

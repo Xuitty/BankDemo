@@ -16,8 +16,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public boolean creatAccount(Account aaccount) {
-		// TODO Auto-generated method stub
-		return false;
+		Account result = accountDAOInterface.save(aaccount);
+		return result.getAaccount()==null?false:true;
 	}
 
 	@Override
@@ -42,6 +42,13 @@ public class AccountServiceImpl implements AccountService {
 	public boolean deleteAccount(Integer aid) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Account getLastAccount() {
+
+		Account result = accountDAOInterface.findFirstByOrderByAidDesc();
+		return result;
 	}
 
 }

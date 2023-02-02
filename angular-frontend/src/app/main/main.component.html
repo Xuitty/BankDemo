@@ -1,12 +1,10 @@
-<ng-container *ngIf="login == false || action == ''">
-  <div class="allCenter">
-    <h2 class="message">{{ message }}</h2>
-  </div>
-</ng-container>
+<div class="allCenter">
+  <h2 class="message">{{ message }}</h2>
+</div>
+<ng-container *ngIf="login == false || action == ''"> </ng-container>
 
 <ng-container *ngIf="login == true && action == 'main'">
   <div class="allCenter">
-    <h2 class="message">{{ message }}</h2>
     <br /><br />
     <div style="font-size: larger; font-weight: bold">
       您好，{{ uname }}<br /><br />
@@ -20,7 +18,63 @@
         type="button"
         class="btn btn-primary"
         value="建立帳戶"
+        (click)="goCreateAccount()"
+      />
+      <input
+        type="button"
+        class="btn btn-primary"
+        value="申請信用卡"
+        (click)="goCreateCreditCard()"
       />
     </div>
   </div>
+</ng-container>
+
+<ng-container *ngIf="login == true && action == 'createAccount'">
+  <div class="allCenter">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-3">
+          <br />幣別:<br />
+          <select
+            #accountCurrencyType
+            style="margin: 10px"
+            class="form-select"
+            aria-label="AccountCurrencyType"
+          >
+            <option value="-1" selected>請選擇幣別</option>
+            <option value="1">台幣</option>
+          </select>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-3">
+          帳戶類型:<br />
+          <select
+            #accountType
+            style="margin: 10px"
+            class="form-select"
+            aria-label="AccountType"
+          >
+            <option value="-1" selected>請選擇類型</option>
+            <option value="1">活存</option>
+          </select>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <input
+            class="btn btn-primary"
+            type="button"
+            value="測試"
+            (click)="doCreateAccount()"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="login == true && action == 'createCreditCard'">
+  card
 </ng-container>

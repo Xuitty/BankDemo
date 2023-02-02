@@ -1,10 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import SERVER from '../../assets/json/config.json';
+import { Account } from '../entity/account';
 import { Info } from '../entity/Info';
+import { Status } from '../entity/status';
 import { User } from '../entity/user';
 import { TimerService } from '../services/timer/timer.service';
 @Component({
@@ -12,7 +21,7 @@ import { TimerService } from '../services/timer/timer.service';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
 })
-export class MainComponent implements OnInit, OnDestroy {
+export class MainComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private cookie: CookieService,
@@ -24,6 +33,7 @@ export class MainComponent implements OnInit, OnDestroy {
   action: string = '';
   message: string = '';
   uname: string = '';
+  uid: number = -1;
 
   accountCount?: number;
   creditCardCount?: number;
@@ -44,18 +54,13 @@ export class MainComponent implements OnInit, OnDestroy {
     let result: Info = new Info();
     await lastValueFrom(
       this.http.post<Info>(this.server + 'mainGetInfo', user)
-    ).then(
-      (res) => {
-        result = res;
-        console.log('res');
-        console.log(res);
-      },
-      (reject) => {
-        reject = null;
-        console.log(reject);
-        console.log('reject');
-      }
-    );
+    ).then((res) => {
+      result = res;
+      // console.log('res');
+      // console.log(res);
+    });
+    // console.log(result);
+
     if (result == null) {
       this.message = '請登入金發財，共享榮華富貴';
       return;
@@ -63,15 +68,48 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.login = true;
     this.action = 'main';
+    this.uid = result.uid;
     this.uname = result.uname;
     this.accountCount = result.account;
     this.creditCardCount = result.creditCard;
     this.debitCardCount = result.debitCard;
-    Decimal.set({ precision: 50 });
-    this.totalMoney = result.totalMoney.toFixed(4);
-    console.log(result.totalMoney);
+    this.totalMoney = result.totalMoney;
+    // console.log(result.totalMoney);
 
     // this.timer.deleteCookie();
+  }
+
+  goCreateAccount() {
+    this.action = 'createAccount';
+  }
+  goCreateCreditCard() {
+    this.action = 'createCreditCard';
+  }
+
+  @ViewChild('accountType') accountType?: ElementRef;
+  @ViewChild('accountCurrencyType') accountCurrencyType?: ElementRef;
+  async doCreateAccount() {
+    this.message = '';
+    if (
+      this.accountType?.nativeElement.value == -1 ||
+      this.accountCurrencyType?.nativeElement.value == -1
+    ) {
+      this.message = '請選取選項';
+      return;
+    }
+    if (
+      this.accountType?.nativeElement.value == 1 ||
+      this.accountCurrencyType?.nativeElement.value == 1
+    ) {
+      let account: Account = new Account();
+      account.atype = 1;
+      account.uid = this.uid;
+      await lastValueFrom(
+        this.http.post<Status>(this.server + 'createAccount', account)
+      ).then((res) => {
+        console.log(res);
+      });
+    }
   }
 
   // @HostListener('document:visibilitychange')
@@ -80,8 +118,8 @@ export class MainComponent implements OnInit, OnDestroy {
   //   debugger;
   //   await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
   // }
-  async ngOnDestroy() {
-    await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
-  }
+  // async ngOnDestroy() {
+  //   await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
+  // }
   ////
 }

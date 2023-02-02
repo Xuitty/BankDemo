@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +16,12 @@ import com.google.gson.Gson;
 import bank.entity.Account;
 import bank.entity.Card;
 import bank.entity.Info;
+import bank.entity.Status;
 import bank.entity.User;
 import bank.service.AccountService;
 import bank.service.CardService;
 import bank.service.UserService;
+import bank.tools.AccountUtils;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -33,12 +36,13 @@ public class MainController {
 	CardService cardService;
 
 	Gson gson = new Gson();
+	AccountUtils accountUtils = new AccountUtils();
 
 	@PostMapping("/mainGetInfo")
 	public Info mainGetInfo(@RequestBody User user) {
 		Info info = new Info();
 		user = userService.queryCookie(user.getUcookie());
-		if(user==null) {
+		if (user == null) {
 			return null;
 		}
 		ArrayList<Account> allAccount = accountService.queryAccountListByUid(user.getUid());
@@ -46,13 +50,13 @@ public class MainController {
 //		ArrayList<Card> debitCardCount = ;
 		ArrayList<ArrayList<Card>> allDebitCard = new ArrayList<>();
 		int count = 0;
-		BigDecimal totalMoney=new BigDecimal(0);
+		BigDecimal totalMoney = new BigDecimal(0);
 		for (Account y : allAccount) {
 			allDebitCard.add(cardService.queryCardListByAid(y.getAid()));
-			totalMoney=totalMoney.add(y.getAbalance());
+			totalMoney = totalMoney.add(y.getAbalance());
 		}
-		for(ArrayList<Card> y:allDebitCard) {
-			count+=y.size();
+		for (ArrayList<Card> y : allDebitCard) {
+			count += y.size();
 		}
 
 		info.setUid(user.getUid());
@@ -60,9 +64,32 @@ public class MainController {
 		info.setAccount(allAccount.size());
 		info.setCreditCard(allCreditCard.size());
 		info.setDebitCard(count);
-		info.setTotalMoney(totalMoney);
+		info.setTotalMoney(totalMoney.toString());
 		System.out.println(info);
 
 		return info;
+	}
+
+	@PostMapping("createAccount")
+	public Status createAccount(@RequestBody Account account) {
+		Status result = new Status();
+		account.setAactive(0);
+		account.setAbalance(new BigDecimal(0));
+		try {
+			account.setAaccount(accountUtils.generator(accountService.getLastAccount()));
+			accountService.creatAccount(account);
+		} catch (Exception e) {
+			result.setStatus(3);
+			result.setMessage("Unknowed Error");
+			return result;
+		}
+		result.setStatus(0);
+		return result;
+	}
+
+	@GetMapping("test")
+	public String test() {
+//		accountService.getLastAccount();
+		return accountUtils.generator(accountService.getLastAccount());
 	}
 }

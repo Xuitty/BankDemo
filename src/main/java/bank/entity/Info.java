@@ -14,7 +14,7 @@ public class Info implements Serializable {
 	private Integer account;
 	private Integer creditCard;
 	private Integer debitCard;
-	private BigDecimal totalMoney;
+	private String totalMoney;
 
 	public Info() {
 	}
@@ -60,11 +60,11 @@ public class Info implements Serializable {
 	}
 	
 
-	public BigDecimal getTotalMoney() {
+	public String getTotalMoney() {
 		return totalMoney;
 	}
 
-	public void setTotalMoney(BigDecimal totalMoney) {
+	public void setTotalMoney(String totalMoney) {
 		this.totalMoney = totalMoney;
 	}
 

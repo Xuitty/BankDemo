@@ -11,6 +11,8 @@ public interface AccountService {
 	Account queryAccount(Integer aid);
 
 	ArrayList<Account> queryAccountListByUid(Integer uid);
+	
+	Account getLastAccount();
 
 	Account updateAccount(Account aaccount);
 
