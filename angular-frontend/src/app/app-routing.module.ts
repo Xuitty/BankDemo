@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'registerUser', component: RegisterUserComponent },
   { path: 'main', component: MainComponent },
   { path: '500', component: UnknownErrorComponent },
-  { path: '404', component: NotFoundComponent, pathMatch: 'full' },
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '404' },
 ];
 

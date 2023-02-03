@@ -77,7 +77,7 @@ public class AccountUtils {
 
 	@Test
 	public void test() {
-		System.out.println(verify("000000012317"));
+		System.out.println(verify("000000004591"));
 //		System.out.println(generator());
 	}
 }

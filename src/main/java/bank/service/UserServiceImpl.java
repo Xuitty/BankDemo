@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
+	@Transactional
 	@Override
 	public User writeCookie(Integer uid) {
 		User user = queryUser(uid);
@@ -84,13 +85,16 @@ public class UserServiceImpl implements UserService {
 		updateUser(user);
 		return user;
 	}
+
+	@Transactional
 	@Override
 	public User queryCookie(String ucookie) {
 		User user = userDAOInterface.findByUcookie(ucookie);
-		
+
 		return user;
 	}
-	
+
+	@Transactional
 	@Override
 	public boolean deleteCookie(Integer uid) {
 		User user = queryUser(uid);
@@ -100,6 +104,7 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
+	@Transactional
 	@Override
 	public boolean deleteVerify(Integer uid) {
 
@@ -107,6 +112,23 @@ public class UserServiceImpl implements UserService {
 		user.setUverify(null);
 		updateUser(user);
 		return false;
+	}
+
+	@Transactional
+	@Override
+	public void timeOutLogOut(Long currentTime) {
+		ArrayList<User> list = userDAOInterface.findByLasttimeLessThan(currentTime);
+		for (User user : list) {
+			user.setUcookie(null);
+			user.setUcookie_salt(null);
+		}
+		userDAOInterface.saveAll(list);
+	}
+
+	@Transactional
+	@Override
+	public void renewCookieTime(User user) {
+		userDAOInterface.save(user);
 	}
 
 }

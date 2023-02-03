@@ -59,6 +59,9 @@ public class User implements Serializable {
 	private Integer status;
 	private String message;
 
+	@Column
+	private Long lasttime=-1L;
+
 	public User() {
 	}
 
@@ -189,8 +192,6 @@ public class User implements Serializable {
 	public void setUverify(String uverify) {
 		this.uverify = uverify;
 	}
-	
-	
 
 	public Integer getStatus() {
 		return status;
@@ -208,14 +209,22 @@ public class User implements Serializable {
 		this.message = message;
 	}
 
+	public Long getLasttime() {
+		return lasttime;
+	}
+
+	public void setLasttime(Long lasttime) {
+		this.lasttime = lasttime;
+	}
+
 	@Override
 	public String toString() {
 		return "User [uid=" + uid + ", uname=" + uname + ", upassword=" + upassword + ", upassword_salt="
 				+ upassword_salt + ", urealname=" + urealname + ", uemail=" + uemail + ", utelephone=" + utelephone
 				+ ", uaddress=" + uaddress + ", usex=" + usex + ", udate=" + udate + ", uidentity=" + uidentity
 				+ ", uactive=" + uactive + ", ulevel=" + ulevel + ", ucookie=" + ucookie + ", ucookie_salt="
-				+ ucookie_salt + ", uverify=" + uverify + ", status=" + status + ", message=" + message + "]";
+				+ ucookie_salt + ", uverify=" + uverify + ", status=" + status + ", message=" + message + ", lasttime="
+				+ lasttime + "]";
 	}
-
 
 }

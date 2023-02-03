@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
 @Component({
@@ -10,6 +10,7 @@ export class IndexComponent implements OnDestroy {
   title: string = '金發財商業銀行網路銀行';
   blinker: string = 'btn btn-warning';
   counter?: any;
+
   ngOnDestroy(): void {
     this.btnLoginAnimationStop();
   }
@@ -18,6 +19,8 @@ export class IndexComponent implements OnDestroy {
   }
 
   btnLoginAnimation() {
+    console.log(Date.now());
+
     let t: number = 0;
 
     this.counter = setInterval(() => {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Account } from '../entity/account';
 import { User } from '../entity/user';
@@ -7,14 +7,19 @@ import SERVER from '../../assets/json/config.json';
 import { lastValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { Status } from '../entity/status';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-user',
   templateUrl: './register-user.component.html',
   styleUrls: ['./register-user.component.css'],
 })
-export class RegisterUserComponent {
-  constructor(private http: HttpClient, private cookie: CookieService) {}
+export class RegisterUserComponent implements OnInit {
+  constructor(
+    private http: HttpClient,
+    private cookie: CookieService,
+    private router: Router
+  ) {}
   @ViewChild('uname') unameNative?: ElementRef;
   @ViewChild('upassword') upasswordNative?: ElementRef;
   @ViewChild('urealname') urealnameNative?: ElementRef;
@@ -34,6 +39,11 @@ export class RegisterUserComponent {
 
   verify_uname: string = '';
 
+  ngOnInit(): void {
+    if (this.cookie.check('username')) {
+      this.router.navigate(['main']);
+    }
+  }
   async doRegisterUser() {
     this.message = '資料處理中請稍候...';
 

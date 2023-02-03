@@ -87,9 +87,4 @@ public class MainController {
 		return result;
 	}
 
-	@GetMapping("test")
-	public String test() {
-//		accountService.getLastAccount();
-		return accountUtils.generator(accountService.getLastAccount());
-	}
 }

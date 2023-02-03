@@ -1,4 +1,9 @@
 export class User {
+  constructor(acc?: string, pass?: string) {
+    this.uname = acc;
+    this.upassword = pass;
+  }
+
   uid?: number;
   uname?: string;
   upassword?: string;
@@ -17,4 +22,5 @@ export class User {
   uverify?: string;
   status?: number;
   message?: string;
+  lasttime?: number;
 }

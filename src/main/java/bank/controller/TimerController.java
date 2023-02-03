@@ -14,14 +14,13 @@ import jakarta.transaction.Transactional;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping
 public class TimerController {
-	
+
 	@Autowired
 	UserDAOInterface userDAOInterface;
-	
-//	@Transactional
+
 	@GetMapping("/cookieDeleteService")
-	public void cookieDeleteService(){
+	public void cookieDeleteService() {
 		System.out.println("success");
 	}
-	
+
 }

@@ -26,4 +26,8 @@ public interface UserService {
 	public boolean deleteCookie(Integer uid);
 	
 	public boolean deleteVerify(Integer uid);
+	
+	public void timeOutLogOut(Long currentTime);
+	
+	public void renewCookieTime(User user);
 }

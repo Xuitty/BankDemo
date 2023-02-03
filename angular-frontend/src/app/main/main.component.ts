@@ -7,6 +7,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
@@ -25,7 +26,8 @@ export class MainComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private cookie: CookieService,
-    private timer: TimerService
+    private timer: TimerService,
+    private router: Router
   ) {}
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
@@ -44,8 +46,45 @@ export class MainComponent implements OnInit {
     this.message = '';
     // console.log(this.server);
 
+    // if (!this.cookie.check('username')) {
+    //   this.message = '請登入金發財，共享榮華富貴';
+    //   let counter = 6;
+    //   await new Promise((res) => {
+    //     let timer = setInterval(() => {
+    //       counter--;
+    //       this.message =
+    //         '請登入金發財，共享榮華富貴<br>將於' +
+    //         counter +
+    //         '秒後導向至登入頁面';
+    //       if (counter == 0) {
+    //         clearInterval(timer);
+    //         res;
+    //       }
+    //     }, 1000);
+    //   });
+    //   console.log('done');
+
+    //   return;
+    // }
+
     if (!this.cookie.check('username')) {
-      this.message = '請登入金發財，共享榮華富貴';
+      // this.message = '請登入金發財，共享榮華富貴';
+      let counter = 6;
+      await new Promise<void>((res) => {
+        let timer = setInterval(() => {
+          counter--;
+          this.message =
+            '請登入金發財，共享榮華富貴<br><br>將於' +
+            counter +
+            '秒後導向至登入頁面';
+          if (counter == 0) {
+            clearInterval(timer);
+            res();
+          }
+        }, 1000);
+      });
+      this.router.navigate(['login']);
+
       return;
     }
     let ucookie = this.cookie.get('username');
@@ -62,10 +101,28 @@ export class MainComponent implements OnInit {
     // console.log(result);
 
     if (result == null) {
-      this.message = '請登入金發財，共享榮華富貴';
+      this.cookie.deleteAll();
+      let counter = 6;
+      await new Promise<void>((res) => {
+        let timer = setInterval(() => {
+          counter--;
+          this.message =
+            '請登入金發財，共享榮華富貴<br><br>將於' +
+            counter +
+            '秒後導向至登入頁面';
+          if (counter == 0) {
+            clearInterval(timer);
+            res();
+          }
+        }, 1000);
+      });
+      this.router.navigate(['login']);
+
       return;
     }
-
+    user = new User();
+    user.uid = result.uid;
+    this.renewTime(user);
     this.login = true;
     this.action = 'main';
     this.uid = result.uid;
@@ -110,6 +167,20 @@ export class MainComponent implements OnInit {
         console.log(res);
       });
     }
+  }
+  async renewTime(user: User) {
+    if (user.uid == undefined || user.uid == null) {
+      return;
+    }
+    await lastValueFrom<User>(
+      this.http.post<User>(this.server + 'renewCookieTime', user)
+    ).then((res) => {
+      user = res;
+    });
+    let old_cookie = this.cookie.get('username');
+    console.log();
+
+    this.cookie.set('username', old_cookie, new Date(user.lasttime!));
   }
 
   // @HostListener('document:visibilitychange')

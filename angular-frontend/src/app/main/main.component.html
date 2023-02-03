@@ -1,5 +1,5 @@
 <div class="allCenter">
-  <h2 class="message">{{ message }}</h2>
+  <h2 class="message" [innerHTML]="message"></h2>
 </div>
 <ng-container *ngIf="login == false || action == ''"> </ng-container>
 

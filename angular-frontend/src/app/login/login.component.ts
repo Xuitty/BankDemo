@@ -3,16 +3,39 @@ import {
   AfterViewInit,
   OnDestroy,
   resolveForwardRef,
+  OnInit,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
-
-
+import { CookieService } from 'ngx-cookie-service';
+import { Route, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { User } from '../entity/user';
+import SERVER from '../../assets/json/config.json';
+import { lastValueFrom } from 'rxjs';
+import { Status } from '../entity/status';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements AfterViewInit, OnDestroy {
+export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
+  constructor(
+    private cookie: CookieService,
+    private router: Router,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit(): void {
+    if (this.cookie.check('username')) {
+      this.router.navigate(['main']);
+    }
+  }
+
+  server: string = JSON.parse(JSON.stringify(SERVER)).url;
+  message?: string = '　';
+
   registerSlogan: string = '立即加入領取神秘小禮物';
   ticker: string = '　';
   counter?: any;
@@ -75,5 +98,41 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
   goRegisterUser() {
     location.href = './registerUser';
+  }
+
+  @ViewChild('uname') uname?: ElementRef;
+  @ViewChild('upassword') upassword?: ElementRef;
+
+  async doLogin() {
+    let uname = this.uname?.nativeElement.value;
+    let upassword = this.upassword?.nativeElement.value;
+
+    if (uname == '' || upassword == '') {
+      this.message = '請輸入帳號密碼';
+      return;
+    }
+    let user: User = new User(uname, upassword);
+    let result: Status = new Status();
+    await lastValueFrom(
+      this.http.post<Status>(this.server + 'userLogin', user)
+    ).then(
+      (res) => {
+        result = res;
+      },
+      (reject) => {
+        console.log(reject);
+        return;
+      }
+    );
+    if (result.status == 1) {
+      this.cookie.set('username', result.message!, 0.006944);
+      this.router.navigate(['main']);
+    } else if (result.status == 3 && result.message == 'accPassError') {
+      this.message = '帳號密碼錯誤';
+    } else if (result.status == 3 && result.message == 'verifyError') {
+      this.message = '帳號未驗證啟用';
+    } else {
+      this.message = '未知的錯誤';
+    }
   }
 }
