@@ -93,7 +93,7 @@ export class RegisterUserComponent implements OnInit {
         location.href = './500';
       }
     );
-    if (!r! || result!.status == 3) {
+    if (!r! || result!.statuss == 3) {
       if (
         result!.message == 'emailAddressError' ||
         result!.message == 'emailError'
@@ -127,7 +127,7 @@ export class RegisterUserComponent implements OnInit {
         location.href = './500';
       }
     );
-    if (!r! || result!.status == 3) {
+    if (!r! || result!.statuss == 3) {
       console.log(result!.message);
 
       return;

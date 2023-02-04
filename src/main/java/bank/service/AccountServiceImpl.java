@@ -17,9 +17,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional
 	@Override
-	public boolean creatAccount(Account aaccount) {
+	public Account creatAccount(Account aaccount) {
 		Account result = accountDAOInterface.save(aaccount);
-		return result.getAaccount() == null ? false : true;
+		return result;
 	}
 
 	@Transactional

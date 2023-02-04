@@ -42,6 +42,8 @@ export class MainComponent implements OnInit {
   debitCardCount?: number;
   totalMoney?: string;
 
+  currentAid?: number;
+
   async ngOnInit() {
     this.message = '';
     // console.log(this.server);
@@ -93,11 +95,18 @@ export class MainComponent implements OnInit {
     let result: Info = new Info();
     await lastValueFrom(
       this.http.post<Info>(this.server + 'mainGetInfo', user)
-    ).then((res) => {
-      result = res;
-      // console.log('res');
-      // console.log(res);
-    });
+    ).then(
+      (res) => {
+        result = res;
+        // console.log('res');
+        // console.log(res);
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+        return;
+      }
+    );
     // console.log(result);
 
     if (result == null) {
@@ -136,11 +145,42 @@ export class MainComponent implements OnInit {
     // this.timer.deleteCookie();
   }
 
-  goCreateAccount() {
-    this.action = 'createAccount';
+  async goCreateAccount() {
+    let result: boolean = false;
+    await this.checkCookieExpired().then(
+      (res) => {
+        result = res;
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+        return;
+      }
+    );
+
+    if (result) {
+      this.action = 'createAccount';
+    } else {
+      this.router.navigate(['cookieExpired']);
+    }
   }
-  goCreateCreditCard() {
-    this.action = 'createCreditCard';
+  async goCreateCreditCard() {
+    let result: boolean = false;
+    await this.checkCookieExpired().then(
+      (res) => {
+        result = res;
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+        return;
+      }
+    );
+    if (result) {
+      this.action = 'createCreditCard';
+    } else {
+      this.router.navigate(['cookieExpired']);
+    }
   }
 
   @ViewChild('accountType') accountType?: ElementRef;
@@ -161,13 +201,50 @@ export class MainComponent implements OnInit {
       let account: Account = new Account();
       account.atype = 1;
       account.uid = this.uid;
-      await lastValueFrom(
+      console.log(account);
+
+      let result: Status = await lastValueFrom(
         this.http.post<Status>(this.server + 'createAccount', account)
       ).then((res) => {
         console.log(res);
+
+        return res;
       });
+      if (result.statuss == 1 && result.message != null) {
+        this.currentAid = Number.parseInt(result.message);
+        this.action = 'verifyAccount';
+      } else {
+        this.router.navigate(['500']);
+      }
     }
   }
+  @ViewChild('averify') averify?: ElementRef;
+  async doVerifyAccount() {
+    let averify: string = this.averify?.nativeElement.value;
+    if (averify == '' || averify.length != 6) {
+      this.message = '請填入驗證碼';
+      return;
+    }
+    let account: Account = new Account();
+    account.aid = this.currentAid;
+    account.averify = averify;
+    console.log(account);
+
+    let result: Status = await lastValueFrom<Status>(
+      this.http.post<Status>(this.server + 'verifyAccount', account)
+    ).then(
+      (res) => {
+        return res;
+      },
+      (reject) => {
+        console.log(reject);
+        // this.router.navigate(['500']);
+        return new Status(4, 'Server error');
+      }
+    );
+    console.log(result);
+  }
+
   async renewTime(user: User) {
     if (user.uid == undefined || user.uid == null) {
       return;
@@ -181,6 +258,18 @@ export class MainComponent implements OnInit {
     console.log();
 
     this.cookie.set('username', old_cookie, new Date(user.lasttime!));
+  }
+
+  async checkCookieExpired() {
+    let result: boolean = false;
+    await lastValueFrom(
+      this.http.get<boolean>(
+        this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
+      )
+    ).then((res) => {
+      result = res;
+    });
+    return result;
   }
 
   // @HostListener('document:visibilitychange')

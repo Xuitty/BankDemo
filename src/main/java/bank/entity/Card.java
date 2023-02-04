@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "card",uniqueConstraints = {@UniqueConstraint(columnNames = "cnumber")})
+@Table(name = "card", uniqueConstraints = { @UniqueConstraint(columnNames = "cnumber") })
 @Component
 public class Card implements Serializable {
 
@@ -27,7 +27,7 @@ public class Card implements Serializable {
 	@Column
 	private Integer cid;
 	@Column
-	private Integer ctype=1;
+	private Integer ctype = 1;
 	@Column
 	private String cnumber;
 	@Column
@@ -37,19 +37,21 @@ public class Card implements Serializable {
 	@Column
 	private String cccv_salt;
 	@Column
-	private Integer cacitve=0;
+	private Integer cacitve = 0;
 	@Column
 	private BigDecimal ccurrent;
 	@Column
 	private BigDecimal climit;
 	@Column
-	private Integer cfailed=0;
+	private Integer cfailed = 0;
+	@Column
+	private String cverify;
 	@Column
 	private Integer aid;
 	@Column
 	private Integer uid;
-	
-	private Integer status;
+
+	private Integer statuss;
 	private String message;
 
 	public Card() {
@@ -151,6 +153,14 @@ public class Card implements Serializable {
 		this.cfailed = cfailed;
 	}
 
+	public String getCverify() {
+		return cverify;
+	}
+
+	public void setCverify(String cverify) {
+		this.cverify = cverify;
+	}
+
 	public Integer getAid() {
 		return aid;
 	}
@@ -166,14 +176,13 @@ public class Card implements Serializable {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
-	
 
-	public Integer getStatus() {
-		return status;
+	public Integer getStatuss() {
+		return statuss;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setStatuss(Integer statuss) {
+		this.statuss = statuss;
 	}
 
 	public String getMessage() {
@@ -188,9 +197,8 @@ public class Card implements Serializable {
 	public String toString() {
 		return "Card [cid=" + cid + ", ctype=" + ctype + ", cnumber=" + cnumber + ", cdate=" + cdate + ", cccv=" + cccv
 				+ ", cccv_salt=" + cccv_salt + ", cacitve=" + cacitve + ", ccurrent=" + ccurrent + ", climit=" + climit
-				+ ", cfailed=" + cfailed + ", aid=" + aid + ", uid=" + uid + ", status=" + status + ", message="
-				+ message + "]";
+				+ ", cfailed=" + cfailed + ", cverify=" + cverify + ", aid=" + aid + ", uid=" + uid + ", statuss="
+				+ statuss + ", message=" + message + "]";
 	}
-
 
 }

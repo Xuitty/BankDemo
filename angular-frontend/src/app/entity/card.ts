@@ -11,8 +11,9 @@ export class Card {
   ccurrent?: Decimal;
   climit?: Decimal;
   cfailed?: number;
+  cverify?: string;
   aid?: number;
   uid?: number;
-  status?: number;
+  statuss?: number;
   message?: string;
 }

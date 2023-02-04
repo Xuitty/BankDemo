@@ -1,13 +1,13 @@
 import { Decimal } from 'decimal.js';
 
 export class Account {
-  
   aid?: number;
   atype?: number;
   aaccount?: string;
   abalance?: Decimal;
   aactive?: number;
+  averify?: string;
   uid?: number;
-  status?: number;
+  statuss?: number;
   message?: string;
 }

@@ -8,7 +8,7 @@ public class Status implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer status;
+	private Integer statuss;
 	//0:Success,1:Success with a message(from back-end),2:Success with a message(from front-end),
 	//3:fail with a message(from back-end),4:fail with a message(from front-end)
 	private String message;
@@ -17,11 +17,11 @@ public class Status implements Serializable {
 	
 	public Status() {
 	}
-	public Integer getStatus() {
-		return status;
+	public Integer getStatuss() {
+		return statuss;
 	}
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setStatuss(Integer statuss) {
+		this.statuss = statuss;
 	}
 	public String getMessage() {
 		return message;
@@ -32,7 +32,7 @@ public class Status implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Status [status=" + status + ", message=" + message + "]";
+		return "Status [statuss=" + statuss + ", message=" + message + "]";
 	}
 	
 	

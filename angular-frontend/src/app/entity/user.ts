@@ -20,7 +20,7 @@ export class User {
   ucookie?: string;
   ucookie_salt?: string;
   uverify?: string;
-  status?: number;
+  statuss?: number;
   message?: string;
   lasttime?: number;
 }

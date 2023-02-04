@@ -6,12 +6,17 @@ import { NotFoundComponent } from './error/not-found/not-found.component';
 import { RegisterUserComponent } from './register-user/register-user.component';
 import { UnknownErrorComponent } from './error/unknown-error/unknown-error.component';
 import { MainComponent } from './main/main.component';
+import { CookieExpiredComponent } from './error/cookie-expired/cookie-expired.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registerUser', component: RegisterUserComponent },
   { path: 'main', component: MainComponent },
+  {
+    path: 'cookieExpired',
+    component: CookieExpiredComponent,
+  },
   { path: '500', component: UnknownErrorComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '404' },

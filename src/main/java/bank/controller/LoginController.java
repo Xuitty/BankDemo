@@ -27,16 +27,16 @@ public class LoginController {
 		user = userService.queryUserByName(user.getUname());
 		Status result = new Status();
 		if (user == null) {
-			result.setStatus(3);
+			result.setStatuss(3);
 			result.setMessage("accPassError");
 			return result;
 		} else if (user.getUactive() == 0) {
-			result.setStatus(3);
+			result.setStatuss(3);
 			result.setMessage("verifyError");
 			return result;
 		}
 
-		result.setStatus(1);
+		result.setStatuss(1);
 		result.setMessage(userService.writeCookie(user.getUid()).getUcookie());
 		return result;
 	}

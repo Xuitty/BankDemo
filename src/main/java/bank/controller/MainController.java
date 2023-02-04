@@ -75,16 +75,25 @@ public class MainController {
 		Status result = new Status();
 		account.setAactive(0);
 		account.setAbalance(new BigDecimal(0));
+		Integer aid = null;
 		try {
 			account.setAaccount(accountUtils.generator(accountService.getLastAccount()));
-			accountService.creatAccount(account);
+			aid = accountService.creatAccount(account).getAid();
 		} catch (Exception e) {
-			result.setStatus(3);
+			e.printStackTrace();
+			result.setStatuss(3);
 			result.setMessage("Unknowed Error");
 			return result;
 		}
-		result.setStatus(0);
+		result.setStatuss(1);
+		result.setMessage(String.valueOf(aid));
 		return result;
+	}
+
+	@PostMapping("verifyAccount")
+	public Status verifyAccount(@RequestBody Account account) {
+		System.out.println(account);
+		return null;
 	}
 
 }

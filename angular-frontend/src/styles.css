@@ -6,12 +6,17 @@
   margin: 10px;
 }
 
-.input{
+.input {
   margin: 10px;
 }
 
-.message{
+.message {
   color: red;
   size: 25px;
   font-weight: bolder;
+}
+
+.box {
+  height: 300px;
+  background-color: cadetblue;
 }

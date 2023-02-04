@@ -14,6 +14,7 @@ import { UnknownErrorComponent } from './error/unknown-error/unknown-error.compo
 import { NotFoundComponent } from './error/not-found/not-found.component';
 import { TimerService } from './services/timer/timer.service';
 import { CookieService } from 'ngx-cookie-service';
+import { CookieExpiredComponent } from './error/cookie-expired/cookie-expired.component';
 
 @NgModule({
   declarations: [
@@ -23,10 +24,11 @@ import { CookieService } from 'ngx-cookie-service';
     RegisterUserComponent,
     MainComponent,
     UnknownErrorComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    CookieExpiredComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-  providers: [TimerService,CookieService],
+  providers: [TimerService, CookieService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

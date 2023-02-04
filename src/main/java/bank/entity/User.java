@@ -56,7 +56,7 @@ public class User implements Serializable {
 	@Column
 	private String uverify;
 
-	private Integer status;
+	private Integer statuss;
 	private String message;
 
 	@Column
@@ -193,12 +193,12 @@ public class User implements Serializable {
 		this.uverify = uverify;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public Integer getStatuss() {
+		return statuss;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setStatuss(Integer statuss) {
+		this.statuss = statuss;
 	}
 
 	public String getMessage() {
@@ -223,7 +223,7 @@ public class User implements Serializable {
 				+ upassword_salt + ", urealname=" + urealname + ", uemail=" + uemail + ", utelephone=" + utelephone
 				+ ", uaddress=" + uaddress + ", usex=" + usex + ", udate=" + udate + ", uidentity=" + uidentity
 				+ ", uactive=" + uactive + ", ulevel=" + ulevel + ", ucookie=" + ucookie + ", ucookie_salt="
-				+ ucookie_salt + ", uverify=" + uverify + ", status=" + status + ", message=" + message + ", lasttime="
+				+ ucookie_salt + ", uverify=" + uverify + ", statuss=" + statuss + ", message=" + message + ", lasttime="
 				+ lasttime + "]";
 	}
 

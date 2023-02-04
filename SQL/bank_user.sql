@@ -39,13 +39,13 @@ CREATE TABLE `user` (
   `ucookie` varchar(32) DEFAULT NULL,
   `ucookie_salt` varchar(32) DEFAULT NULL,
   `uverify` varchar(6) DEFAULT NULL,
+  `statuss` int DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
-  `status` int DEFAULT NULL,
   `lasttime` bigint NOT NULL DEFAULT '-1',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uname_UNIQUE` (`uname`),
   UNIQUE KEY `UK33usp01rahy3w7nv0g62b3s8s` (`uname`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +54,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'ABCD','78b3454ceabced218481dece70862d68','ZkXi6H5pY3nyCLJ00KjWhyGRtGchQ5sK','123','ufokun@gmail.com','123','123',1,'1999-09-09','123123',1,0,NULL,NULL,NULL,NULL,NULL,1675396110005),(2,'wadaw','494fd4b7a970e05dd6ae514e6208772e','R5bBdXg1JxGIbj6YTplXMdVDJoV28uEA','dwadwadaw','ufokun@gmail.com','weaewa','eawewae',1,'1999-09-09','awewaea',0,0,NULL,NULL,'091437',NULL,NULL,-1),(3,'waeawe','9a4531e4022410bbd8aea71a883efb42','qLmfFeNysGAIk1PUKQPJjx3yB5YtYQgK','waewaeawe','ufokun@gmail.com','weewq','wqeqew',1,'1999-09-09','qweqwe',1,0,NULL,NULL,NULL,NULL,NULL,1675409035185),(4,'wadawd','6de5962580344004f1d2f5414730de89','S18B9VhrlzNQF6RqXqatauxzE5tyYoQC','wadaw','ufokun@gmail.com','weqwe','qweqwewq',1,'1999-09-09','eqweqwe',1,0,NULL,NULL,NULL,NULL,NULL,1675409674908),(5,'waewae','2efdaa8cee2ae3577746f8cb3910581f','D8ebLtvqJlTxwoDTEaAyD171tYLmhV0y','waeawe','ufokun@gmail.com','3213wqewq','wqewqe',1,'1999-09-09','ewqewqe',1,0,NULL,NULL,NULL,NULL,NULL,1675411801445),(6,'aweawe','50919eda222f8dd23f01dfde4f8e4f29','uFeiPLCRlcJDj5gk7Lm6famgVU0ZJ6lb','eaweawe','ufokun@gmail.com','213123wq','wqeqweqwe',1,'1999-09-09','wqeqwe',1,0,NULL,NULL,NULL,NULL,NULL,1675413343639),(7,'asdf','879a20bc217dfec1fa9b9d05a3f1dc4c','Y9NF67bT1ZSq9IBjAg9WWUYHL5bDewr3','wqeqw','ufokun@gmail.com','ewea','waeaw',1,'1999-09-09','eawea',1,0,NULL,NULL,NULL,NULL,NULL,1675417640323);
+INSERT INTO `user` VALUES (1,'ABCD','85735e7d2283b9123862cabda06cbce8','FHTQcDDeJRldt1TEw2u4JYaeu6CLk6Tv','123456','ufokun@gmail.com','123456789','erwerew',1,'1999-09-09','qweqwe',1,0,'d1270dac8ee2a099b82174ff78d4baa6','PuX0O744gkwZlKoDcgmZ1LprLYmUFmTw',NULL,NULL,NULL,1675506602885);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -67,4 +67,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-03 18:25:42
+-- Dump completed on 2023-02-04 18:22:58

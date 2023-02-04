@@ -33,20 +33,20 @@ public class RegisterController {
 		} catch (SendFailedException e) {
 //			e.printStackTrace();
 			System.out.println("emailError");
-			status.setStatus(3);
+			status.setStatuss(3);
 			status.setMessage("emailAddressError");
 			return status;
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			status.setStatus(3);
+			status.setStatuss(3);
 			status.setMessage("emailError");
 			return status;
 		}
 		if (result == false) {
-			status.setStatus(3);
+			status.setStatuss(3);
 			status.setMessage("failed");
 		} else {
-			status.setStatus(0);
+			status.setStatuss(0);
 		}
 		return status;
 
@@ -63,11 +63,11 @@ public class RegisterController {
 			user.setUverify(null);
 			user.setUactive(1);
 			userService.updateUser(user);
-			status.setStatus(1);
+			status.setStatuss(1);
 			status.setMessage(user.getUcookie());
 			return status;
 		}
-		status.setStatus(3);
+		status.setStatuss(3);
 		status.setMessage("verifyError");
 		return status;
 	}

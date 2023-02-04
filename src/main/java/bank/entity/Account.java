@@ -35,9 +35,11 @@ public class Account implements Serializable {
 	@Column
 	private Integer aactive;
 	@Column
+	private String averify;
+	@Column
 	private Integer uid;
 	
-	private Integer status;
+	private Integer statuss;
 	private String message;
 
 	public Account() {
@@ -82,6 +84,16 @@ public class Account implements Serializable {
 	public void setAactive(Integer aactive) {
 		this.aactive = aactive;
 	}
+	
+	
+
+	public String getAverify() {
+		return averify;
+	}
+
+	public void setAverify(String averify) {
+		this.averify = averify;
+	}
 
 	public Integer getUid() {
 		return uid;
@@ -92,12 +104,12 @@ public class Account implements Serializable {
 	}
 	
 
-	public Integer getStatus() {
-		return status;
+	public Integer getStatuss() {
+		return statuss;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setStatuss(Integer statuss) {
+		this.statuss = statuss;
 	}
 
 	public String getMessage() {
@@ -111,8 +123,10 @@ public class Account implements Serializable {
 	@Override
 	public String toString() {
 		return "Account [aid=" + aid + ", atype=" + atype + ", aaccount=" + aaccount + ", abalance=" + abalance
-				+ ", aactive=" + aactive + ", uid=" + uid + ", status=" + status + ", message=" + message + "]";
+				+ ", aactive=" + aactive + ", averify=" + averify + ", uid=" + uid + ", statuss=" + statuss
+				+ ", message=" + message + "]";
 	}
+
 
 
 	

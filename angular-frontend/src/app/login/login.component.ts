@@ -124,12 +124,12 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
         return;
       }
     );
-    if (result.status == 1) {
+    if (result.statuss == 1) {
       this.cookie.set('username', result.message!, 0.006944);
       this.router.navigate(['main']);
-    } else if (result.status == 3 && result.message == 'accPassError') {
+    } else if (result.statuss == 3 && result.message == 'accPassError') {
       this.message = '帳號密碼錯誤';
-    } else if (result.status == 3 && result.message == 'verifyError') {
+    } else if (result.statuss == 3 && result.message == 'verifyError') {
       this.message = '帳號未驗證啟用';
     } else {
       this.message = '未知的錯誤';
