@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableAutoConfiguration
-//@ComponentScan("bank")
-//@EntityScan("bank.dao")
+// @ComponentScan("bank")
+// @EntityScan("bank.dao")
 public class BankDemoApplication {
-	public static final String KEY = "bakwdrzhzsggsbqy";
+	public static final String KEY = "KEY";
 
 	public static void main(String[] args) {
 		SpringApplication.run(BankDemoApplication.class, args);

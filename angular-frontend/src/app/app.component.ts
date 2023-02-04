@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.bgService.bgPath.unsubscribe;
+    this.bgService.bgPath.unsubscribe();
   }
 
   test() {

@@ -2,6 +2,7 @@ package bank.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +23,10 @@ import bank.service.AccountService;
 import bank.service.CardService;
 import bank.service.UserService;
 import bank.tools.AccountUtils;
+import bank.tools.JavaMailTools;
+import bank.tools.PasswordGenerator;
+import jakarta.mail.MessagingException;
+import jakarta.mail.SendFailedException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -37,6 +42,7 @@ public class MainController {
 
 	Gson gson = new Gson();
 	AccountUtils accountUtils = new AccountUtils();
+	JavaMailTools javaMailTools = new JavaMailTools();
 
 	@PostMapping("/mainGetInfo")
 	public Info mainGetInfo(@RequestBody User user) {
@@ -46,12 +52,16 @@ public class MainController {
 			return null;
 		}
 		ArrayList<Account> allAccount = accountService.queryAccountListByUid(user.getUid());
+		ArrayList<Account> allActiveAccount = accountService.queryAccountListByUid(user.getUid());
 		ArrayList<Card> allCreditCard = cardService.queryCardListByUid(user.getUid());
 //		ArrayList<Card> debitCardCount = ;
 		ArrayList<ArrayList<Card>> allDebitCard = new ArrayList<>();
 		int count = 0;
 		BigDecimal totalMoney = new BigDecimal(0);
 		for (Account y : allAccount) {
+//			if(y.getAactive()==1) {
+//				allActiveAccount.add(y);
+//			}
 			allDebitCard.add(cardService.queryCardListByAid(y.getAid()));
 			totalMoney = totalMoney.add(y.getAbalance());
 		}
@@ -65,6 +75,7 @@ public class MainController {
 		info.setCreditCard(allCreditCard.size());
 		info.setDebitCard(count);
 		info.setTotalMoney(totalMoney.toString());
+		info.setLasttime(new Date().getTime());
 		System.out.println(info);
 
 		return info;
@@ -76,6 +87,8 @@ public class MainController {
 		Status result = new Status();
 		account.setAactive(0);
 		account.setAbalance(new BigDecimal(0));
+		String verify = new PasswordGenerator().verifyGen(6);
+		account.setAverify(verify);
 		Integer aid = null;
 		try {
 			account.setAaccount(accountUtils.generator(accountService.getLastAccount()));
@@ -86,6 +99,22 @@ public class MainController {
 			result.setMessage("Unknowed Error");
 			return result;
 		}
+		try {
+			javaMailTools.sendVerify("金發財商業銀行戶頭註冊驗證碼",
+					userService.queryUser(accountService.queryAccount(aid).getUid()).getUrealname(),
+					userService.queryUser(accountService.queryAccount(aid).getUid()).getUemail(), verify);
+		} catch (SendFailedException e) {
+//			e.printStackTrace();
+			System.out.println("emailError");
+			result.setStatuss(3);
+			result.setMessage("emailAddressError");
+			return result;
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			result.setStatuss(3);
+			result.setMessage("emailError");
+			return result;
+		}
 		result.setStatuss(1);
 		result.setMessage(String.valueOf(aid));
 		return result;
@@ -93,8 +122,18 @@ public class MainController {
 
 	@PostMapping("verifyAccount")
 	public Status verifyAccount(@RequestBody Account account) {
-//		System.out.println(account);
-		return null;
+		Status result = new Status();
+		Account account_new = accountService.queryAccount(account.getAid());
+		if (!(account_new.getAverify().equals(account.getAverify()))) {
+			result.setStatuss(3);
+			result.setMessage("verifyError");
+			return result;
+		}
+		account_new.setAverify(null);
+		account_new.setAactive(2);
+		accountService.updateAccount(account_new);
+		result.setStatuss(0);
+		return result;
 	}
 
 }

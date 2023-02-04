@@ -25,8 +25,8 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	@Override
 	public Account queryAccount(Integer aid) {
-		// TODO Auto-generated method stub
-		return null;
+		return accountDAOInterface.findByAid(aid);
+		
 	}
 
 	@Transactional
@@ -39,8 +39,8 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	@Override
 	public Account updateAccount(Account aaccount) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return accountDAOInterface.save(aaccount);
 	}
 
 	@Transactional

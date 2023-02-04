@@ -20,8 +20,6 @@ public class QuartzTask {
     public void timeOutLogOutService() {
     	Long now = new Date().getTime();
     	userService.timeOutLogOut(now);
-    	System.out.println(now);
-    	System.out.println("done");
     }
     
 }

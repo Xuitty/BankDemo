@@ -37,6 +37,8 @@ export class MainComponent implements OnInit {
   uname: string = '';
   uid: number = -1;
 
+  // lasttime: number = -1;  **********counterUtil**********
+
   accountCount?: number;
   creditCardCount?: number;
   debitCardCount?: number;
@@ -140,6 +142,22 @@ export class MainComponent implements OnInit {
     this.creditCardCount = result.creditCard;
     this.debitCardCount = result.debitCard;
     this.totalMoney = result.totalMoney;
+
+    // if (result.lasttime == -1) {  **********counterUtil**********
+    //   await this.renewTime(user).then(
+    //     (res) => {
+    //       this.lasttime = res!.lasttime!;
+    //     },
+    //     (reject) => {
+    //       console.log(reject);
+    //       this.router.navigate(['500']);
+    //     }
+    //   );
+    // } else {
+    //   this.lasttime = result.lasttime;
+    // }
+    // this.message = this.lasttime.toString();
+
     // console.log(result.totalMoney);
 
     // this.timer.deleteCookie();
@@ -186,63 +204,122 @@ export class MainComponent implements OnInit {
   @ViewChild('accountType') accountType?: ElementRef;
   @ViewChild('accountCurrencyType') accountCurrencyType?: ElementRef;
   async doCreateAccount() {
-    this.message = '';
-    if (
-      this.accountType?.nativeElement.value == -1 ||
-      this.accountCurrencyType?.nativeElement.value == -1
-    ) {
-      this.message = '請選取選項';
-      return;
-    }
-    if (
-      this.accountType?.nativeElement.value == 1 ||
-      this.accountCurrencyType?.nativeElement.value == 1
-    ) {
-      let account: Account = new Account();
-      account.atype = 1;
-      account.uid = this.uid;
-      console.log(account);
-
-      let result: Status = await lastValueFrom(
-        this.http.post<Status>(this.server + 'createAccount', account)
-      ).then((res) => {
-        console.log(res);
-
-        return res;
-      });
-      if (result.statuss == 1 && result.message != null) {
-        this.currentAid = Number.parseInt(result.message);
-        this.action = 'verifyAccount';
-      } else {
+    let result: boolean = false;
+    await this.checkCookieExpired().then(
+      (res) => {
+        result = res;
+      },
+      (reject) => {
+        console.log(reject);
         this.router.navigate(['500']);
+        return;
       }
+    );
+
+    if (result) {
+      this.action = 'createAccount';
+
+      this.message = '';
+      if (
+        this.accountType?.nativeElement.value == -1 ||
+        this.accountCurrencyType?.nativeElement.value == -1
+      ) {
+        this.message = '請選取選項';
+        return;
+      }
+      if (
+        this.accountType?.nativeElement.value == 1 ||
+        this.accountCurrencyType?.nativeElement.value == 1
+      ) {
+        let account: Account = new Account();
+        account.atype = 1;
+        account.uid = this.uid;
+
+        let result: Status = await lastValueFrom(
+          this.http.post<Status>(this.server + 'createAccount', account)
+        ).then((res) => {
+          console.log(res);
+
+          return res;
+        });
+        if (result.statuss == 1 && result.message != null) {
+          this.currentAid = Number.parseInt(result.message);
+          this.action = 'verifyAccount';
+        } else {
+          this.router.navigate(['500']);
+        }
+      }
+    } else {
+      this.router.navigate(['cookieExpired']);
     }
   }
   @ViewChild('averify') averify?: ElementRef;
   async doVerifyAccount() {
-    let averify: string = this.averify?.nativeElement.value;
-    if (averify == '' || averify.length != 6) {
-      this.message = '請填入驗證碼';
-      return;
-    }
-    let account: Account = new Account();
-    account.aid = this.currentAid;
-    account.averify = averify;
-    console.log(account);
-
-    let result: Status = await lastValueFrom<Status>(
-      this.http.post<Status>(this.server + 'verifyAccount', account)
-    ).then(
+    let result: boolean = false;
+    await this.checkCookieExpired().then(
       (res) => {
-        return res;
+        result = res;
       },
       (reject) => {
         console.log(reject);
-        // this.router.navigate(['500']);
-        return new Status(4, 'Server error');
+        this.router.navigate(['500']);
+        return;
       }
     );
-    console.log(result);
+    if (result) {
+      let averify: string = this.averify?.nativeElement.value;
+      if (averify == '' || averify.length != 6) {
+        this.message = '請填入驗證碼';
+        return;
+      }
+      let account: Account = new Account();
+      account.aid = this.currentAid;
+      account.averify = averify;
+      console.log(account);
+
+      let r: Status = await lastValueFrom<Status>(
+        this.http.post<Status>(this.server + 'verifyAccount', account)
+      ).then(
+        (res) => {
+          return res;
+        },
+        (reject) => {
+          console.log(reject);
+          // this.router.navigate(['500']);
+          return new Status(4, 'Server error');
+        }
+      );
+      console.log(r);
+
+      if (r.statuss == 0) {
+        let counter: number = 6;
+        await new Promise<void>((res) => {
+          let timer = setInterval(() => {
+            counter--;
+            this.message =
+              '信箱驗證完成，請等待我們審核通過，謝謝您的耐心等候<br>將於' +
+              counter +
+              '秒後回到首頁';
+            if (counter == 0) {
+              clearInterval(timer);
+              res();
+            }
+          }, 1000);
+        });
+        console.log(123);
+
+        location.href = './main';
+      } else if (
+        r.statuss == 3 &&
+        (r.message == 'emailAddressError' || r.message == 'emailError')
+      ) {
+        this.message = '信箱無法收信，請聯絡客服修改';
+      } else {
+        this.message = '未知的錯誤';
+      }
+    } else {
+      this.router.navigate(['cookieExpired']);
+    }
   }
 
   async renewTime(user: User) {
@@ -258,18 +335,17 @@ export class MainComponent implements OnInit {
     console.log();
 
     this.cookie.set('username', old_cookie, new Date(user.lasttime!));
+    return lastValueFrom<User>(
+      this.http.post<User>(this.server + 'renewCookieTime', user)
+    );
   }
 
-  async checkCookieExpired() {
-    let result: boolean = false;
-    await lastValueFrom(
+  checkCookieExpired() {
+    return lastValueFrom(
       this.http.get<boolean>(
         this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
       )
-    ).then((res) => {
-      result = res;
-    });
-    return result;
+    );
   }
 
   // @HostListener('document:visibilitychange')

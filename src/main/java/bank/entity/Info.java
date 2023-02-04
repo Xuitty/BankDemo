@@ -15,6 +15,7 @@ public class Info implements Serializable {
 	private Integer creditCard;
 	private Integer debitCard;
 	private String totalMoney;
+	private Long lasttime=-1L;
 
 	public Info() {
 	}
@@ -58,7 +59,6 @@ public class Info implements Serializable {
 	public void setDebitCard(Integer debitCard) {
 		this.debitCard = debitCard;
 	}
-	
 
 	public String getTotalMoney() {
 		return totalMoney;
@@ -68,11 +68,18 @@ public class Info implements Serializable {
 		this.totalMoney = totalMoney;
 	}
 
+	public Long getLasttime() {
+		return lasttime;
+	}
+
+	public void setLasttime(Long lasttime) {
+		this.lasttime = lasttime;
+	}
+
 	@Override
 	public String toString() {
 		return "Info [uid=" + uid + ", uname=" + uname + ", account=" + account + ", creditCard=" + creditCard
-				+ ", debitCard=" + debitCard + ", totalMoney=" + totalMoney + "]";
+				+ ", debitCard=" + debitCard + ", totalMoney=" + totalMoney + ", lasttime=" + lasttime + "]";
 	}
-
 
 }

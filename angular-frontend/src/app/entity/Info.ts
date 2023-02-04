@@ -7,4 +7,5 @@ export class Info {
   creditCard!: number;
   debitCard!: number;
   totalMoney!: string;
+  lasttime: number = -1;
 }
