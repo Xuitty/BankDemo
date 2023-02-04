@@ -72,6 +72,7 @@ public class MainController {
 
 	@PostMapping("createAccount")
 	public Status createAccount(@RequestBody Account account) {
+		System.out.println(account);
 		Status result = new Status();
 		account.setAactive(0);
 		account.setAbalance(new BigDecimal(0));
@@ -92,7 +93,7 @@ public class MainController {
 
 	@PostMapping("verifyAccount")
 	public Status verifyAccount(@RequestBody Account account) {
-		System.out.println(account);
+//		System.out.println(account);
 		return null;
 	}
 

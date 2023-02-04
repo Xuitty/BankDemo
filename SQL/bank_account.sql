@@ -35,7 +35,7 @@ CREATE TABLE `account` (
   PRIMARY KEY (`aid`),
   UNIQUE KEY `UKk1hu995p90bet1khvnjrblb3g` (`aaccount`),
   UNIQUE KEY `UKs1eiwy12xvscxve1562fl7l9` (`aaccount`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,6 +47,74 @@ LOCK TABLES `account` WRITE;
 INSERT INTO `account` VALUES (1,1,'000000000019',0.0000,0,NULL,1,NULL,NULL),(2,1,'000000000028',0.0000,0,NULL,1,NULL,NULL),(3,1,'000000000037',0.0000,0,NULL,1,NULL,NULL),(4,1,'000000000046',0.0000,0,NULL,1,NULL,NULL),(5,1,'000000000055',0.0000,0,NULL,1,NULL,NULL),(6,1,'000000000064',0.0000,0,NULL,1,NULL,NULL),(7,1,'000000000073',0.0000,0,NULL,1,NULL,NULL),(8,1,'000000000082',0.0000,0,NULL,1,NULL,NULL),(9,1,'000000000091',0.0000,0,NULL,1,NULL,NULL),(10,1,'000000000106',0.0000,0,NULL,1,NULL,NULL),(11,1,'000000000115',0.0000,0,NULL,1,NULL,NULL),(12,1,'000000000124',0.0000,0,NULL,1,NULL,NULL),(13,1,'000000000133',0.0000,0,NULL,1,NULL,NULL),(14,1,'000000000142',0.0000,0,NULL,1,NULL,NULL),(15,1,'000000000151',0.0000,0,NULL,1,NULL,NULL),(16,1,'000000000160',0.0000,0,NULL,1,NULL,NULL),(17,1,'000000000179',0.0000,0,NULL,1,NULL,NULL),(18,1,'000000000188',0.0000,0,NULL,1,NULL,NULL),(19,1,'000000000197',0.0000,0,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `account_AFTER_INSERT` AFTER INSERT ON `account` FOR EACH ROW BEGIN
+insert into account_log values(null,'INSERT',concat(now(),'(UTC+8)'),new.aid,new.atype,new.aaccount,new.abalance,new.aactive,new.averify,new.uid,new.statuss,new.message);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `account_BEFORE_UPDATE` BEFORE UPDATE ON `account` FOR EACH ROW BEGIN
+insert into account_log values(null,'UPDATE(OLD)',concat(now(),'(UTC+8)'),old.aid,old.atype,old.aaccount,old.abalance,old.aactive,old.averify,old.uid,old.statuss,old.message);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `account_AFTER_UPDATE` AFTER UPDATE ON `account` FOR EACH ROW BEGIN
+insert into account_log values(null,'UPDATE(NEW)',concat(now(),'(UTC+8)'),new.aid,new.atype,new.aaccount,new.abalance,new.aactive,new.averify,new.uid,new.statuss,new.message);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `account_BEFORE_DELETE` BEFORE DELETE ON `account` FOR EACH ROW BEGIN
+insert into account_log values(null,'DELETE',concat(now(),'(UTC+8)'),old.aid,old.atype,old.aaccount,old.abalance,old.aactive,old.averify,old.uid,old.statuss,old.message);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -57,4 +125,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-04 18:22:58
+-- Dump completed on 2023-02-04 23:34:57
