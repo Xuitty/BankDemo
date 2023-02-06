@@ -15,6 +15,7 @@ import { NotFoundComponent } from './error/not-found/not-found.component';
 import { TimerService } from './services/timer/timer.service';
 import { CookieService } from 'ngx-cookie-service';
 import { CookieExpiredComponent } from './error/cookie-expired/cookie-expired.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { CookieExpiredComponent } from './error/cookie-expired/cookie-expired.co
     NotFoundComponent,
     CookieExpiredComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgChartsModule],
   providers: [TimerService, CookieService],
   bootstrap: [AppComponent],
 })

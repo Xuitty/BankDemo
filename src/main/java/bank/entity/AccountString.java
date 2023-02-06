@@ -16,7 +16,7 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "account", uniqueConstraints = { @UniqueConstraint(columnNames = "aaccount") })
 @Component
-public class Account implements Serializable {
+public class AccountString implements Serializable {
 
 	/**
 	 * 
@@ -31,7 +31,7 @@ public class Account implements Serializable {
 	@Column
 	private String aaccount;
 	@Column
-	private BigDecimal abalance;
+	private String abalance;
 	@Column
 	private Integer aactive;
 	@Column
@@ -44,7 +44,7 @@ public class Account implements Serializable {
 	private Integer statuss;
 	private String message;
 
-	public Account() {
+	public AccountString() {
 	}
 
 	public Integer getAid() {
@@ -71,11 +71,11 @@ public class Account implements Serializable {
 		this.aaccount = aaccount;
 	}
 
-	public BigDecimal getAbalance() {
+	public String getAbalance() {
 		return abalance;
 	}
 
-	public void setAbalance(BigDecimal abalance) {
+	public void setAbalance(String abalance) {
 		this.abalance = abalance;
 	}
 
@@ -129,7 +129,7 @@ public class Account implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Account [aid=" + aid + ", atype=" + atype + ", aaccount=" + aaccount + ", abalance=" + abalance
+		return "AccountString [aid=" + aid + ", atype=" + atype + ", aaccount=" + aaccount + ", abalance=" + abalance
 				+ ", aactive=" + aactive + ", averify=" + averify + ", anickname=" + anickname + ", uid=" + uid
 				+ ", statuss=" + statuss + ", message=" + message + "]";
 	}

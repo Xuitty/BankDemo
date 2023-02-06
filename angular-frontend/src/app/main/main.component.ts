@@ -8,11 +8,13 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChartType } from 'chart.js';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import SERVER from '../../assets/json/config.json';
 import { Account } from '../entity/account';
+import { Card } from '../entity/card';
 import { Info } from '../entity/Info';
 import { Status } from '../entity/status';
 import { User } from '../entity/user';
@@ -39,12 +41,37 @@ export class MainComponent implements OnInit {
 
   // lasttime: number = -1;  **********counterUtil**********
 
-  accountCount?: number;
-  creditCardCount?: number;
-  debitCardCount?: number;
+  allAccount?: Account[];
+  allActivedAccount?: Account[];
+  allAccountCount?: number;
+  allActivedAccountCount?: number;
+  allcreditCard?: Card[];
+  allActivedCreditCard?: Card[];
+  allcreditCardCount?: number;
+  allActivedCreditCardCount?: number;
+  allDebitCard?: Card[];
+  allActivedDebitCard?: Card[];
+  allDebitCardCount?: number;
+  allActivedDebitCardCount?: number;
   totalMoney?: string;
 
   currentAid?: number;
+
+  barChartOptions = {
+    responsive: true,
+    tooltips: {
+      callbacks: {
+        label: function (tooltipItem: any, data: any) {
+          return Number(tooltipItem.yLabel).toFixed(2);
+        },
+      },
+    },
+  };
+  barChartType: ChartType = 'pie';
+  barChartLegend = false;
+
+  barChartLabels = [];
+  barChartData: any = [];
 
   async ngOnInit() {
     this.message = '';
@@ -100,6 +127,8 @@ export class MainComponent implements OnInit {
     ).then(
       (res) => {
         result = res;
+        console.log(res);
+
         // console.log('res');
         // console.log(res);
       },
@@ -138,10 +167,53 @@ export class MainComponent implements OnInit {
     this.action = 'main';
     this.uid = result.uid;
     this.uname = result.uname;
-    this.accountCount = result.account;
-    this.creditCardCount = result.creditCard;
-    this.debitCardCount = result.debitCard;
+    this.allAccount = result.allAccount;
+    this.allActivedAccount = result.allActivedAccount;
+    this.allcreditCard = result.allCreditCard;
+    this.allActivedCreditCard = result.allActivedCreditCard;
+    this.allDebitCard = result.allDebitCard;
+    this.allActivedDebitCard = result.allActivedDebitCard;
+
+    this.allAccountCount = result.allAccount.length;
+    this.allActivedAccountCount = result.allActivedAccount.length;
+    this.allcreditCardCount = result.allCreditCard.length;
+    this.allActivedCreditCardCount = result.allActivedCreditCard.length;
+    this.allDebitCardCount = result.allDebitCard.length;
+    this.allActivedDebitCardCount = result.allActivedDebitCard.length;
     this.totalMoney = result.totalMoney;
+
+    let accountNicknames: string[] = [];
+
+    let accountBalances: Decimal[] = [];
+    this.allAccount.forEach((acc) => {
+      if (!new Decimal(acc.abalance!).equals(new Decimal(0))) {
+        accountBalances.push(new Decimal(acc.abalance!));
+      }
+      if (acc.anickname == null) {
+        accountNicknames.push('(未命名)');
+      } else {
+        accountNicknames.push(acc.anickname);
+      }
+    });
+    console.log(accountBalances.toString());
+    this.barChartData = [
+      {
+        data: accountBalances,
+        label: '',
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(120, 16, 24)',
+          'rgb(145, 144, 71)',
+          'rgb(171, 235, 134)',
+          'rgb(35, 28, 158)',
+          'rgb(202, 36, 214)',
+          'rgb(37, 250, 250)',
+          'rgb(56, 112, 105)',
+        ],
+      },
+    ];
 
     // if (result.lasttime == -1) {  **********counterUtil**********
     //   await this.renewTime(user).then(

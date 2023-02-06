@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Info implements Serializable {
+public class InfoString implements Serializable {
 
 	/**
 	 * 
@@ -13,16 +13,16 @@ public class Info implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer uid;
 	private String uname;
-	private Account[] allAccount;
-	private Account[] allActivedAccount;
-	private Card[] allCreditCard;
-	private Card[] allActivedCreditCard;
-	private Card[] allDebitCard;
-	private Card[] allActivedDebitCard;
+	private AccountString[] allAccount;
+	private AccountString[] allActivedAccount;
+	private CardString[] allCreditCard;
+	private CardString[] allActivedCreditCard;
+	private CardString[] allDebitCard;
+	private CardString[] allActivedDebitCard;
 	private String totalMoney;
 	private Long lasttime = -1L;
 
-	public Info() {
+	public InfoString() {
 	}
 
 	public Integer getUid() {
@@ -41,51 +41,51 @@ public class Info implements Serializable {
 		this.uname = uname;
 	}
 
-	public Account[] getAllAccount() {
+	public AccountString[] getAllAccount() {
 		return allAccount;
 	}
 
-	public void setAllAccount(Account[] allAccount) {
+	public void setAllAccount(AccountString[] allAccount) {
 		this.allAccount = allAccount;
 	}
 
-	public Account[] getAllActivedAccount() {
+	public AccountString[] getAllActivedAccount() {
 		return allActivedAccount;
 	}
 
-	public void setAllActivedAccount(Account[] allActivedAccount) {
+	public void setAllActivedAccount(AccountString[] allActivedAccount) {
 		this.allActivedAccount = allActivedAccount;
 	}
 
-	public Card[] getAllCreditCard() {
+	public CardString[] getAllCreditCard() {
 		return allCreditCard;
 	}
 
-	public void setAllCreditCard(Card[] allCreditCard) {
+	public void setAllCreditCard(CardString[] allCreditCard) {
 		this.allCreditCard = allCreditCard;
 	}
 
-	public Card[] getAllActivedCreditCard() {
+	public CardString[] getAllActivedCreditCard() {
 		return allActivedCreditCard;
 	}
 
-	public void setAllActivedCreditCard(Card[] allActivedCreditCard) {
+	public void setAllActivedCreditCard(CardString[] allActivedCreditCard) {
 		this.allActivedCreditCard = allActivedCreditCard;
 	}
 
-	public Card[] getAllDebitCard() {
+	public CardString[] getAllDebitCard() {
 		return allDebitCard;
 	}
 
-	public void setAllDebitCard(Card[] allDebitCard) {
+	public void setAllDebitCard(CardString[] allDebitCard) {
 		this.allDebitCard = allDebitCard;
 	}
 
-	public Card[] getAllActivedDebitCard() {
+	public CardString[] getAllActivedDebitCard() {
 		return allActivedDebitCard;
 	}
 
-	public void setAllActivedDebitCard(Card[] allActivedDebitCard) {
+	public void setAllActivedDebitCard(CardString[] allActivedDebitCard) {
 		this.allActivedDebitCard = allActivedDebitCard;
 	}
 

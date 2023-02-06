@@ -2,6 +2,7 @@ package bank.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,14 @@ import com.google.gson.Gson;
 import bank.entity.Account;
 import bank.entity.Card;
 import bank.entity.Info;
+import bank.entity.InfoString;
 import bank.entity.Status;
 import bank.entity.User;
 import bank.service.AccountService;
 import bank.service.CardService;
 import bank.service.UserService;
 import bank.tools.AccountUtils;
+import bank.tools.InfoDecimal2StringConverter;
 import bank.tools.JavaMailTools;
 import bank.tools.PasswordGenerator;
 import jakarta.mail.MessagingException;
@@ -45,40 +48,59 @@ public class MainController {
 	JavaMailTools javaMailTools = new JavaMailTools();
 
 	@PostMapping("/mainGetInfo")
-	public Info mainGetInfo(@RequestBody User user) {
+	public InfoString mainGetInfo(@RequestBody User user) {
 		Info info = new Info();
 		user = userService.queryCookie(user.getUcookie());
 		if (user == null) {
 			return null;
 		}
 		ArrayList<Account> allAccount = accountService.queryAccountListByUid(user.getUid());
-		ArrayList<Account> allActiveAccount = accountService.queryAccountListByUid(user.getUid());
+		ArrayList<Account> allActivedAccount = new ArrayList<>();
 		ArrayList<Card> allCreditCard = cardService.queryCardListByUid(user.getUid());
-//		ArrayList<Card> debitCardCount = ;
-		ArrayList<ArrayList<Card>> allDebitCard = new ArrayList<>();
-		int count = 0;
+		ArrayList<Card> allActivedCreditCard = new ArrayList<>();
+		for (Card y : allCreditCard) {
+			if (y.getCacitve() == 1) {
+				allActivedCreditCard.add(y);
+			}
+		}
+		ArrayList<ArrayList<Card>> allAccountDebitCard = new ArrayList<>();
+		ArrayList<Card> allDebitCard = new ArrayList<>();
+		ArrayList<Card> allActivedDebitCard = new ArrayList<>();
 		BigDecimal totalMoney = new BigDecimal(0);
 		for (Account y : allAccount) {
-//			if(y.getAactive()==1) {
-//				allActiveAccount.add(y);
-//			}
-			allDebitCard.add(cardService.queryCardListByAid(y.getAid()));
+			if (y.getAactive() == 1) {
+				allActivedAccount.add(y);
+			}
+			allAccountDebitCard.add(cardService.queryCardListByAid(y.getAid()));
 			totalMoney = totalMoney.add(y.getAbalance());
 		}
-		for (ArrayList<Card> y : allDebitCard) {
-			count += y.size();
+		for (ArrayList<Card> y : allAccountDebitCard) {
+			if (y.size() > 0) {
+				for (Card z : y) {
+					allDebitCard.add(z);
+					if (z.getCacitve() == 1) {
+						allActivedDebitCard.add(z);
+					}
+				}
+			}
 		}
 
+		
+		
 		info.setUid(user.getUid());
 		info.setUname(user.getUname());
-		info.setAccount(allAccount.size());
-		info.setCreditCard(allCreditCard.size());
-		info.setDebitCard(count);
+		info.setAllAccount(allAccount.toArray(new Account[allAccount.size()]));
+		info.setAllActivedAccount(allActivedAccount.toArray(new Account[allActivedAccount.size()]));
+		info.setAllCreditCard(allCreditCard.toArray(new Card[allCreditCard.size()]));
+		info.setAllActivedCreditCard(allActivedCreditCard.toArray(new Card[allActivedCreditCard.size()]));
+		info.setAllDebitCard(allDebitCard.toArray(new Card[allDebitCard.size()]));
+		info.setAllActivedDebitCard(allActivedDebitCard.toArray(new Card[allActivedDebitCard.size()]));
 		info.setTotalMoney(totalMoney.toString());
 		info.setLasttime(new Date().getTime());
 		System.out.println(info);
-
-		return info;
+		System.out.println(InfoDecimal2StringConverter.receiver(info));
+		
+		return InfoDecimal2StringConverter.receiver(info);
 	}
 
 	@PostMapping("createAccount")

@@ -8,8 +8,8 @@ export class Card {
   cccv?: string;
   cccv_salt?: string;
   cactive?: string;
-  ccurrent?: Decimal;
-  climit?: Decimal;
+  ccurrent?: string;
+  climit?: string;
   cfailed?: number;
   cverify?: string;
   aid?: number;
