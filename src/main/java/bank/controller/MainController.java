@@ -59,7 +59,7 @@ public class MainController {
 		ArrayList<Card> allCreditCard = cardService.queryCardListByUid(user.getUid());
 		ArrayList<Card> allActivedCreditCard = new ArrayList<>();
 		for (Card y : allCreditCard) {
-			if (y.getCacitve() == 1) {
+			if (y.getCactive() == 1) {
 				allActivedCreditCard.add(y);
 			}
 		}
@@ -78,7 +78,7 @@ public class MainController {
 			if (y.size() > 0) {
 				for (Card z : y) {
 					allDebitCard.add(z);
-					if (z.getCacitve() == 1) {
+					if (z.getCactive() == 1) {
 						allActivedDebitCard.add(z);
 					}
 				}

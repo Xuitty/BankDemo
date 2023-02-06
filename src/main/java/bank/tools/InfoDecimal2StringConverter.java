@@ -53,7 +53,7 @@ public class InfoDecimal2StringConverter {
 		for (Card y : info.getAllCreditCard()) {
 			CardString new_data = new CardString();
 			new_data.setAid(y.getAid());
-			new_data.setCacitve(y.getCacitve());
+			new_data.setCacitve(y.getCactive());
 			new_data.setCccv(y.getCccv());
 			new_data.setCccv_salt(y.getCccv_salt());
 			new_data.setCcurrent(y.getCcurrent().toString());
@@ -72,7 +72,7 @@ public class InfoDecimal2StringConverter {
 		for (Card y : info.getAllActivedCreditCard()) {
 			CardString new_data = new CardString();
 			new_data.setAid(y.getAid());
-			new_data.setCacitve(y.getCacitve());
+			new_data.setCacitve(y.getCactive());
 			new_data.setCccv(y.getCccv());
 			new_data.setCccv_salt(y.getCccv_salt());
 			new_data.setCcurrent(y.getCcurrent().toString());
@@ -91,7 +91,7 @@ public class InfoDecimal2StringConverter {
 		for (Card y : info.getAllDebitCard()) {
 			CardString new_data = new CardString();
 			new_data.setAid(y.getAid());
-			new_data.setCacitve(y.getCacitve());
+			new_data.setCacitve(y.getCactive());
 			new_data.setCccv(y.getCccv());
 			new_data.setCccv_salt(y.getCccv_salt());
 			new_data.setCcurrent(y.getCcurrent().toString());
@@ -110,7 +110,7 @@ public class InfoDecimal2StringConverter {
 		for (Card y : info.getAllActivedDebitCard()) {
 			CardString new_data = new CardString();
 			new_data.setAid(y.getAid());
-			new_data.setCacitve(y.getCacitve());
+			new_data.setCacitve(y.getCactive());
 			new_data.setCccv(y.getCccv());
 			new_data.setCccv_salt(y.getCccv_salt());
 			new_data.setCcurrent(y.getCcurrent().toString());

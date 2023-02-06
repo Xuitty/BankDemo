@@ -37,7 +37,7 @@ public class Card implements Serializable {
 	@Column
 	private String cccv_salt;
 	@Column
-	private Integer cacitve = 0;
+	private Integer cactive = 0;
 	@Column
 	private BigDecimal ccurrent;
 	@Column
@@ -65,7 +65,7 @@ public class Card implements Serializable {
 		this.cdate = cdate;
 		this.cccv = cccv;
 		this.cccv_salt = cccv_salt;
-		this.cacitve = cacitve;
+		this.cactive = cacitve;
 		this.ccurrent = ccurrent;
 		this.climit = climit;
 		this.cfailed = cfailed;
@@ -121,12 +121,12 @@ public class Card implements Serializable {
 		this.cccv_salt = cccv_salt;
 	}
 
-	public Integer getCacitve() {
-		return cacitve;
+	public Integer getCactive() {
+		return cactive;
 	}
 
-	public void setCacitve(Integer cacitve) {
-		this.cacitve = cacitve;
+	public void setCactive(Integer cactive) {
+		this.cactive = cactive;
 	}
 
 	public BigDecimal getCcurrent() {
@@ -196,7 +196,7 @@ public class Card implements Serializable {
 	@Override
 	public String toString() {
 		return "Card [cid=" + cid + ", ctype=" + ctype + ", cnumber=" + cnumber + ", cdate=" + cdate + ", cccv=" + cccv
-				+ ", cccv_salt=" + cccv_salt + ", cacitve=" + cacitve + ", ccurrent=" + ccurrent + ", climit=" + climit
+				+ ", cccv_salt=" + cccv_salt + ", cactive=" + cactive + ", ccurrent=" + ccurrent + ", climit=" + climit
 				+ ", cfailed=" + cfailed + ", cverify=" + cverify + ", aid=" + aid + ", uid=" + uid + ", statuss="
 				+ statuss + ", message=" + message + "]";
 	}

@@ -36,7 +36,6 @@ CREATE TABLE `card` (
   `cverify` varchar(6) DEFAULT NULL,
   `aid` int DEFAULT NULL,
   `uid` int DEFAULT NULL,
-  `cacitve` int DEFAULT NULL,
   `statuss` int DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`cid`),
@@ -131,4 +130,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-04 23:34:57
+-- Dump completed on 2023-02-06 18:23:38
