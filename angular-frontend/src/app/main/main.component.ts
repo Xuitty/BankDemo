@@ -8,7 +8,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ChartType } from 'chart.js';
+import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
@@ -57,20 +57,13 @@ export class MainComponent implements OnInit {
 
   currentAid?: number;
 
-  barChartOptions = {
-    responsive: true,
-    tooltips: {
-      callbacks: {
-        label: function (tooltipItem: any, data: any) {
-          return Number(tooltipItem.yLabel).toFixed(2);
-        },
-      },
-    },
-  };
-  barChartType: ChartType = 'pie';
+  @ViewChild('chart') chart?: Chart;
+
+  barChartOptions = {};
+  barChartType: ChartType = 'doughnut';
   barChartLegend = false;
 
-  barChartLabels = [];
+  barChartLabels: string[] = [];
   barChartData: any = [];
 
   async ngOnInit() {
@@ -188,14 +181,17 @@ export class MainComponent implements OnInit {
     this.allAccount.forEach((acc) => {
       if (!new Decimal(acc.abalance!).equals(new Decimal(0))) {
         accountBalances.push(new Decimal(acc.abalance!));
+        if (acc.anickname == null) {
+          accountNicknames.push('(未命名)');
+        } else {
+          accountNicknames.push(acc.anickname);
+        }
       }
-      if (acc.anickname == null) {
-        accountNicknames.push('(未命名)');
-      } else {
-        accountNicknames.push(acc.anickname);
-      }
+      console.log(acc.anickname + ' : ' + acc.abalance);
+      console.log(accountNicknames + ' : ' + accountBalances);
     });
     console.log(accountBalances.toString());
+    this.barChartLabels = accountNicknames;
     this.barChartData = [
       {
         data: accountBalances,
@@ -214,6 +210,23 @@ export class MainComponent implements OnInit {
         ],
       },
     ];
+    this.barChartOptions = {
+      responsive: true,
+      options: {
+        plugins: {
+          tooltip: {
+            enabled: true,
+            intersect: false,
+            mode: 'nearest',
+            callbacks: {
+              title: () => 'title',
+              label: (item: { parsed: string }) => item.parsed + '%',
+            },
+          },
+        },
+      },
+    };
+    this.chart?.update();
 
     // if (result.lasttime == -1) {  **********counterUtil**********
     //   await this.renewTime(user).then(
