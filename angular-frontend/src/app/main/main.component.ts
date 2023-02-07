@@ -4,11 +4,22 @@ import {
   HostListener,
   OnInit,
   OnDestroy,
+  AfterViewChecked,
   ViewChild,
   ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
+import {
+  Chart,
+  ChartConfiguration,
+  ChartData,
+  ChartDataset,
+  ChartOptions,
+  ChartType,
+  ChartTypeRegistry,
+  TooltipItem,
+} from 'chart.js';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
@@ -24,13 +35,17 @@ import { TimerService } from '../services/timer/timer.service';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private cookie: CookieService,
     private timer: TimerService,
     private router: Router
   ) {}
+  ngOnDestroy(): void {
+    clearInterval(this.intervalCheck);
+  }
+  intervalCheck: any;
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
   login: boolean = true;
@@ -59,12 +74,12 @@ export class MainComponent implements OnInit {
 
   @ViewChild('chart') chart?: Chart;
 
-  barChartOptions = {};
-  barChartType: ChartType = 'doughnut';
-  barChartLegend = false;
+  accountChartOptions: ChartConfiguration['options'] = {};
+  accountChartType: ChartType = 'doughnut';
+  accountChartLegend = false;
 
-  barChartLabels: string[] = [];
-  barChartData: any = [];
+  accountChartLabels: string[] = [];
+  accountChartData: any = [];
 
   async ngOnInit() {
     this.message = '';
@@ -187,12 +202,12 @@ export class MainComponent implements OnInit {
           accountNicknames.push(acc.anickname);
         }
       }
-      console.log(acc.anickname + ' : ' + acc.abalance);
-      console.log(accountNicknames + ' : ' + accountBalances);
+      // console.log(acc.anickname + ' : ' + acc.abalance);
+      // console.log(accountNicknames + ' : ' + accountBalances);
     });
-    console.log(accountBalances.toString());
-    this.barChartLabels = accountNicknames;
-    this.barChartData = [
+    // console.log(accountBalances.toString());
+    this.accountChartLabels = accountNicknames;
+    this.accountChartData = [
       {
         data: accountBalances,
         label: '',
@@ -210,23 +225,38 @@ export class MainComponent implements OnInit {
         ],
       },
     ];
-    this.barChartOptions = {
+    this.accountChartOptions = {
       responsive: true,
-      options: {
-        plugins: {
-          tooltip: {
-            enabled: true,
-            intersect: false,
-            mode: 'nearest',
-            callbacks: {
-              title: () => 'title',
-              label: (item: { parsed: string }) => item.parsed + '%',
+      plugins: {
+        tooltip: {
+          enabled: true,
+          // intersect: false,
+          mode: 'nearest',
+          callbacks: {
+            label: (tooltipItems: TooltipItem<ChartType>) => {
+              return tooltipItems.formattedValue + ' 元';
             },
           },
         },
       },
     };
-    this.chart?.update();
+    let intervalCheck = setInterval(async () => {
+      await this.checkCookieExpired().then(
+        (res) => {
+          console.log(res);
+
+          if (!res) {
+            clearInterval(intervalCheck);
+            this.doLogout();
+          }
+        },
+        (reject) => {
+          clearInterval(intervalCheck);
+          console.log(reject);
+          this.router.navigate(['500']);
+        }
+      );
+    }, 30000);
 
     // if (result.lasttime == -1) {  **********counterUtil**********
     //   await this.renewTime(user).then(
@@ -433,6 +463,11 @@ export class MainComponent implements OnInit {
     );
   }
 
+  doLogout() {
+    this.cookie.deleteAll();
+    this.router.navigate(['']);
+  }
+
   // @HostListener('document:visibilitychange')
   // async unloadHandler() {
   //   // this.http.get(this.server + 'cookieDeleteService').subscribe();
@@ -443,4 +478,7 @@ export class MainComponent implements OnInit {
   //   await lastValueFrom(this.http.get(this.server + 'cookieDeleteService'));
   // }
   ////
+  async doAutoCheck() {
+    console.log('autochecked');
+  }
 }

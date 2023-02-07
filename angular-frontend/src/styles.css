@@ -18,5 +18,10 @@
 
 .box {
   height: 300px;
-  /* background-color: cadetblue; */
+  background-color: cadetblue;
+}
+
+.fitContent {
+  height: fit-content;
+  /* width: fit-content; */
 }
