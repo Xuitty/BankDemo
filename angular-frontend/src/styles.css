@@ -18,10 +18,35 @@
 
 .box {
   height: 300px;
-  background-color: cadetblue;
+  /* background-color: cadetblue; */
 }
 
 .fitContent {
   height: fit-content;
   /* width: fit-content; */
+}
+table {
+  width: 1000px;
+  background-color: rgba(140, 140, 137, 30%);
+}
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+.tableheadAccount {
+  width: 30px;
+}
+.tableheadNickname {
+  width: 30px;
+}
+.tableheadBalance {
+  width: 40px;
+}
+.tableheadAction {
+  width: 20px;
 }

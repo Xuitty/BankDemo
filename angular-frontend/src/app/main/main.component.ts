@@ -8,6 +8,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  TemplateRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -20,6 +21,7 @@ import {
   ChartTypeRegistry,
   TooltipItem,
 } from 'chart.js';
+import { PointElement, Tooltip } from 'chart.js/dist';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
@@ -80,6 +82,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
   accountChartLabels: string[] = [];
   accountChartData: any = [];
+
+  notempty: any;
+  empty: any;
 
   async ngOnInit() {
     this.message = '';
@@ -226,11 +231,27 @@ export class MainComponent implements OnInit, OnDestroy {
       },
     ];
     this.accountChartOptions = {
+      // events: ['click', 'mouseleave'],
       responsive: true,
+      // hover: {
+      //   mode: 'nearest',
+      //   intersect: true,
+      // },
+      // onClick: (event, element) => {
+      //   console.log(element[0].element.getProps(['$context']));
+      //   console.log('clicked');
+      // },
+      // onHover: (event, element, chart) => {
+      //   console.log(chart.data.datasets[0].data[0]?.toString());
+      //   chart.tooltip?.setActiveElements([element[0]], {
+      //     x: 0,
+      //     y: 0,
+      //   });
+      // },
       plugins: {
         tooltip: {
           enabled: true,
-          // intersect: false,
+          intersect: true,
           mode: 'nearest',
           callbacks: {
             label: (tooltipItems: TooltipItem<ChartType>) => {
