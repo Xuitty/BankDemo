@@ -12,8 +12,8 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'angular-frontend';
   style = {
     'background-image': 'url("")',
-    height: '100vh',
-    width: '100vw',
+    height: '100vmax',
+    width: '100wmax',
   };
 
   constructor(private bgService: BgServiceService) {}

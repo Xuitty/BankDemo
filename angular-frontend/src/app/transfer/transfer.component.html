@@ -1,1 +1,75 @@
-<p>transfer works!</p>
+<div class="allCenter">
+  <h2 class="message" [innerHTML]="message"></h2>
+</div>
+
+<div class="container-fluid">
+  <div
+    class="row box text-center"
+    style="margin-left: 50px; margin-right: 50px; height: max-content"
+  >
+    <div class="col"></div>
+    <div class="col fw-bolder fs-5 box fitContent">
+      轉帳服務
+      <br />
+      <br />
+      <div>
+        轉出帳號:　<select #senderAccount (click)="selectAccount()">
+          <ng-container *ngFor="let acc of allActivedAccount">
+            <option
+              *ngIf="acc.aid != transferAccount.aid"
+              label="{{ acc.aaccount }} ({{
+                acc.anickname == null ? '未命名' : acc.anickname
+              }})"
+              value="{{ acc }}"
+            ></option>
+            <option
+              *ngIf="acc.aid === transferAccount.aid"
+              label="{{ acc.aaccount }} ({{
+                acc.anickname == null ? '未命名' : acc.anickname
+              }})"
+              value="{{ acc }}"
+              selected
+            ></option>
+          </ng-container>
+          <!-- <option value="456"></option> -->
+        </select>
+        餘額:　{{ currentBalance }}
+      </div>
+      <br /><br />
+      轉入銀行代碼:　<input type="text" value="444" disabled /> <br /><br />
+      轉入銀行帳號:　<input type="text" [maxLength]="20" /> <br /><br />
+      <ng-container>
+        <div class="form-check form-switch align" style="align-self: center">
+          預約轉帳功能　<input
+            #schedule
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+            [checked]="scheduleSwitchChecked"
+            (click)="scheduleSwitch()"
+          />
+          <div *ngIf="scheduleSwitchStatus" class="text-center">
+            <br />
+            <div>選擇日期時間</div>
+            <input #dateTime type="datetime-local" name="" id="" />
+          </div>
+        </div>
+      </ng-container>
+      <br /><br />
+      <div>轉帳金額　<input type="number" max="50" /></div>
+      <br />
+      <div>
+        貨幣類型　<select style="width: auto">
+          <option label="台幣" value="1" selected></option>
+        </select>
+      </div>
+      <input class="btn btn-primary" type="button" value="確認" />
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+<!-- <ng-container *ngIf="login == true && action == 'transfer'">{{
+  transferAccount
+}}</ng-container> -->

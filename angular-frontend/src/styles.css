@@ -50,3 +50,8 @@ td {
 .tableheadAction {
   width: 20px;
 }
+.form-check .form-check-input {
+  float: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}

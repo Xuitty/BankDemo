@@ -50,7 +50,7 @@ export class MainComponent implements OnInit, OnDestroy {
   intervalCheck: any;
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
-  login: boolean = true;
+  login: boolean = false;
   action: string = '';
   message: string = '';
   uname: string = '';
@@ -85,6 +85,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
   notempty: any;
   empty: any;
+
+  transferAccount?: Account;
+  currentUserUid?: number;
 
   async ngOnInit() {
     this.message = '';
@@ -220,13 +223,12 @@ export class MainComponent implements OnInit, OnDestroy {
           'rgb(255, 99, 132)',
           'rgb(54, 162, 235)',
           'rgb(255, 205, 86)',
-          'rgb(120, 16, 24)',
-          'rgb(145, 144, 71)',
+          'rgb(245, 144, 206)',
+          'rgb(188, 245, 127)',
           'rgb(171, 235, 134)',
-          'rgb(35, 28, 158)',
-          'rgb(202, 36, 214)',
+          'rgb(147, 114, 247)',
+          'rgb(197, 199, 197)',
           'rgb(37, 250, 250)',
-          'rgb(56, 112, 105)',
         ],
       },
     ];
@@ -262,6 +264,7 @@ export class MainComponent implements OnInit, OnDestroy {
       },
     };
     let intervalCheck = setInterval(async () => {
+      //auto logout function
       await this.checkCookieExpired().then(
         (res) => {
           console.log(res);
@@ -313,6 +316,9 @@ export class MainComponent implements OnInit, OnDestroy {
     );
 
     if (result) {
+      let user: User = new User();
+      user.uid = this.uid;
+      this.renewTime(user);
       this.action = 'createAccount';
     } else {
       this.router.navigate(['cookieExpired']);
@@ -331,6 +337,9 @@ export class MainComponent implements OnInit, OnDestroy {
       }
     );
     if (result) {
+      let user: User = new User();
+      user.uid = this.uid;
+      this.renewTime(user);
       this.action = 'createCreditCard';
     } else {
       this.router.navigate(['cookieExpired']);
@@ -458,6 +467,32 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
+  async goTransfer(acc: Account) {
+    let result: boolean = false;
+    await this.checkCookieExpired().then(
+      (res) => {
+        result = res;
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+        return;
+      }
+    );
+
+    if (result) {
+      this.action = 'transfer';
+      this.transferAccount = acc;
+      this.currentUserUid = this.uid;
+      let user: User = new User();
+      user.uid = this.uid;
+      this.renewTime(user);
+      this.router.navigate(['main/transfer']);
+    } else {
+      this.router.navigate(['cookieExpired']);
+    }
+  }
+
   async renewTime(user: User) {
     if (user.uid == undefined || user.uid == null) {
       return;
@@ -468,7 +503,6 @@ export class MainComponent implements OnInit, OnDestroy {
       user = res;
     });
     let old_cookie = this.cookie.get('username');
-    console.log();
 
     this.cookie.set('username', old_cookie, new Date(user.lasttime!));
     return lastValueFrom<User>(

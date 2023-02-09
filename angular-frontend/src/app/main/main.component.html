@@ -1,3 +1,9 @@
+<app-transfer
+  *ngIf="login == true && action == 'transfer'"
+  [transferAccount]="transferAccount!"
+  [currentUserUid]="currentUserUid"
+  [allActivedAccount]="allActivedAccount"
+></app-transfer>
 <div class="allCenter">
   <h2 class="message" [innerHTML]="message"></h2>
 </div>
@@ -53,8 +59,24 @@
                 <tr>
                   <td class="tableAccount">{{ acc.aaccount }}</td>
                   <td class="tableNickname">
-                    <div *ngIf="acc.anickname == ''">(未命名)</div>
-                    <div *ngIf="acc.anickname != ''">{{ acc.anickname }}</div>
+                    <div
+                      *ngIf="
+                        acc.anickname == null ||
+                        acc.anickname == undefined ||
+                        acc.anickname == ''
+                      "
+                    >
+                      (未命名)
+                    </div>
+                    <div
+                      *ngIf="
+                        acc.anickname != null &&
+                        acc.anickname != undefined &&
+                        acc.anickname != ''
+                      "
+                    >
+                      {{ acc.anickname }}
+                    </div>
                   </td>
                   <td class="tableBalance">NTD$ {{ acc.abalance }}</td>
                   <td class="tableAction">
@@ -73,7 +95,7 @@
                         aria-labelledby="dropdownMenuButton1"
                       >
                         <li>
-                          <a class="dropdown-item" [routerLink]="['transfer']"
+                          <a class="dropdown-item" (click)="goTransfer(acc)"
                             >轉帳</a
                           >
                         </li>
