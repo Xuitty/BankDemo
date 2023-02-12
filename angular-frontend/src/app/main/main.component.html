@@ -1,8 +1,8 @@
 <app-transfer
   *ngIf="login == true && action == 'transfer'"
   [transferAccount]="transferAccount!"
-  [currentUserUid]="currentUserUid"
-  [allActivedAccount]="allActivedAccount"
+  [currentUserUid]="currentUserUid!"
+  [allActivedAccount]="allActivedAccount!"
 ></app-transfer>
 <div class="allCenter">
   <h2 class="message" [innerHTML]="message"></h2>

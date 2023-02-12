@@ -431,7 +431,7 @@ export class MainComponent implements OnInit, OnDestroy {
         (reject) => {
           console.log(reject);
           // this.router.navigate(['500']);
-          return new Status(4, 'Server error');
+          return new Status(4, undefined, 'Server error');
         }
       );
       console.log(r);
@@ -487,6 +487,7 @@ export class MainComponent implements OnInit, OnDestroy {
       let user: User = new User();
       user.uid = this.uid;
       this.renewTime(user);
+      clearInterval(this.intervalCheck);
       this.router.navigate(['main/transfer']);
     } else {
       this.router.navigate(['cookieExpired']);

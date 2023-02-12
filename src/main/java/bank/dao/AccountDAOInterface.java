@@ -12,6 +12,8 @@ public interface AccountDAOInterface extends JpaRepository<Account, Integer> {
 	
 	Account findByAid(Integer aid);
 	
+	Account findByAaccount(String aaccount);
+	
 	Account findFirstByOrderByAidDesc();
 	
 	

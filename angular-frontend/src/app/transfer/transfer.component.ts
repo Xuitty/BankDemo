@@ -5,6 +5,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import SERVER from '../../assets/json/config.json';
 import { Account } from '../entity/account';
+import { Status } from '../entity/status';
+import { Transfer } from '../entity/transfer';
 import { User } from '../entity/user';
 
 @Component({
@@ -22,21 +24,17 @@ export class TransferComponent implements OnInit {
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
   message?: string = '';
   login: boolean = false;
-  action?: string = '';
+  action?: string = 'transfer';
   ucookie?: string;
-  @Input('allActivedAccount') allActivedAccount?: Account[];
+  @Input('allActivedAccount') allActivedAccount!: Account[];
   @Input('transferAccount') transferAccount!: Account;
-  @Input('currentUserUid') currentUserUid?: number;
+  @Input('currentUserUid') currentUserUid!: number;
 
   scheduleSwitchStatus: boolean = false;
   scheduleSwitchChecked: string = '';
 
   async ngOnInit() {
     this.message = '';
-
-    console.log(this.allActivedAccount);
-    console.log(this.transferAccount);
-    console.log(this.currentUserUid);
 
     if (!this.cookie.check('username')) {
       // this.message = '請登入金發財，共享榮華富貴';
@@ -60,6 +58,7 @@ export class TransferComponent implements OnInit {
     }
     let user: User = new User();
     user.uid = this.currentUserUid;
+    this.currentBalance = this.transferAccount.abalance;
     this.renewTime(user);
     this.ucookie = this.cookie.get('username');
     let intervalCheck = setInterval(async () => {
@@ -93,14 +92,66 @@ export class TransferComponent implements OnInit {
       this.scheduleSwitchStatus === false ? '' : 'checked';
   }
 
-  @ViewChild('senderAccount') senderAccount?: ElementRef;
+  @ViewChild('accountSelector') accountSelector?: ElementRef;
   currentBalance?: string;
   selectAccount() {
-    let acc: Account = this.senderAccount?.nativeElement.value;
-    this.transferAccount = acc;
-    this.currentBalance = acc.abalance;
-    console.log(this.senderAccount?.nativeElement);
-    console.log(acc.abalance);
+    this.transferAccount = this.allActivedAccount?.find(
+      (item, index, array) => {
+        return item.aaccount == this.accountSelector?.nativeElement.value;
+      }
+    )!;
+    this.currentBalance = this.transferAccount.abalance;
+    console.log(this.accountSelector?.nativeElement);
+    console.log(this.transferAccount.abalance);
+  }
+
+  @ViewChild('receiverBankCode') receiverBankCode?: ElementRef;
+  @ViewChild('receiverAccount') receiverAccount?: ElementRef;
+  @ViewChild('currencyType') currencyType?: ElementRef;
+  @ViewChild('amountString') amountString?: ElementRef;
+  async doTransfer() {
+    let result: boolean = false;
+    await this.checkCookieExpired().then(
+      (res) => {
+        if (res != true) {
+          result = false;
+          return;
+        }
+        result = true;
+        this.renewTime(new User(undefined, undefined, this.currentUserUid));
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+      }
+    );
+    if (result == false) {
+      return;
+    }
+    if (this.currencyType?.nativeElement.value == 1) {
+      let amountString: string = this.amountString?.nativeElement.value;
+      if (amountString.includes('.')) {
+        this.message = '台幣交易不可含有小數';
+        return;
+      }
+    }
+    let transfer: Transfer = new Transfer();
+    transfer.sender_account = this.transferAccount.aaccount!;
+    transfer.receiver_bank_code = this.receiverBankCode?.nativeElement.value;
+    transfer.receiver_account = this.receiverAccount?.nativeElement.value;
+    transfer.schedule = this.scheduleSwitchStatus;
+    if (transfer.schedule) {
+      transfer.schedule_time = Date.parse(this.dateTime?.nativeElement.value);
+    }
+    transfer.amount_string = this.amountString?.nativeElement.value;
+    transfer.currency_type = this.currencyType?.nativeElement.value;
+    await lastValueFrom(
+      this.http.post<Status>(this.server + 'doTransfer', transfer)
+    ).then((res) => {
+      if (res.statuss == 0 || res.statuss == 1) {
+        this.action = 'verify';
+      }
+    });
   }
 
   async renewTime(user: User) {

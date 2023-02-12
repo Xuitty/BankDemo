@@ -16,44 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `card_log`
+-- Table structure for table `transfer`
 --
 
-DROP TABLE IF EXISTS `card_log`;
+DROP TABLE IF EXISTS `transfer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `card_log` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `operate` varchar(15) NOT NULL,
-  `operatetime` varchar(40) NOT NULL,
-  `cid` int DEFAULT NULL,
-  `ctype` tinyint(1) DEFAULT '1',
-  `cnumber` varchar(16) DEFAULT NULL,
-  `cdate` varchar(4) DEFAULT NULL,
-  `cccv` varchar(32) DEFAULT NULL,
-  `cccv_salt` varchar(32) DEFAULT NULL,
-  `cactive` tinyint(1) DEFAULT '0',
-  `ccurrent` decimal(38,4) DEFAULT NULL,
-  `climit` decimal(38,4) DEFAULT NULL,
-  `cfailed` tinyint(1) DEFAULT '0',
-  `cverify` varchar(6) DEFAULT NULL,
-  `aid` int DEFAULT NULL,
-  `uid` int DEFAULT NULL,
-  `cacitve` int DEFAULT NULL,
-  `statuss` int DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `transfer` (
+  `tid` int NOT NULL AUTO_INCREMENT,
+  `sender_account` varchar(20) NOT NULL,
+  `receiver_bank_code` varchar(6) NOT NULL,
+  `receiver_account` varchar(20) NOT NULL,
+  `amount` decimal(38,4) NOT NULL,
+  `currency_type` int NOT NULL,
+  `schedule` tinyint(1) NOT NULL,
+  `schedule_time` bigint DEFAULT NULL,
+  `operate_time` bigint DEFAULT NULL,
+  `verify` varchar(6) DEFAULT NULL,
+  PRIMARY KEY (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `card_log`
+-- Dumping data for table `transfer`
 --
 
-LOCK TABLES `card_log` WRITE;
-/*!40000 ALTER TABLE `card_log` DISABLE KEYS */;
-INSERT INTO `card_log` VALUES (2,'','',1,1,'123123','2244','456','7897456',1,0.0000,0.0000,0,NULL,NULL,1,1,NULL,NULL),(3,'DELETE','2023-02-04 10:42:39(UTC+8)',1,1,'123123','2244','456','7897456',1,0.0000,0.0000,0,NULL,NULL,1,1,NULL,NULL);
-/*!40000 ALTER TABLE `card_log` ENABLE KEYS */;
+LOCK TABLES `transfer` WRITE;
+/*!40000 ALTER TABLE `transfer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transfer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

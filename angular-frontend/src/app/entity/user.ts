@@ -1,5 +1,6 @@
 export class User {
-  constructor(acc?: string, pass?: string) {
+  constructor(acc?: string, pass?: string, uid?: number) {
+    this.uid = uid;
     this.uname = acc;
     this.upassword = pass;
   }

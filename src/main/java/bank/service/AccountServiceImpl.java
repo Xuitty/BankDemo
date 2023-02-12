@@ -26,7 +26,13 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Account queryAccount(Integer aid) {
 		return accountDAOInterface.findByAid(aid);
-		
+
+	}
+
+	@Transactional
+	@Override
+	public Account queryAccountByAaccount(String Aaccount) {
+		return accountDAOInterface.findByAaccount(Aaccount);
 	}
 
 	@Transactional

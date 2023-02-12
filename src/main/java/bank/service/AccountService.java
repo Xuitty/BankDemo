@@ -9,6 +9,8 @@ public interface AccountService {
 	Account creatAccount(Account aaccount);
 
 	Account queryAccount(Integer aid);
+	
+	Account queryAccountByAaccount(String Aaccount);
 
 	ArrayList<Account> queryAccountListByUid(Integer uid);
 	
