@@ -6,7 +6,7 @@ import bank.entity.Account;
 
 public interface AccountService {
 
-	Account creatAccount(Account aaccount);
+	Account createAccount(Account aaccount);
 
 	Account queryAccount(Integer aid);
 	

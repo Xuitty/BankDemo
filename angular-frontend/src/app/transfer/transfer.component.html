@@ -34,7 +34,7 @@
             </ng-container>
             <!-- <option value="456"></option> -->
           </select>
-          餘額:　$TWD{{ currentBalance }}
+          餘額:　$TWD {{ currentBalance }}
         </div>
         <br /><br />
         轉入銀行代碼:　<input
@@ -83,4 +83,20 @@
     </div>
   </div>
 </ng-container>
-<ng-container *ngIf="action == 'verify'"> verify works! </ng-container>
+<ng-container *ngIf="action == 'verify'">
+  <div class="allCenter">
+    輸入驗證碼: <input #uverify id="uverify" class="input" type="text" /><br />
+    <input
+      type="button"
+      class="btn btn-primary"
+      value="驗證"
+      (click)="doVerify()"
+    />
+    <input
+      type="button"
+      class="btn btn-primary"
+      value="清除"
+      onclick="document.getElementById('uverify').value=''"
+    />
+  </div>
+</ng-container>

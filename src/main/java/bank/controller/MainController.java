@@ -114,7 +114,7 @@ public class MainController {
 		Integer aid = null;
 		try {
 			account.setAaccount(accountUtils.generator(accountService.getLastAccount()));
-			aid = accountService.creatAccount(account).getAid();
+			aid = accountService.createAccount(account).getAid();
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setStatuss(3);

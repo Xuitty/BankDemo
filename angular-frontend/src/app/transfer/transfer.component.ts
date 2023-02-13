@@ -33,6 +33,8 @@ export class TransferComponent implements OnInit {
   scheduleSwitchStatus: boolean = false;
   scheduleSwitchChecked: string = '';
 
+  transferingTid?: number;
+
   async ngOnInit() {
     this.message = '';
 
@@ -147,12 +149,77 @@ export class TransferComponent implements OnInit {
     transfer.currency_type = this.currencyType?.nativeElement.value;
     await lastValueFrom(
       this.http.post<Status>(this.server + 'doTransfer', transfer)
-    ).then((res) => {
-      if (res.statuss == 0 || res.statuss == 1) {
-        this.action = 'verify';
+    ).then(
+      async (res) => {
+        console.log(res);
+
+        if (res.statuss == 3) {
+          if (res.message == 'emailAddressError') {
+            let counter: number = 5;
+
+            await new Promise<void>((res) => {
+              let timer = setInterval(() => {
+                if (counter <= 0) {
+                  clearInterval(timer);
+                  res();
+                }
+                this.message =
+                  '使用者電子郵件有誤，此次交易作廢<br>請至個人專區檢查或聯繫客服 0800-806-449<br>' +
+                  counter +
+                  '秒後將重新導向至主頁';
+                counter--;
+              }, 1000);
+            });
+          }
+          if (res.message == 'accountNotExist') {
+            let counter: number = 5;
+
+            await new Promise<void>((res) => {
+              let timer = setInterval(() => {
+                if (counter <= 0) {
+                  clearInterval(timer);
+                  res();
+                }
+                this.message =
+                  '您的帳戶號碼有誤，此次交易作廢，請聯繫客服 0800-806-449<br>' +
+                  counter +
+                  '秒後將重新導向至主頁';
+                counter--;
+              }, 1000);
+            });
+          }
+          this.router.navigate(['login']);
+        } else if (res.statuss == 1) {
+          this.transferingTid = Number.parseInt(res.message!);
+          this.action = 'verify';
+        } else {
+          let counter: number = 5;
+
+          await new Promise<void>((res) => {
+            let timer = setInterval(() => {
+              if (counter <= 0) {
+                clearInterval(timer);
+                res();
+              }
+              this.message =
+                '伺服器錯誤，此次交易作廢，請聯繫客服 0800-806-449<br>' +
+                counter +
+                '秒後將重新導向至主頁';
+              counter--;
+            }, 1000);
+          });
+          this.router.navigate(['login']);
+        }
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+        return;
       }
-    });
+    );
   }
+
+  async doVerify() {}
 
   async renewTime(user: User) {
     if (user.uid == undefined || user.uid == null) {

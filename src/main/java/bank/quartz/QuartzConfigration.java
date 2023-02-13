@@ -1,5 +1,7 @@
 package bank.quartz;
 
+import java.util.Date;
+
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 @Configuration
 public class QuartzConfigration {
@@ -20,6 +23,7 @@ public class QuartzConfigration {
         bean.setStartupDelay(1);
         // 註冊觸發器
         bean.setTriggers(triggers);
+        bean.setSchedulerName("myScheduler");
         return bean;
     }
 
@@ -32,6 +36,7 @@ public class QuartzConfigration {
         jobDetail.setConcurrent(false);
         jobDetail.setTargetObject(task);
         jobDetail.setTargetMethod("timeOutLogOutService");  // 對應上支程式要執行的 method
+        jobDetail.setName("timeOutLogOutService");
         return jobDetail;
     }
     
@@ -43,5 +48,23 @@ public class QuartzConfigration {
         trigger.setCronExpression(cron);
         return trigger;
     }
+    
+//    @Bean(name = "setTransferTimeoutDetail") // 指定 jobDetail 名稱
+//    public MethodInvokingJobDetailFactoryBean setTransferTimeoutDetail(QuartzTask task) {
+//    	MethodInvokingJobDetailFactoryBean jobDetail = new MethodInvokingJobDetailFactoryBean();
+//    	jobDetail.setConcurrent(false);
+//    	jobDetail.setTargetObject(task);
+//    	jobDetail.setTargetMethod("setTransferTimeout");  // 對應上支程式要執行的 method
+//    	return jobDetail;
+//    }
+//    
+//    @Bean
+//    public SimpleTriggerFactoryBean setTransferTimeoutTrigger(JobDetail setTransferTimeoutDetail) { 
+//    	SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
+//    	trigger.setJobDetail(setTransferTimeoutDetail);  // 對應要執行的 jobDetail 名稱
+//    	trigger.setStartTime(new Date(new Date().getTime()));
+//    	
+//    	return trigger;
+//    }
 
 }
