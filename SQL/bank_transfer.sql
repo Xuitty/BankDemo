@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bank
 -- ------------------------------------------------------
--- Server version	8.0.29
+-- Server version	8.0.31
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,11 +30,11 @@ CREATE TABLE `transfer` (
   `amount` decimal(38,4) NOT NULL,
   `currency_type` int NOT NULL,
   `schedule` tinyint(1) NOT NULL,
-  `schedule_time` bigint DEFAULT NULL,
-  `operate_time` bigint DEFAULT NULL,
+  `schedule_time` datetime DEFAULT NULL,
+  `operate_time` datetime DEFAULT NULL,
   `verify` varchar(6) DEFAULT NULL,
   PRIMARY KEY (`tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +43,7 @@ CREATE TABLE `transfer` (
 
 LOCK TABLES `transfer` WRITE;
 /*!40000 ALTER TABLE `transfer` DISABLE KEYS */;
+INSERT INTO `transfer` VALUES (1,'000000000019','444','123',-1.0000,1,0,NULL,NULL,'070425'),(2,'000000000019','444','123',-1.0000,1,0,NULL,NULL,NULL),(3,'000000000019','444','123',-1.0000,1,1,NULL,NULL,'890261'),(4,'000000000019','444','123',-1.0000,1,0,NULL,NULL,NULL),(5,'000000000019','444','123',-1.0000,1,1,'1999-09-09 09:09:00',NULL,NULL);
 /*!40000 ALTER TABLE `transfer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-13  0:19:28
+-- Dump completed on 2023-02-14 18:24:28

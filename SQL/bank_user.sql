@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bank
 -- ------------------------------------------------------
--- Server version	8.0.29
+-- Server version	8.0.31
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,7 +54,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'ABCD','85735e7d2283b9123862cabda06cbce8','FHTQcDDeJRldt1TEw2u4JYaeu6CLk6Tv','123456','ufokun@gmail.com','123456789','erwerew',1,'1999-09-09','qweqwe',1,0,NULL,NULL,NULL,NULL,NULL,1676024158992);
+INSERT INTO `user` VALUES (1,'ABCD','85735e7d2283b9123862cabda06cbce8','FHTQcDDeJRldt1TEw2u4JYaeu6CLk6Tv','123456','ufokun@gmail.com','123456789','erwerew',1,'1999-09-09','qweqwe',1,0,NULL,NULL,NULL,NULL,NULL,1676338736471);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -136,4 +136,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-13  0:19:28
+-- Dump completed on 2023-02-14 18:24:28
