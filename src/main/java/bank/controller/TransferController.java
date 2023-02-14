@@ -1,5 +1,8 @@
 package bank.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.quartz.JobDetail;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.format.datetime.standard.DateTimeFormatterFactory;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -51,17 +55,15 @@ public class TransferController {
 	UserService userService;
 	@Autowired
 	TransferService transferService;
-	@Autowired
-	TransferDAOInterface transferDAOInterface;
-	@Autowired
-	private Scheduler scheduler;
-	@Autowired
-	BeanFactory beanFactory;
+//	@Autowired
+//	private Scheduler scheduler;
+//	@Autowired
+//	BeanFactory beanFactory;
 
 	@PostMapping("doTransfer")
 	public Status doTransfer(@RequestBody Transfer transfer) {
 		Status result = new Status();
-		if (accountService.queryAccountByAaccount(transfer.getSender_account()).getAid() == null) {
+		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAid() == null) {
 			result.setStatuss(3);
 			result.setMessage("accountNotExist");
 			return result;
@@ -71,9 +73,9 @@ public class TransferController {
 		String verify = passwordGenerator.verifyGen(6);
 		try {
 			javaMailTools.sendVerify("金發財商業銀行轉帳驗證碼",
-					userService.queryUser(accountService.queryAccountByAaccount(transfer.getSender_account()).getUid())
+					userService.queryUser(accountService.queryAccountByAaccount(transfer.getSenderAccount()).getUid())
 							.getUname(),
-					userService.queryUser(accountService.queryAccountByAaccount(transfer.getSender_account()).getUid())
+					userService.queryUser(accountService.queryAccountByAaccount(transfer.getSenderAccount()).getUid())
 							.getUemail(),
 					verify);
 		} catch (MessagingException e) {
@@ -93,12 +95,12 @@ public class TransferController {
 	@PostMapping("doVerify")
 	public Status doVerify(@RequestBody Transfer transfer) {
 		Status result = new Status();
-		if (accountService.queryAccountByAaccount(transfer.getSender_account()).getAid() == null
-				|| accountService.queryAccountByAaccount(transfer.getReceiver_account()).getAid() == null) {
+		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAid() == null
+				|| accountService.queryAccountByAaccount(transfer.getReceiverAccount()).getAid() == null) {
 			result.setStatuss(3);
 			result.setMessage("accountNotExist");
 		}
-		if (transfer.getCurrency_type() == 1 && transfer.getAmount_string().contains(".")) {
+		if (transfer.getCurrencyType() == 1 && transfer.getAmountString().contains(".")) {
 			result.setStatuss(3);
 			result.setMessage("amountCurrencyTypeError");
 		}
@@ -125,8 +127,9 @@ public class TransferController {
 //		
 //		
 //		scheduler.scheduleJob(methodInvokingJobDetailFactoryBean.getObject(),simpleTriggerFactoryBean.getObject());
-		System.out.println(transferDAOInterface.findByVerifyEquals(null));
-		
+//		System.out.println(transferDAOInterface.findByVerifyEquals(null));
+//		System.out.println(new SimpleDateFormat().toPattern() .format(new Date().getTime()));
+
 	}
 //	class Taska{
 //		void test(Transfer transfer) {

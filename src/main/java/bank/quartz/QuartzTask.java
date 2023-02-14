@@ -1,5 +1,7 @@
 package bank.quartz;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,8 @@ public class QuartzTask {
     	System.out.println("done");
     }
     
-    public void setTransferTimeout(Transfer transfer) {
-    	transferService.deleteTransfer(transfer.getTid());
+    public void scheduleTransferCheckService() {
+		String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString();
+		System.out.println(transferService.excuteScheduleTransfer(dateTime));
     }
 }

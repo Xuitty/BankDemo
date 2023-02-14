@@ -23,26 +23,31 @@ public class Transfer implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Integer tid;
-	@Column
-	private String sender_account;
-	@Column
-	private Integer receiver_bank_code;
-	@Column
-	private String receiver_account;
+	@Column(name = "sender_account")
+	private String senderAccount;
+	@Column(name = "receiver_bank_code")
+	private Integer receiverBankCode;
+	@Column(name = "receiver_account")
+	private String receiverAccount;
 	@Column
 	private BigDecimal amount;
 	@Transient
-	private String amount_string;
-	@Column
-	private Integer currency_type;
+	private String amountString;
+	@Column(name = "currency_type")
+	private Integer currencyType;
 	@Column
 	private Boolean schedule;
-	@Column
-	private Long schedule_time;
-	@Column
-	private Long operate_time;
+	@Column(name = "schedule_time")
+	private String scheduleTime;
+	@Column(name = "operate_time")
+	private String operateTime;
 	@Column
 	private String verify;
+	
+	
+
+	public Transfer() {
+	}
 
 	public Integer getTid() {
 		return tid;
@@ -52,28 +57,28 @@ public class Transfer implements Serializable {
 		this.tid = tid;
 	}
 
-	public String getSender_account() {
-		return sender_account;
+	public String getSenderAccount() {
+		return senderAccount;
 	}
 
-	public void setSender_account(String sender_account) {
-		this.sender_account = sender_account;
+	public void setSenderAccount(String senderAccount) {
+		this.senderAccount = senderAccount;
 	}
 
-	public Integer getReceiver_bank_code() {
-		return receiver_bank_code;
+	public Integer getReceiverBankCode() {
+		return receiverBankCode;
 	}
 
-	public void setReceiver_bank_code(Integer receiver_bank_code) {
-		this.receiver_bank_code = receiver_bank_code;
+	public void setReceiverBankCode(Integer receiverBankCode) {
+		this.receiverBankCode = receiverBankCode;
 	}
 
-	public String getReceiver_account() {
-		return receiver_account;
+	public String getReceiverAccount() {
+		return receiverAccount;
 	}
 
-	public void setReceiver_account(String receiver_account) {
-		this.receiver_account = receiver_account;
+	public void setReceiverAccount(String receiverAccount) {
+		this.receiverAccount = receiverAccount;
 	}
 
 	public BigDecimal getAmount() {
@@ -84,20 +89,20 @@ public class Transfer implements Serializable {
 		this.amount = amount;
 	}
 
-	public String getAmount_string() {
-		return amount_string;
+	public String getAmountString() {
+		return amountString;
 	}
 
-	public void setAmount_string(String amount_string) {
-		this.amount_string = amount_string;
+	public void setAmountString(String amountString) {
+		this.amountString = amountString;
 	}
 
-	public Integer getCurrency_type() {
-		return currency_type;
+	public Integer getCurrencyType() {
+		return currencyType;
 	}
 
-	public void setCurrency_type(Integer currency_type) {
-		this.currency_type = currency_type;
+	public void setCurrencyType(Integer currencyType) {
+		this.currencyType = currencyType;
 	}
 
 	public Boolean getSchedule() {
@@ -108,20 +113,20 @@ public class Transfer implements Serializable {
 		this.schedule = schedule;
 	}
 
-	public Long getSchedule_time() {
-		return schedule_time;
+	public String getScheduleTime() {
+		return scheduleTime;
 	}
 
-	public void setSchedule_time(Long schedule_time) {
-		this.schedule_time = schedule_time;
+	public void setScheduleTime(String scheduleTime) {
+		this.scheduleTime = scheduleTime;
 	}
 
-	public Long getOperate_time() {
-		return operate_time;
+	public String getOperateTime() {
+		return operateTime;
 	}
 
-	public void setOperate_time(Long operate_time) {
-		this.operate_time = operate_time;
+	public void setOperateTime(String operateTime) {
+		this.operateTime = operateTime;
 	}
 
 	public String getVerify() {
@@ -134,10 +139,10 @@ public class Transfer implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Transfer [tid=" + tid + ", sender_account=" + sender_account + ", receiver_bank_code="
-				+ receiver_bank_code + ", receiver_account=" + receiver_account + ", amount=" + amount
-				+ ", amount_string=" + amount_string + ", currency_type=" + currency_type + ", schedule=" + schedule
-				+ ", schedule_time=" + schedule_time + ", operate_time=" + operate_time + ", verify=" + verify + "]";
+		return "Transfer [tid=" + tid + ", senderAccount=" + senderAccount + ", receiverBankCode=" + receiverBankCode
+				+ ", receiverAccount=" + receiverAccount + ", amount=" + amount + ", amountString=" + amountString
+				+ ", currencyType=" + currencyType + ", schedule=" + schedule + ", scheduleTime=" + scheduleTime
+				+ ", operateTime=" + operateTime + ", verify=" + verify + "]";
 	}
 
 }

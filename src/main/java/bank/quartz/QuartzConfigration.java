@@ -49,22 +49,22 @@ public class QuartzConfigration {
         return trigger;
     }
     
-//    @Bean(name = "setTransferTimeoutDetail") // 指定 jobDetail 名稱
-//    public MethodInvokingJobDetailFactoryBean setTransferTimeoutDetail(QuartzTask task) {
-//    	MethodInvokingJobDetailFactoryBean jobDetail = new MethodInvokingJobDetailFactoryBean();
-//    	jobDetail.setConcurrent(false);
-//    	jobDetail.setTargetObject(task);
-//    	jobDetail.setTargetMethod("setTransferTimeout");  // 對應上支程式要執行的 method
-//    	return jobDetail;
-//    }
-//    
-//    @Bean
-//    public SimpleTriggerFactoryBean setTransferTimeoutTrigger(JobDetail setTransferTimeoutDetail) { 
-//    	SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
-//    	trigger.setJobDetail(setTransferTimeoutDetail);  // 對應要執行的 jobDetail 名稱
-//    	trigger.setStartTime(new Date(new Date().getTime()));
-//    	
-//    	return trigger;
-//    }
-
+    @Bean(name = "scheduleTransferCheckServiceDetail") // 指定 jobDetail 名稱
+    public MethodInvokingJobDetailFactoryBean scheduleTransferCheckServiceDetail(QuartzTask task) {
+        MethodInvokingJobDetailFactoryBean jobDetail = new MethodInvokingJobDetailFactoryBean();
+        jobDetail.setConcurrent(false);
+        jobDetail.setTargetObject(task);
+        jobDetail.setTargetMethod("scheduleTransferCheckService");  // 對應上支程式要執行的 method
+        jobDetail.setName("scheduleTransferCheckService");
+        return jobDetail;
+    }
+    
+    @Bean
+    public CronTriggerFactoryBean scheduleTransferCheckServiceTrigger(JobDetail scheduleTransferCheckServiceDetail) { 
+        String cron = "0-59 * * * * ? *"; // 排程設定
+        CronTriggerFactoryBean trigger = new CronTriggerFactoryBean();
+        trigger.setJobDetail(scheduleTransferCheckServiceDetail);  // 對應要執行的 jobDetail 名稱
+        trigger.setCronExpression(cron);
+        return trigger;
+    }
 }

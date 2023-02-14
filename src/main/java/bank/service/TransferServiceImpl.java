@@ -1,5 +1,7 @@
 package bank.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,12 @@ public class TransferServiceImpl implements TransferService {
 	public boolean deleteTransfer(Integer tid) {
 		transferDAOInterface.delete(queryTransfer(tid));
 		return queryTransfer(tid).getTid() == null ? true : false;
+	}
+
+	@Override
+	@Transactional
+	public ArrayList<Transfer> excuteScheduleTransfer(String dateTime) {
+		return transferDAOInterface.findByVerifyEqualsAndScheduleTimeLessThanEqual(null, dateTime);
 	}
 
 }

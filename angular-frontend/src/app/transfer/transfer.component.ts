@@ -138,15 +138,15 @@ export class TransferComponent implements OnInit {
       }
     }
     let transfer: Transfer = new Transfer();
-    transfer.sender_account = this.transferAccount.aaccount!;
-    transfer.receiver_bank_code = this.receiverBankCode?.nativeElement.value;
-    transfer.receiver_account = this.receiverAccount?.nativeElement.value;
+    transfer.senderAccount = this.transferAccount.aaccount!;
+    transfer.receiverBankCode = this.receiverBankCode?.nativeElement.value;
+    transfer.receiverAccount = this.receiverAccount?.nativeElement.value;
     transfer.schedule = this.scheduleSwitchStatus;
     if (transfer.schedule) {
-      transfer.schedule_time = Date.parse(this.dateTime?.nativeElement.value);
+      transfer.scheduleTime = this.dateTime?.nativeElement.value;
     }
-    transfer.amount_string = this.amountString?.nativeElement.value;
-    transfer.currency_type = this.currencyType?.nativeElement.value;
+    transfer.amountString = this.amountString?.nativeElement.value;
+    transfer.currencyType = this.currencyType?.nativeElement.value;
     await lastValueFrom(
       this.http.post<Status>(this.server + 'doTransfer', transfer)
     ).then(

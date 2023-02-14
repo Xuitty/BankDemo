@@ -1,14 +1,14 @@
 import Decimal from 'decimal.js';
 
 export class Transfer {
-  sender_account?: string;
-  receiver_bank_code?: number;
-  receiver_account?: string;
+  senderAccount?: string;
+  receiverBankCode?: number;
+  receiverAccount?: string;
   amount?: Decimal = new Decimal(-1); //do not use in front-end
-  amount_string?: string;
-  currency_type?: number;
+  amountString?: string;
+  currencyType?: number;
   schedule?: boolean;
-  schedule_time?: number;
-  operate_time?: number;
+  scheduleTime?: string;
+  operateTime?: string;
   verify?: string;
 }
