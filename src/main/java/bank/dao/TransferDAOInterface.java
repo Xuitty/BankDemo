@@ -12,6 +12,6 @@ public interface TransferDAOInterface extends JpaRepository<Transfer, Integer> {
 	
 	Transfer findByTid(Integer tid);
 	
-	ArrayList<Transfer> findByVerifyEqualsAndScheduleTimeLessThanEqual(String NULL,String dateTime);
+	ArrayList<Transfer> findByVerifyEqualsAndScheduleTimeLessThanEqualAndStatussEquals(String NULL,String dateTime,Integer statuss);
 	
 }

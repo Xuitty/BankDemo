@@ -2,6 +2,7 @@ package bank.quartz;
 
 import java.util.Date;
 
+import org.hibernate.service.spi.InjectService;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,7 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 @Configuration
 public class QuartzConfigration {
-
+	@InjectService
     @Bean(name = "scheduler")
     public SchedulerFactoryBean schedulerFactory(Trigger... triggers) {
         SchedulerFactoryBean bean = new SchedulerFactoryBean();
@@ -61,7 +62,7 @@ public class QuartzConfigration {
     
     @Bean
     public CronTriggerFactoryBean scheduleTransferCheckServiceTrigger(JobDetail scheduleTransferCheckServiceDetail) { 
-        String cron = "0-59 * * * * ? *"; // 排程設定
+        String cron = "0,30 * * * * ? *"; // 排程設定
         CronTriggerFactoryBean trigger = new CronTriggerFactoryBean();
         trigger.setJobDetail(scheduleTransferCheckServiceDetail);  // 對應要執行的 jobDetail 名稱
         trigger.setCronExpression(cron);

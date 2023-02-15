@@ -2,6 +2,7 @@ package bank.service;
 
 import java.util.ArrayList;
 
+import bank.entity.Status;
 import bank.entity.Transfer;
 
 public interface TransferService {
@@ -14,5 +15,7 @@ public interface TransferService {
 	
 	public boolean deleteTransfer(Integer tid);
 	
-	public ArrayList<Transfer> excuteScheduleTransfer(String dateTime);
+	public Status excuteTransfer(Integer tid);
+	
+	public ArrayList<Status> excuteScheduleTransfer(String dateTime);
 }

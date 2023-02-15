@@ -141,6 +141,11 @@ export class TransferComponent implements OnInit {
     transfer.senderAccount = this.transferAccount.aaccount!;
     transfer.receiverBankCode = this.receiverBankCode?.nativeElement.value;
     transfer.receiverAccount = this.receiverAccount?.nativeElement.value;
+    if (transfer.receiverAccount?.length! < 12) {
+      console.log(transfer.receiverAccount?.length!);
+
+      transfer.receiverAccount = transfer.receiverAccount?.padStart(12, '0');
+    }
     transfer.schedule = this.scheduleSwitchStatus;
     if (transfer.schedule) {
       transfer.scheduleTime = this.dateTime?.nativeElement.value;
@@ -218,8 +223,30 @@ export class TransferComponent implements OnInit {
       }
     );
   }
-
-  async doVerify() {}
+  @ViewChild('tverify') tverify?: ElementRef;
+  async doVerify() {
+    let verify = this.tverify?.nativeElement.value;
+    let transfer: Transfer = new Transfer();
+    let result: Status = new Status();
+    transfer.tid = this.transferingTid;
+    transfer.verify = verify;
+    await lastValueFrom(
+      this.http.post<Status>(this.server + 'doTransferVerify', transfer)
+    ).then(
+      (res) => {
+        result = res;
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+      }
+    );
+    if (result.statuss == 0) {
+      console.log('success');
+    } else {
+      console.log(result);
+    }
+  }
 
   async renewTime(user: User) {
     if (user.uid == undefined || user.uid == null) {

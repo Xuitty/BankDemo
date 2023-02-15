@@ -111,5 +111,56 @@ public class JavaMailTools {
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendScheduleTransferResult(String subject,String name, String receiver, String dateTime,Integer receiverBankCode,String receiverAccount,String currencyType,String amount,Integer tid,String result,String reason) throws MessagingException {
+
+		String to = receiver;
+		String msg = "親愛的 " + name + "，您於 " + dateTime +" 向 ("+receiverBankCode+")-"+receiverAccount+" 轉帳 "+currencyType+amount+" 元\n"+"交易序號為 "+tid+"\n交易 "+result;
+		if(result.equals("失敗")) {
+			msg+="\n原因:"+reason;
+		}
+		final String from = "sopdf2@gmail.com";
+		final String password = BankDemoApplication.KEY;
+		Properties props = new Properties();
+		props.setProperty("mail.transport.protocol", "smtp");
+		props.setProperty("mail.host", "smtp.gmail.com");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", "465");
+//		props.put("mail.debug", "true");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.socketFactory.fallback", "false");
+		Session session = Session.getInstance(props, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, password);
+			}
+		});
+
+		// session.setDebug(true);
+		Transport transport = null;
+		try {
+			transport = session.getTransport();
+			InternetAddress addressFrom = new InternetAddress(from);
+
+			MimeMessage message = new MimeMessage(session);
+			message.setSender(addressFrom);
+			message.setSubject(subject);
+			message.setContent(msg, "text/plain; charset=UTF-8");
+//			message.setContent(message, "text/plain; charset=UTF-8");
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			transport.connect();
+			Transport.send(message);
+		} catch (MessagingException e) {
+			throw e;
+		} finally {
+		}
+		try {
+			transport.close();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
 

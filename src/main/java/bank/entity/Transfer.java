@@ -17,7 +17,9 @@ import jakarta.persistence.Transient;
 @Table(name = "transfer")
 @Component
 public class Transfer implements Serializable {
-
+	// 1:insufficientBalance 2:accountNotExist 3:accountNotActive
+	// 4:amountCurrencyTypeError 5:verifyInvalid(front-end use only)
+	// 6:transferAlreadyDoneOrNotExist(front-end use only)
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +45,10 @@ public class Transfer implements Serializable {
 	private String operateTime;
 	@Column
 	private String verify;
-	
-	
+	@Column
+	private Integer statuss; // 0:Pending for verify 1:Successes 2:Failed 3:Pending for scheduled transfer
+	@Column
+	private Integer error;
 
 	public Transfer() {
 	}
@@ -137,12 +141,29 @@ public class Transfer implements Serializable {
 		this.verify = verify;
 	}
 
+	public Integer getStatuss() {
+		return statuss;
+	}
+
+	public void setStatuss(Integer statuss) {
+		this.statuss = statuss;
+	}
+
+	public Integer getError() {
+		return error;
+	}
+
+	public void setError(Integer error) {
+		this.error = error;
+	}
+
 	@Override
 	public String toString() {
 		return "Transfer [tid=" + tid + ", senderAccount=" + senderAccount + ", receiverBankCode=" + receiverBankCode
 				+ ", receiverAccount=" + receiverAccount + ", amount=" + amount + ", amountString=" + amountString
 				+ ", currencyType=" + currencyType + ", schedule=" + schedule + ", scheduleTime=" + scheduleTime
-				+ ", operateTime=" + operateTime + ", verify=" + verify + "]";
+				+ ", operateTime=" + operateTime + ", verify=" + verify + ", statuss=" + statuss + ", error=" + error
+				+ "]";
 	}
 
 }

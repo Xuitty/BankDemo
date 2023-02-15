@@ -1,5 +1,6 @@
 package bank.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +38,7 @@ import bank.dao.TransferDAOInterface;
 import bank.entity.Status;
 import bank.entity.Transfer;
 import bank.quartz.QuartzTask;
+import bank.quartz.VerifyTimeout;
 import bank.service.AccountService;
 import bank.service.TransferService;
 import bank.service.UserService;
@@ -55,16 +57,20 @@ public class TransferController {
 	UserService userService;
 	@Autowired
 	TransferService transferService;
+	@Autowired
+	private Scheduler scheduler;
 //	@Autowired
 //	private Scheduler scheduler;
 //	@Autowired
 //	BeanFactory beanFactory;
 
 	@PostMapping("doTransfer")
-	public Status doTransfer(@RequestBody Transfer transfer) {
+	public Status doTransfer(@RequestBody Transfer transfer)
+			throws ClassNotFoundException, NoSuchMethodException, SchedulerException {
 		Status result = new Status();
 		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAid() == null) {
 			result.setStatuss(3);
+			result.setErrorCode(2);
 			result.setMessage("accountNotExist");
 			return result;
 		}
@@ -85,31 +91,48 @@ public class TransferController {
 			result.setMessage("emailAddressError");
 			return result;
 		}
+		transfer.setStatuss(0);
 		transfer.setVerify(verify);
+		transfer.setAmount(new BigDecimal(transfer.getAmountString()));
 		transfer = transferService.updateTransfer(transfer);
+		VerifyTimeout vt = new VerifyTimeout();
+		vt.create(scheduler, transferService, transfer.getTid());
 		result.setStatuss(1);
 		result.setMessage(String.valueOf(transfer.getTid()));
 		return result;
 	}
 
-	@PostMapping("doVerify")
-	public Status doVerify(@RequestBody Transfer transfer) {
+	@PostMapping("doTransferVerify")
+	public Status doTransferVerify(@RequestBody Transfer transfer) throws SchedulerException {
 		Status result = new Status();
-		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAid() == null
-				|| accountService.queryAccountByAaccount(transfer.getReceiverAccount()).getAid() == null) {
+		if (transferService.queryTransfer(transfer.getTid()).getVerify() == null
+				|| transferService.queryTransfer(transfer.getTid()) == null) {
 			result.setStatuss(3);
-			result.setMessage("accountNotExist");
+			result.setErrorCode(6);
+			result.setMessage("transferAlreadyDoneOrNotExist");
+			return result;
 		}
-		if (transfer.getCurrencyType() == 1 && transfer.getAmountString().contains(".")) {
+		if (!(transferService.queryTransfer(transfer.getTid()).getVerify().equals(transfer.getVerify()))) {
 			result.setStatuss(3);
-			result.setMessage("amountCurrencyTypeError");
+			result.setErrorCode(5);
+			result.setMessage("verifyInvalid");
+			return result;
 		}
-
-		return null;
+		transfer = transferService.queryTransfer(transfer.getTid());
+		if (transfer.getSchedule()) {
+			transfer.setVerify(null);
+			transfer.setStatuss(3);
+			transferService.updateTransfer(transfer);
+			result.setStatuss(0);
+			return result;
+		}
+		scheduler.deleteJob(JobKey.jobKey(String.valueOf(transfer.getTid())));
+		result = transferService.excuteTransfer(transfer.getTid());
+		return result;
 	}
 
-	@GetMapping("scheduleTest")
-	public void scheduleTest() throws SchedulerException, ClassNotFoundException, NoSuchMethodException {
+//	@GetMapping("scheduleTest")
+//	public void scheduleTest() throws SchedulerException, ClassNotFoundException, NoSuchMethodException {
 //		MethodInvokingJobDetailFactoryBean methodInvokingJobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
 //		methodInvokingJobDetailFactoryBean.setTargetObject(new Taska());
 //		methodInvokingJobDetailFactoryBean.setTargetMethod("test");
@@ -129,8 +152,8 @@ public class TransferController {
 //		scheduler.scheduleJob(methodInvokingJobDetailFactoryBean.getObject(),simpleTriggerFactoryBean.getObject());
 //		System.out.println(transferDAOInterface.findByVerifyEquals(null));
 //		System.out.println(new SimpleDateFormat().toPattern() .format(new Date().getTime()));
-
-	}
+//
+//	}
 //	class Taska{
 //		void test(Transfer transfer) {
 //			System.out.println(transfer.getTid());

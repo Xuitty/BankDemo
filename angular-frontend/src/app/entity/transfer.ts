@@ -1,6 +1,7 @@
 import Decimal from 'decimal.js';
 
 export class Transfer {
+  tid?: number;
   senderAccount?: string;
   receiverBankCode?: number;
   receiverAccount?: string;
