@@ -67,6 +67,7 @@ public class TransferController {
 	@PostMapping("doTransfer")
 	public Status doTransfer(@RequestBody Transfer transfer)
 			throws ClassNotFoundException, NoSuchMethodException, SchedulerException {
+		System.out.println(transfer);
 		Status result = new Status();
 		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAid() == null) {
 			result.setStatuss(3);

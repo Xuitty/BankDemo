@@ -173,6 +173,11 @@
           class="btn btn-primary"
           value="申請信用卡"
           (click)="goCreateCreditCard()"
+        /><input
+          type="button"
+          class="btn btn-danger"
+          value="登出"
+          (click)="doLogout()"
         />
       </div>
     </div>
@@ -217,6 +222,12 @@
             type="button"
             value="申請"
             (click)="doCreateAccount()"
+          />
+          <input
+            type="button"
+            class="btn btn-primary"
+            value="返回"
+            (click)="action = 'main'"
           />
         </div>
       </div>

@@ -9,12 +9,16 @@
       style="margin-left: 50px; margin-right: 50px; height: max-content"
     >
       <div class="col"></div>
-      <div class="col fw-bolder fs-5 box fitContent">
+      <div class="col-3 fw-bolder fs-5 box fitContent">
         轉帳服務
         <br />
         <br />
         <div>
-          轉出帳號:　<select #accountSelector (click)="selectAccount()">
+          轉出帳號:　<select
+            #accountSelector
+            class="form-select"
+            (click)="selectAccount()"
+          >
             <ng-container *ngFor="let acc of allActivedAccount">
               <option
                 *ngIf="acc.aid != transferAccount.aid"
@@ -34,20 +38,29 @@
             </ng-container>
             <!-- <option value="456"></option> -->
           </select>
-          餘額:　$TWD {{ currentBalance }}
+          <br />
+          <div style="color: rgb(53, 62, 187)">
+            餘額:　$TWD {{ currentBalance }}
+          </div>
         </div>
-        <br /><br />
+        <br />
         轉入銀行代碼:　<input
           #receiverBankCode
+          class="form-control"
           type="text"
           value="444"
           disabled
         />
-        <br /><br />
-        轉入銀行帳號:　<input #receiverAccount type="text" [maxLength]="20" />
-        <br /><br />
+        <br />
+        轉入銀行帳號:　<input
+          #receiverAccount
+          class="form-control"
+          type="text"
+          [maxLength]="20"
+        />
+        <br />
         <ng-container>
-          <div class="form-check form-switch align" style="align-self: center">
+          <div class="form-check form-switch" style="align-items: center">
             預約轉帳功能　<input
               #schedule
               class="form-check-input"
@@ -60,15 +73,23 @@
             <div *ngIf="scheduleSwitchStatus" class="text-center">
               <br />
               <div>選擇日期時間</div>
-              <input #dateTime type="datetime-local" name="" id="" />
+              <input
+                #dateTime
+                class="form-control"
+                type="datetime-local"
+                name=""
+                id=""
+              />
             </div>
           </div>
         </ng-container>
-        <br /><br />
-        <div>轉帳金額　<input #amountString type="number" max="50" /></div>
         <br />
         <div>
-          貨幣類型　<select #currencyType style="width: auto">
+          轉帳金額　<input #amountString class="form-control" type="number" />
+        </div>
+        <br />
+        <div>
+          貨幣類型　<select #currencyType class="form-control">
             <option label="台幣" value="1" selected></option>
           </select>
         </div>
@@ -78,14 +99,30 @@
           value="確認"
           (click)="doTransfer()"
         />
+        <input
+          type="button"
+          class="btn btn-primary"
+          value="返回"
+          (click)="router.navigate(['login'])"
+        />
       </div>
       <div class="col"></div>
     </div>
   </div>
 </ng-container>
 <ng-container *ngIf="action == 'verify'">
-  <div class="allCenter">
-    輸入驗證碼: <input #tverify id="uverify" class="input" type="text" /><br />
+  <div class="allCenter fw-bolder fs-5">
+    <br /><br />轉出帳號:{{ transfer.senderAccount }}<br /><br />接收帳號:{{
+      transfer.receiverAccount
+    }}<br /><br />金額:{{ transfer.currencyType == 1 ? "$NTD" : "$USD" }}　{{
+      transfer.amountString
+    }}元<br /><br />
+    <ng-container *ngIf="transfer.schedule">
+      預約日期時間:{{ transfer.scheduleTime }}<br /><br />
+    </ng-container>
+    輸入驗證碼:
+    <input #tverify id="uverify" class="input" type="text" />
+    <br />
     <input
       type="button"
       class="btn btn-primary"
@@ -98,5 +135,32 @@
       value="清除"
       onclick="document.getElementById('uverify').value=''"
     />
+    <input
+      type="button"
+      class="btn btn-primary"
+      value="返回"
+      (click)="action = 'transfer'"
+    />
+  </div>
+</ng-container>
+<ng-container *ngIf="action == 'transferResultSuccess'">
+  <div class="allCenter">
+    <h2>交易完成</h2>
+    <h2 class="message" [innerHTML]="message"></h2>
+  </div> </ng-container
+><ng-container *ngIf="action == 'transferResultFailed'">
+  <div class="allCenter">
+    <h2>交易失敗</h2>
+    <h2 class="message" [innerHTML]="message"></h2>
+  </div> </ng-container
+><ng-container *ngIf="action == 'scheduledTransferResultSuccess'">
+  <div class="allCenter">
+    <h2>預約交易完成</h2>
+    <h2 class="message" [innerHTML]="message"></h2>
+  </div> </ng-container
+><ng-container *ngIf="action == 'scheduledTransferResultFailed'">
+  <div class="allCenter">
+    <h2>預約交易失敗</h2>
+    <h2 class="message" [innerHTML]="message"></h2>
   </div>
 </ng-container>

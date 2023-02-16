@@ -41,8 +41,7 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private cookie: CookieService,
-    private timer: TimerService,
-    private router: Router
+    public router: Router
   ) {}
   ngOnDestroy(): void {
     clearInterval(this.intervalCheck);
@@ -263,19 +262,19 @@ export class MainComponent implements OnInit, OnDestroy {
         },
       },
     };
-    let intervalCheck = setInterval(async () => {
+    this.intervalCheck = setInterval(() => {
       //auto logout function
-      await this.checkCookieExpired().then(
+      this.checkCookieExpired().then(
         (res) => {
           console.log(res);
 
           if (!res) {
-            clearInterval(intervalCheck);
-            this.doLogout();
+            clearInterval(this.intervalCheck);
+            this.doCookieExpired();
           }
         },
         (reject) => {
-          clearInterval(intervalCheck);
+          clearInterval(this.intervalCheck);
           console.log(reject);
           this.router.navigate(['500']);
         }
@@ -388,6 +387,7 @@ export class MainComponent implements OnInit, OnDestroy {
           return res;
         });
         if (result.statuss == 1 && result.message != null) {
+          this.renewTime(new User(undefined, undefined, this.uid));
           this.currentAid = Number.parseInt(result.message);
           this.action = 'verifyAccount';
         } else {
@@ -437,6 +437,7 @@ export class MainComponent implements OnInit, OnDestroy {
       console.log(r);
 
       if (r.statuss == 0) {
+        this.renewTime(new User(undefined, undefined, this.uid));
         let counter: number = 6;
         await new Promise<void>((res) => {
           let timer = setInterval(() => {
@@ -481,15 +482,16 @@ export class MainComponent implements OnInit, OnDestroy {
     );
 
     if (result) {
-      this.action = 'transfer';
       this.transferAccount = acc;
       this.currentUserUid = this.uid;
       let user: User = new User();
       user.uid = this.uid;
       this.renewTime(user);
       clearInterval(this.intervalCheck);
-      this.router.navigate(['main/transfer']);
+      // this.router.navigate(['main/transfer']);
+      this.action = 'transfer';
     } else {
+      clearInterval(this.intervalCheck);
       this.router.navigate(['cookieExpired']);
     }
   }
@@ -522,6 +524,11 @@ export class MainComponent implements OnInit, OnDestroy {
   doLogout() {
     this.cookie.deleteAll();
     this.router.navigate(['']);
+  }
+
+  doCookieExpired() {
+    this.cookie.deleteAll();
+    this.router.navigate(['cookieExpired']);
   }
 
   // @HostListener('document:visibilitychange')

@@ -18,7 +18,7 @@ export class TransferComponent implements OnInit {
   constructor(
     private cookie: CookieService,
     private http: HttpClient,
-    private router: Router
+    public router: Router
   ) {}
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
@@ -26,6 +26,7 @@ export class TransferComponent implements OnInit {
   login: boolean = false;
   action?: string = 'transfer';
   ucookie?: string;
+  intervalCheck?: any;
   @Input('allActivedAccount') allActivedAccount!: Account[];
   @Input('transferAccount') transferAccount!: Account;
   @Input('currentUserUid') currentUserUid!: number;
@@ -33,6 +34,7 @@ export class TransferComponent implements OnInit {
   scheduleSwitchStatus: boolean = false;
   scheduleSwitchChecked: string = '';
 
+  transfer: Transfer = new Transfer();
   transferingTid?: number;
 
   async ngOnInit() {
@@ -63,19 +65,19 @@ export class TransferComponent implements OnInit {
     this.currentBalance = this.transferAccount.abalance;
     this.renewTime(user);
     this.ucookie = this.cookie.get('username');
-    let intervalCheck = setInterval(async () => {
+    this.intervalCheck = setInterval(() => {
       //auto logout function
-      await this.checkCookieExpired().then(
+      this.checkCookieExpired().then(
         (res) => {
           console.log(res);
 
           if (!res) {
-            clearInterval(intervalCheck);
-            this.doLogout();
+            clearInterval(this.intervalCheck);
+            this.doCookieExpired();
           }
         },
         (reject) => {
-          clearInterval(intervalCheck);
+          clearInterval(this.intervalCheck);
           console.log(reject);
           this.router.navigate(['500']);
         }
@@ -115,45 +117,52 @@ export class TransferComponent implements OnInit {
     let result: boolean = false;
     await this.checkCookieExpired().then(
       (res) => {
-        if (res != true) {
-          result = false;
+        result = res;
+        console.log(res);
+        this.renewTime(new User(undefined, undefined, this.currentUserUid)); //manual update(onClick)
+        if (!res) {
+          clearInterval(this.intervalCheck);
+          this.doCookieExpired();
           return;
         }
-        result = true;
-        this.renewTime(new User(undefined, undefined, this.currentUserUid));
       },
       (reject) => {
+        clearInterval(this.intervalCheck);
         console.log(reject);
         this.router.navigate(['500']);
-      }
-    );
-    if (result == false) {
-      return;
-    }
-    if (this.currencyType?.nativeElement.value == 1) {
-      let amountString: string = this.amountString?.nativeElement.value;
-      if (amountString.includes('.')) {
-        this.message = '台幣交易不可含有小數';
         return;
       }
+    );
+    if (!result) {
+      return;
     }
-    let transfer: Transfer = new Transfer();
-    transfer.senderAccount = this.transferAccount.aaccount!;
-    transfer.receiverBankCode = this.receiverBankCode?.nativeElement.value;
-    transfer.receiverAccount = this.receiverAccount?.nativeElement.value;
-    if (transfer.receiverAccount?.length! < 12) {
-      console.log(transfer.receiverAccount?.length!);
+    let check: boolean = this.formCheck();
+    if (!check) {
+      return;
+    }
+    // let transfer: Transfer = new Transfer();
+    this.transfer.senderAccount = this.transferAccount.aaccount!;
+    this.transfer.receiverBankCode = this.receiverBankCode?.nativeElement.value;
+    this.transfer.receiverAccount = this.receiverAccount?.nativeElement.value;
+    if (this.transfer.receiverAccount?.length! < 12) {
+      // console.log(this.transfer.receiverAccount?.length!);
 
-      transfer.receiverAccount = transfer.receiverAccount?.padStart(12, '0');
+      this.transfer.receiverAccount = this.transfer.receiverAccount?.padStart(
+        12,
+        '0'
+      );
     }
-    transfer.schedule = this.scheduleSwitchStatus;
-    if (transfer.schedule) {
-      transfer.scheduleTime = this.dateTime?.nativeElement.value;
+    this.transfer.schedule = this.scheduleSwitchStatus;
+    if (this.transfer.schedule) {
+      this.transfer.scheduleTime = String(
+        this.dateTime?.nativeElement.value
+      ).replace('T', ' ');
     }
-    transfer.amountString = this.amountString?.nativeElement.value;
-    transfer.currencyType = this.currencyType?.nativeElement.value;
+    this.transfer.amountString = this.amountString?.nativeElement.value;
+    this.transfer.currencyType = this.currencyType?.nativeElement.value;
+
     await lastValueFrom(
-      this.http.post<Status>(this.server + 'doTransfer', transfer)
+      this.http.post<Status>(this.server + 'doTransfer', this.transfer)
     ).then(
       async (res) => {
         console.log(res);
@@ -225,6 +234,29 @@ export class TransferComponent implements OnInit {
   }
   @ViewChild('tverify') tverify?: ElementRef;
   async doVerify() {
+    let result1: boolean = false;
+    await this.checkCookieExpired().then(
+      (res) => {
+        result1 = res;
+        console.log(res);
+        this.renewTime(new User(undefined, undefined, this.currentUserUid)); //manual update(onClick)
+        if (!res) {
+          clearInterval(this.intervalCheck);
+          this.doCookieExpired();
+          return;
+        }
+      },
+      (reject) => {
+        clearInterval(this.intervalCheck);
+        console.log(reject);
+        this.router.navigate(['500']);
+        return;
+      }
+    );
+    if (!result1) {
+      return;
+    }
+
     let verify = this.tverify?.nativeElement.value;
     let transfer: Transfer = new Transfer();
     let result: Status = new Status();
@@ -234,6 +266,8 @@ export class TransferComponent implements OnInit {
       this.http.post<Status>(this.server + 'doTransferVerify', transfer)
     ).then(
       (res) => {
+        console.log(res);
+
         result = res;
       },
       (reject) => {
@@ -241,11 +275,49 @@ export class TransferComponent implements OnInit {
         this.router.navigate(['500']);
       }
     );
-    if (result.statuss == 0) {
-      console.log('success');
+
+    if (this.transfer.schedule) {
+      if (result.statuss == 0) {
+        this.action == 'scheduledTransferResultSuccess';
+        this.message =
+          '將在您預定的時間轉帳，交易結果將寄出電子郵件通知，請留意收件匣';
+      } else if (result.statuss == 3) {
+        if (result.errorCode == 6) {
+          this.action == 'scheduledTransferResultFailed';
+          let counter: number = 6;
+          let timer: any = setInterval(() => {
+            counter--;
+            this.message = '交易不存在，' + counter + '秒後將導向首頁';
+            if (counter < 1) {
+              clearInterval(timer);
+              this.router.navigate(['login']);
+            }
+          }, 1000);
+        } else {
+          this.action == 'scheduledTransferResultFailed';
+          this.message = '未知的錯誤';
+        }
+      }
     } else {
-      console.log(result);
+      if (result.statuss == 1) {
+        this.action == 'transferResultSuccess';
+        this.message =
+          '轉出帳號:' +
+          this.transfer.senderAccount +
+          '<br>' +
+          '轉入帳號:(' +
+          this.transfer.receiverBankCode +
+          ')-' +
+          this.transfer.receiverAccount +
+          '<br>' +
+          '金額' +
+          (this.transfer.currencyType == 1 ? '$NTD' : '$USD') +
+          this.transfer.amountString +
+          '元<br>餘額:' +
+          result.message;
+      }
     }
+    console.log(this.action);
   }
 
   async renewTime(user: User) {
@@ -274,8 +346,50 @@ export class TransferComponent implements OnInit {
     );
   }
 
+  formCheck(): boolean {
+    if (
+      this.receiverAccount?.nativeElement.value == '' ||
+      this.amountString?.nativeElement.value == ''
+    ) {
+      this.message = '請填寫轉帳資訊';
+      return false;
+    }
+    if (this.currencyType?.nativeElement.value == 1) {
+      let amountString: string = this.amountString?.nativeElement.value;
+      if (amountString.includes('.')) {
+        this.message = '台幣交易不可含有小數';
+        return false;
+      }
+    }
+    let dateTime: string = this.dateTime?.nativeElement.value;
+    if (this.scheduleSwitchStatus && dateTime.length < 1) {
+      this.message = '請選擇預約日期';
+      return false;
+    }
+
+    if (
+      String(this.receiverAccount?.nativeElement.value).search(/[^0-9]/) != -1
+    ) {
+      this.message = '轉入帳號格式錯誤';
+      return false;
+    }
+    if (
+      String(this.amountString?.nativeElement.value).search(/[^0-9.]/) != -1 ||
+      String(this.amountString?.nativeElement.value).length > 38
+    ) {
+      this.message = '轉帳金額格式錯誤';
+      return false;
+    }
+    return true;
+  }
+
   doLogout() {
     this.cookie.deleteAll();
     this.router.navigate(['']);
+  }
+
+  doCookieExpired() {
+    this.cookie.deleteAll();
+    this.router.navigate(['cookieExpired']);
   }
 }

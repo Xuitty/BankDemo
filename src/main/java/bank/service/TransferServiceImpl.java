@@ -27,6 +27,7 @@ public class TransferServiceImpl implements TransferService {
 	UserService userService;
 	@Autowired
 	JavaMailTools javaMailTools;
+	
 
 	@Override
 	@Transactional
@@ -64,10 +65,24 @@ public class TransferServiceImpl implements TransferService {
 			result.setMessage("transferAlreadyDoneOrNotExist");
 			return result;
 		}
+		if (transfer.getAmount().compareTo(new BigDecimal(0)) < 1) {
+			transfer.setVerify(null);
+			transfer.setOperateTime(
+					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
+			transfer.setStatuss(2);
+			transfer.setError(7);
+
+			updateTransfer(transfer);
+			result.setStatuss(3);
+			result.setErrorCode(7);
+			result.setMessage("amountLessThanOrEqualsZero");
+			return result;
+		}
 		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAbalance()
 				.compareTo(transfer.getAmount()) == -1) {
 			transfer.setOperateTime(
 					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
+			transfer.setVerify(null);
 			transfer.setStatuss(2);
 			transfer.setError(1);
 			updateTransfer(transfer);
@@ -77,9 +92,22 @@ public class TransferServiceImpl implements TransferService {
 			return result;
 		}
 		;
+		if (transfer.getSenderAccount().equals(transfer.getReceiverAccount())) {
+			transfer.setOperateTime(
+					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
+			transfer.setVerify(null);
+			transfer.setStatuss(2);
+			transfer.setError(8);
+			updateTransfer(transfer);
+			result.setStatuss(3);
+			result.setErrorCode(8);
+			result.setMessage("transferToSendAccount");
+			return result;
+		}
 		if (accountService.queryAccountByAaccount(transfer.getReceiverAccount()) == null) {
 			transfer.setOperateTime(
 					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
+			transfer.setVerify(null);
 			transfer.setStatuss(2);
 			transfer.setError(2);
 			updateTransfer(transfer);
@@ -92,6 +120,7 @@ public class TransferServiceImpl implements TransferService {
 				|| accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAactive() == 2
 				|| accountService.queryAccountByAaccount(transfer.getReceiverAccount()).getAactive() == 0
 				|| accountService.queryAccountByAaccount(transfer.getReceiverAccount()).getAactive() == 2) {
+			transfer.setVerify(null);
 			transfer.setOperateTime(
 					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
 			transfer.setStatuss(2);
@@ -105,16 +134,19 @@ public class TransferServiceImpl implements TransferService {
 		if (transfer.getCurrencyType() == 1
 				&& !(String.valueOf(transfer.getAmount()).substring(String.valueOf(transfer.getAmount()).length() - 4,
 						String.valueOf(transfer.getAmount()).length()).equals("0000"))) {
+			transfer.setVerify(null);
 			transfer.setOperateTime(
 					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
 			transfer.setStatuss(2);
 			transfer.setError(4);
+
 			updateTransfer(transfer);
 			result.setStatuss(3);
 			result.setErrorCode(4);
 			result.setMessage("amountCurrencyTypeError");
 			return result;
 		}
+
 		Account sender = accountService.queryAccountByAaccount(transfer.getSenderAccount());
 		Account receiver = accountService.queryAccountByAaccount(transfer.getReceiverAccount());
 		sender.setAbalance(sender.getAbalance().subtract(transfer.getAmount()));
@@ -126,29 +158,37 @@ public class TransferServiceImpl implements TransferService {
 		transfer.setOperateTime(
 				LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString());
 		updateTransfer(transfer);
-		result.setStatuss(0);
+		result.setStatuss(1);
+		result.setMessage(String
+				.valueOf(accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAbalance().toString())); // balance
+																														// after
+																														// transfer
 		return result;
 	}
 
 	@Override
 	@Transactional
 	public ArrayList<Status> excuteScheduleTransfer(String dateTime) {
-		ArrayList<Transfer> transfers = transferDAOInterface.findByVerifyEqualsAndScheduleTimeLessThanEqualAndStatussEquals(null,
-				dateTime,3);
-		ArrayList<Status> results =new ArrayList<>();
+		ArrayList<Transfer> transfers = transferDAOInterface
+				.findByVerifyEqualsAndScheduleTimeLessThanEqualAndStatussEquals(null, dateTime, 3);
+		ArrayList<Status> results = new ArrayList<>();
 		for (Transfer y : transfers) {
 			Status result = excuteTransfer(y.getTid());
 			results.add(result);
 			String reason = "";
-			if (result.getStatuss() != 0) {
+			if (result.getStatuss() != 1) {
 				if (result.getErrorCode() == 1) {
 					reason = "001 餘額不足";
 				} else if (result.getErrorCode() == 2) {
 					reason = "002 接收帳號不存在";
-				}else if (result.getErrorCode() == 3) {
+				} else if (result.getErrorCode() == 3) {
 					reason = "003 您的帳號或接收帳號未啟用";
-				}else if (result.getErrorCode() == 4) {
+				} else if (result.getErrorCode() == 4) {
 					reason = "004 貨幣單位輸入錯誤";
+				} else if (result.getErrorCode() == 7) {
+					reason = "007 匯款金額小於等於0元";
+				}else if (result.getErrorCode() == 8) {
+					reason = "008 接收帳號為轉出帳號";
 				}
 			}
 			try {
