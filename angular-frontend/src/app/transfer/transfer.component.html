@@ -79,6 +79,8 @@
                 type="datetime-local"
                 name=""
                 id=""
+                [min]="this.calenderRestrictor()![1]"
+                [max]="this.calenderRestrictor()![0]"
               />
             </div>
           </div>
@@ -112,6 +114,7 @@
 </ng-container>
 <ng-container *ngIf="action == 'verify'">
   <div class="allCenter fw-bolder fs-5">
+    <h2 class="message" [innerHTML]="message"></h2>
     <br /><br />轉出帳號:{{ transfer.senderAccount }}<br /><br />接收帳號:{{
       transfer.receiverAccount
     }}<br /><br />金額:{{ transfer.currencyType == 1 ? "$NTD" : "$USD" }}　{{
@@ -121,7 +124,7 @@
       預約日期時間:{{ transfer.scheduleTime }}<br /><br />
     </ng-container>
     輸入驗證碼:
-    <input #tverify id="uverify" class="input" type="text" />
+    <input #tverify id="tverify" class="input" type="text" />
     <br />
     <input
       type="button"
@@ -147,20 +150,64 @@
   <div class="allCenter">
     <h2>交易完成</h2>
     <h2 class="message" [innerHTML]="message"></h2>
+    <br /><br /><input
+      class="btn btn-primary"
+      type="button"
+      value="回首頁"
+      (click)="router.navigate(['login']); renewTimeUid(currentUserUid)"
+    /><input
+      class="btn btn-primary"
+      type="button"
+      value="再轉一筆"
+      (click)="
+        updateBalance(currentUserUid);
+        action = 'transfer';
+        message = '';
+        renewTimeUid(currentUserUid)
+      "
+    />
   </div> </ng-container
 ><ng-container *ngIf="action == 'transferResultFailed'">
   <div class="allCenter">
     <h2>交易失敗</h2>
     <h2 class="message" [innerHTML]="message"></h2>
+    <br /><br /><input
+      class="btn btn-primary"
+      type="button"
+      value="回首頁"
+      (click)="router.navigate(['login']); renewTimeUid(currentUserUid)"
+    />
   </div> </ng-container
 ><ng-container *ngIf="action == 'scheduledTransferResultSuccess'">
   <div class="allCenter">
     <h2>預約交易完成</h2>
     <h2 class="message" [innerHTML]="message"></h2>
+    <br /><br /><input
+      class="btn btn-primary"
+      type="button"
+      value="回首頁"
+      (click)="router.navigate(['login']); renewTimeUid(currentUserUid)"
+    /><input
+      class="btn btn-primary"
+      type="button"
+      value="再轉一筆"
+      (click)="
+        updateBalance(currentUserUid);
+        action = 'transfer';
+        message = '';
+        renewTimeUid(currentUserUid)
+      "
+    />
   </div> </ng-container
 ><ng-container *ngIf="action == 'scheduledTransferResultFailed'">
   <div class="allCenter">
     <h2>預約交易失敗</h2>
     <h2 class="message" [innerHTML]="message"></h2>
+    <br /><br /><input
+      class="btn btn-primary"
+      type="button"
+      value="回首頁"
+      (click)="router.navigate(['login']); renewTimeUid(currentUserUid)"
+    />
   </div>
 </ng-container>

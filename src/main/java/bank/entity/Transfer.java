@@ -20,6 +20,8 @@ public class Transfer implements Serializable {
 	// 1:insufficientBalance 2:accountNotExist 3:accountNotActive
 	// 4:amountCurrencyTypeError 5:verifyInvalid(front-end use only)
 	// 6:transferAlreadyDoneOrNotExist(front-end use only)
+	// 7:amountLessThanOrEqualsZero 8:transferToSendAccount
+	// 9:scheduleTimeIllegal
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

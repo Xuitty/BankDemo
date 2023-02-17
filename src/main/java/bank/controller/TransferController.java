@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.quartz.JobDetail;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zaxxer.hikari.util.ClockSource.Factory;
 
 import bank.dao.TransferDAOInterface;
+import bank.entity.Account;
 import bank.entity.Status;
 import bank.entity.Transfer;
 import bank.quartz.QuartzTask;
@@ -69,6 +71,16 @@ public class TransferController {
 			throws ClassNotFoundException, NoSuchMethodException, SchedulerException {
 		System.out.println(transfer);
 		Status result = new Status();
+		if(transfer.getSchedule()) {
+			LocalDateTime scheduleTime = LocalDateTime.parse(transfer.getScheduleTime());
+			if(scheduleTime.isAfter(scheduleTime.plusMonths(3L))||scheduleTime.isBefore(scheduleTime.plusMinutes(5))) {
+				result.setStatuss(3);
+				result.setErrorCode(9);
+				result.setMessage("scheduleTimeIllegal");
+				return result;
+			}
+		}
+		
 		if (accountService.queryAccountByAaccount(transfer.getSenderAccount()).getAid() == null) {
 			result.setStatuss(3);
 			result.setErrorCode(2);
@@ -131,6 +143,19 @@ public class TransferController {
 		result = transferService.excuteTransfer(transfer.getTid());
 		return result;
 	}
+	@PostMapping("updateBalance")
+	public Account[] updateBalance(@RequestBody Integer uid) {
+		ArrayList<Account> allAccount = accountService.queryAccountListByUid(uid);
+		ArrayList<Account> allActivedAccount = new ArrayList<>();
+		
+		for (Account y : allAccount) {
+			if (y.getAactive() == 1) {
+				allActivedAccount.add(y);
+			}
+		}
+		return allActivedAccount.toArray(new Account[allActivedAccount.size()]);
+	}
+	
 
 //	@GetMapping("scheduleTest")
 //	public void scheduleTest() throws SchedulerException, ClassNotFoundException, NoSuchMethodException {

@@ -39,7 +39,6 @@ export class TransferComponent implements OnInit {
 
   async ngOnInit() {
     this.message = '';
-
     if (!this.cookie.check('username')) {
       // this.message = '請登入金發財，共享榮華富貴';
       let counter = 6;
@@ -119,7 +118,9 @@ export class TransferComponent implements OnInit {
       (res) => {
         result = res;
         console.log(res);
-        this.renewTime(new User(undefined, undefined, this.currentUserUid)); //manual update(onClick)
+        if (res) {
+          this.renewTime(new User(undefined, undefined, this.currentUserUid)); //manual update(onClick)
+        }
         if (!res) {
           clearInterval(this.intervalCheck);
           this.doCookieExpired();
@@ -184,6 +185,7 @@ export class TransferComponent implements OnInit {
                 counter--;
               }, 1000);
             });
+            return;
           }
           if (res.message == 'accountNotExist') {
             let counter: number = 5;
@@ -201,6 +203,7 @@ export class TransferComponent implements OnInit {
                 counter--;
               }, 1000);
             });
+            return;
           }
           this.router.navigate(['login']);
         } else if (res.statuss == 1) {
@@ -275,15 +278,14 @@ export class TransferComponent implements OnInit {
         this.router.navigate(['500']);
       }
     );
-
     if (this.transfer.schedule) {
       if (result.statuss == 0) {
-        this.action == 'scheduledTransferResultSuccess';
+        this.action = 'scheduledTransferResultSuccess';
         this.message =
           '將在您預定的時間轉帳，交易結果將寄出電子郵件通知，請留意收件匣';
       } else if (result.statuss == 3) {
         if (result.errorCode == 6) {
-          this.action == 'scheduledTransferResultFailed';
+          this.action = 'scheduledTransferResultFailed';
           let counter: number = 6;
           let timer: any = setInterval(() => {
             counter--;
@@ -293,28 +295,82 @@ export class TransferComponent implements OnInit {
               this.router.navigate(['login']);
             }
           }, 1000);
+        } else if (result.errorCode == 5) {
+          this.message =
+            '<br>' +
+            String(result.errorCode).padStart(3, '0') +
+            ' - 驗證碼錯誤，請確認後重新輸入';
         } else {
-          this.action == 'scheduledTransferResultFailed';
+          this.action = 'scheduledTransferResultFailed';
           this.message = '未知的錯誤';
         }
       }
     } else {
       if (result.statuss == 1) {
-        this.action == 'transferResultSuccess';
+        this.action = 'transferResultSuccess';
         this.message =
-          '轉出帳號:' +
+          '<br>轉出帳號:' +
           this.transfer.senderAccount +
-          '<br>' +
+          '<br><br>' +
           '轉入帳號:(' +
           this.transfer.receiverBankCode +
           ')-' +
           this.transfer.receiverAccount +
-          '<br>' +
+          '<br><br>' +
           '金額' +
           (this.transfer.currencyType == 1 ? '$NTD' : '$USD') +
           this.transfer.amountString +
-          '元<br>餘額:' +
+          '元<br><br>餘額:' +
           result.message;
+      } else if (result.errorCode == 1) {
+        this.action = 'transferResultFailed';
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 帳戶餘額不足';
+      } else if (result.errorCode == 2) {
+        this.action = 'transferResultFailed';
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 轉入帳戶不存在';
+      } else if (result.errorCode == 3) {
+        this.action = 'transferResultFailed';
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 轉入帳戶未啟用';
+      } else if (result.errorCode == 4) {
+        this.action = 'transferResultFailed';
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 台幣交易不可交易小於一元';
+      } else if (result.errorCode == 5) {
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 驗證碼錯誤，請確認後重新輸入';
+      } else if (result.errorCode == 6) {
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 此交易不存在，請重新操作';
+      } else if (result.errorCode == 7) {
+        this.action = 'transferResultFailed';
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 交易金額小於等於0元';
+      } else if (result.errorCode == 8) {
+        this.action = 'transferResultFailed';
+        this.message =
+          '<br>' +
+          String(result.errorCode).padStart(3, '0') +
+          ' - 轉入帳戶不得為轉出帳戶';
+      } else {
+        this.action = 'scheduledTransferResultFailed';
+        this.message = '未知的錯誤';
       }
     }
     console.log(this.action);
@@ -335,6 +391,22 @@ export class TransferComponent implements OnInit {
     this.cookie.set('username', old_cookie, new Date(user.lasttime!));
     return lastValueFrom<User>(
       this.http.post<User>(this.server + 'renewCookieTime', user)
+    );
+  }
+  async renewTimeUid(uid: number) {
+    if (uid == undefined || uid == null) {
+      return;
+    }
+    let user: User;
+    await lastValueFrom<User>(
+      this.http.post<User>(this.server + 'renewCookieTimeUid', uid)
+    ).then((res) => {
+      user = res;
+    });
+    let old_cookie = this.cookie.get('username');
+    this.cookie.set('username', old_cookie, new Date(user!.lasttime!));
+    return lastValueFrom<User>(
+      this.http.post<User>(this.server + 'renewCookieTime', user!)
     );
   }
 
@@ -383,6 +455,20 @@ export class TransferComponent implements OnInit {
     return true;
   }
 
+  async updateBalance(uid: number) {
+    await lastValueFrom(
+      this.http.post<Account[]>(this.server + 'updateBalance', uid)
+    ).then(
+      (res) => {
+        this.allActivedAccount = res;
+      },
+      (reject) => {
+        console.log(reject);
+        this.router.navigate(['500']);
+      }
+    );
+  }
+
   doLogout() {
     this.cookie.deleteAll();
     this.router.navigate(['']);
@@ -391,5 +477,38 @@ export class TransferComponent implements OnInit {
   doCookieExpired() {
     this.cookie.deleteAll();
     this.router.navigate(['cookieExpired']);
+  }
+
+  calenderRestrictor(): string[] | null {
+    let timeMin: Date = new Date(Date.now());
+    timeMin.setHours(timeMin.getHours() + 8);
+    timeMin.setMinutes(timeMin.getMinutes() + 5);
+    let timeMax: Date = new Date(Date.now());
+    timeMax.setMonth(timeMax.getMonth() + 3);
+    timeMax.setHours(timeMax.getHours() + 8);
+
+    let max: string =
+      timeMax.toISOString().substring(0, timeMax.toISOString().indexOf('T')) +
+      ' ' +
+      timeMax
+        .toISOString()
+        .substring(
+          timeMax.toISOString().indexOf('T') + 1,
+          timeMax.toISOString().indexOf('T') + 6
+        );
+
+    let min: string =
+      timeMin.toISOString().substring(0, timeMin.toISOString().indexOf('T')) +
+      ' ' +
+      timeMin
+        .toISOString()
+        .substring(
+          timeMin.toISOString().indexOf('T') + 1,
+          timeMin.toISOString().indexOf('T') + 6
+        );
+
+    let result: string[] = [max, min];
+
+    return result;
   }
 }

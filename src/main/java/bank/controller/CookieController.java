@@ -29,6 +29,14 @@ public class CookieController {
 		return user;
 	}
 	
+	@PostMapping("/renewCookieTimeUid")
+	public User renewCookieTimeUid(@RequestBody Integer uid) {
+		User user=userService.queryUser(uid);
+		user.setLasttime(new Date().getTime()+600L*1000L);
+		userService.renewCookieTime(user);
+		return user;
+	}
+	
 	@GetMapping("/checkCookieExpired")
 	public boolean checkCookieExpired(@RequestParam String cookie) {
 		return userService.queryCookie(cookie)==null?false:true;
