@@ -12,8 +12,8 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'angular-frontend';
   style = {
     'background-image': 'url("")',
-    height: '100vmax',
-    width: '100wmax',
+    height: window.screen.availHeight - 75 + 'px',
+    width: window.screen.availWidth - 50 + 'px',
   };
 
   constructor(private bgService: BgServiceService) {}
@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.bgSubscription = this.bgService.bgPath.subscribe((bgPath) => {
       this.style['background-image'] = 'url(' + bgPath + ')';
     });
+    console.log(this.style);
   }
 
   ngOnDestroy(): void {

@@ -79,8 +79,8 @@
                 type="datetime-local"
                 name=""
                 id=""
-                [min]="this.calenderRestrictor()![1]"
-                [max]="this.calenderRestrictor()![0]"
+                [min]="dateMaxMin[1]"
+                [max]="dateMaxMin[0]"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@
 <ng-container *ngIf="action == 'transferResultSuccess'">
   <div class="allCenter">
     <h2>交易完成</h2>
-    <h2 class="message" [innerHTML]="message"></h2>
+    <h2 class="message" style="color: forestgreen" [innerHTML]="message"></h2>
     <br /><br /><input
       class="btn btn-primary"
       type="button"
@@ -161,6 +161,7 @@
       value="再轉一筆"
       (click)="
         updateBalance(currentUserUid);
+        calenderRestrictor();
         action = 'transfer';
         message = '';
         renewTimeUid(currentUserUid)
@@ -181,7 +182,7 @@
 ><ng-container *ngIf="action == 'scheduledTransferResultSuccess'">
   <div class="allCenter">
     <h2>預約交易完成</h2>
-    <h2 class="message" [innerHTML]="message"></h2>
+    <h2 class="message" [innerHTML]="message" style="color: forestgreen"></h2>
     <br /><br /><input
       class="btn btn-primary"
       type="button"
@@ -193,6 +194,7 @@
       value="再轉一筆"
       (click)="
         updateBalance(currentUserUid);
+        calenderRestrictor();
         action = 'transfer';
         message = '';
         renewTimeUid(currentUserUid)

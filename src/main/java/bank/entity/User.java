@@ -55,6 +55,8 @@ public class User implements Serializable {
 	private String ucookie_salt;
 	@Column
 	private String uverify;
+	@Column 
+	private Byte[] upic;
 
 	private Integer statuss;
 	private String message;

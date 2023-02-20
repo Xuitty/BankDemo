@@ -69,11 +69,15 @@ public class TransferController {
 	@PostMapping("doTransfer")
 	public Status doTransfer(@RequestBody Transfer transfer)
 			throws ClassNotFoundException, NoSuchMethodException, SchedulerException {
-		System.out.println(transfer);
+//		System.out.println(transfer);
 		Status result = new Status();
 		if(transfer.getSchedule()) {
-			LocalDateTime scheduleTime = LocalDateTime.parse(transfer.getScheduleTime());
-			if(scheduleTime.isAfter(scheduleTime.plusMonths(3L))||scheduleTime.isBefore(scheduleTime.plusMinutes(5))) {
+//			System.out.println(transfer.getScheduleTime());
+			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime scheduleTime = LocalDateTime.parse(transfer.getScheduleTime(),dateTimeFormatter);
+			LocalDateTime timeNow = LocalDateTime.now();
+//			System.out.println(scheduleTime+"  "+scheduleTime.plusMonths(3)+"  "+scheduleTime.plusMinutes(5));
+			if(scheduleTime.isAfter(timeNow.plusMonths(3L))||scheduleTime.isBefore(timeNow.plusMinutes(5))) {
 				result.setStatuss(3);
 				result.setErrorCode(9);
 				result.setMessage("scheduleTimeIllegal");

@@ -4,6 +4,12 @@
   [currentUserUid]="currentUserUid!"
   [allActivedAccount]="allActivedAccount!"
 ></app-transfer>
+<app-history
+  *ngIf="login == true && action == 'history'"
+  [historyAccount]="historyAccount!"
+  [currentUserUid]="currentUserUid!"
+  [allActivedAccount]="allActivedAccount!"
+></app-history>
 <div class="allCenter">
   <h2 class="message" [innerHTML]="message"></h2>
 </div>
@@ -100,8 +106,8 @@
                           >
                         </li>
                         <li>
-                          <a class="dropdown-item" href="http://google.com"
-                            >貸款</a
+                          <a class="dropdown-item" (click)="goHistory(acc)"
+                            >交易紀錄</a
                           >
                         </li>
                         <li>

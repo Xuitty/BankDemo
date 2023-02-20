@@ -16,7 +16,8 @@ import { TimerService } from './services/timer/timer.service';
 import { CookieService } from 'ngx-cookie-service';
 import { CookieExpiredComponent } from './error/cookie-expired/cookie-expired.component';
 import { NgChartsModule } from 'ng2-charts';
-import { TransferComponent } from './transfer/transfer.component';
+import { TransferComponent } from './main/transfer/transfer.component';
+import { HistoryComponent } from './main/history/history.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TransferComponent } from './transfer/transfer.component';
     NotFoundComponent,
     CookieExpiredComponent,
     TransferComponent,
+    HistoryComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgChartsModule],
   providers: [TimerService, CookieService],

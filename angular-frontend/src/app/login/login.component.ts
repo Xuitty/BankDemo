@@ -31,6 +31,8 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
     if (this.cookie.check('username')) {
       this.router.navigate(['main']);
     }
+    let bodyScrollToTop: HTMLElement = document.getElementById('login')!;
+    bodyScrollToTop.scrollIntoView({ behavior: 'smooth' });
   }
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
@@ -39,10 +41,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
   registerSlogan: string = '立即加入領取神秘小禮物';
   ticker: string = '　';
   counter?: any;
-  async ngAfterViewInit() {
+  ngAfterViewInit(): void {
     let t: number = 0;
     let a: number = 0;
-    this.counter = setInterval(async () => {
+    this.counter = setInterval(() => {
       if ((t < this.registerSlogan.length || t == 0) && a == 0) {
         this.ticker += this.registerSlogan.charAt(t);
         t++;

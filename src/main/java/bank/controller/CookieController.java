@@ -39,6 +39,7 @@ public class CookieController {
 	
 	@GetMapping("/checkCookieExpired")
 	public boolean checkCookieExpired(@RequestParam String cookie) {
+		System.out.println(cookie);
 		return userService.queryCookie(cookie)==null?false:true;
 		
 	}

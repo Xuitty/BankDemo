@@ -189,6 +189,8 @@ public class TransferServiceImpl implements TransferService {
 					reason = "007 匯款金額小於等於0元";
 				}else if (result.getErrorCode() == 8) {
 					reason = "008 接收帳號為轉出帳號";
+				}else if (result.getErrorCode() == 9) {
+					reason = "009 時間不合法";
 				}
 			}
 			try {
@@ -199,7 +201,7 @@ public class TransferServiceImpl implements TransferService {
 								.getUemail(),
 						y.getOperateTime(), y.getReceiverBankCode(), y.getReceiverAccount(),
 						y.getCurrencyType() == 1 ? "台幣" : "美金", y.getAmount().toString(), y.getTid(),
-						result.getStatuss() == 0 ? "成功" : "失敗", reason);
+						result.getStatuss() == 1||result.getStatuss() == 0 ? "成功" : "失敗", reason);
 			} catch (MessagingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

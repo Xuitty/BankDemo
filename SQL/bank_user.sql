@@ -39,6 +39,7 @@ CREATE TABLE `user` (
   `ucookie` varchar(32) DEFAULT NULL,
   `ucookie_salt` varchar(32) DEFAULT NULL,
   `uverify` varchar(6) DEFAULT NULL,
+  `upic` mediumblob,
   `statuss` int DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
   `lasttime` bigint NOT NULL DEFAULT '-1',
@@ -54,7 +55,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'ABCD','85735e7d2283b9123862cabda06cbce8','FHTQcDDeJRldt1TEw2u4JYaeu6CLk6Tv','123456','ufokun@gmail.com','123456789','erwerew',1,'1999-09-09','qweqwe',1,0,NULL,NULL,NULL,NULL,NULL,1676542158767);
+INSERT INTO `user` VALUES (1,'ABCD','85735e7d2283b9123862cabda06cbce8','FHTQcDDeJRldt1TEw2u4JYaeu6CLk6Tv','123456','ufokun@gmail.com','123456789','erwerew',1,'1999-09-09','qweqwe',1,0,NULL,NULL,NULL,NULL,NULL,NULL,1676888292454);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -64,10 +65,10 @@ UNLOCK TABLES;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_AFTER_INSERT` AFTER INSERT ON `user` FOR EACH ROW BEGIN
-insert into user_log values(null,'INSERT',concat(now(),'(UTC+8)'),new.uid,new.uname,new.upassword,new.upassword_salt,new.urealname,new.uemail,new.utelephone,new.uaddress,new.usex,new.udate,new.uidentity,new.uactive,new.ulevel,new.ucookie,new.ucookie_salt,new.uverify,new.statuss,new.message,new.lasttime);
+insert into user_log values(null,'INSERT',concat(now(),'(UTC+8)'),new.uid,new.uname,new.upassword,new.upassword_salt,new.urealname,new.uemail,new.utelephone,new.uaddress,new.usex,new.udate,new.uidentity,new.uactive,new.ulevel,new.ucookie,new.ucookie_salt,new.uverify,new.upic,new.statuss,new.message,new.lasttime);
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -81,10 +82,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_BEFORE_UPDATE` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
-insert into user_log values(null,'UPDATE(OLD)',concat(now(),'(UTC+8)'),old.uid,old.uname,old.upassword,old.upassword_salt,old.urealname,old.uemail,old.utelephone,old.uaddress,old.usex,old.udate,old.uidentity,old.uactive,old.ulevel,old.ucookie,old.ucookie_salt,old.uverify,old.statuss,old.message,old.lasttime);
+insert into user_log values(null,'UPDATE(OLD)',concat(now(),'(UTC+8)'),old.uid,old.uname,old.upassword,old.upassword_salt,old.urealname,old.uemail,old.utelephone,old.uaddress,old.usex,old.udate,old.uidentity,old.uactive,old.ulevel,old.ucookie,old.ucookie_salt,old.uverify,old.upic,old.statuss,old.message,old.lasttime);
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -98,10 +99,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_AFTER_UPDATE` AFTER UPDATE ON `user` FOR EACH ROW BEGIN
-insert into user_log values(null,'UPDATE(NEW)',concat(now(),'(UTC+8)'),new.uid,new.uname,new.upassword,new.upassword_salt,new.urealname,new.uemail,new.utelephone,new.uaddress,new.usex,new.udate,new.uidentity,new.uactive,new.ulevel,new.ucookie,new.ucookie_salt,new.uverify,new.statuss,new.message,new.lasttime);
+insert into user_log values(null,'UPDATE(NEW)',concat(now(),'(UTC+8)'),new.uid,new.uname,new.upassword,new.upassword_salt,new.urealname,new.uemail,new.utelephone,new.uaddress,new.usex,new.udate,new.uidentity,new.uactive,new.ulevel,new.ucookie,new.ucookie_salt,new.uverify,new.upic,new.statuss,new.message,new.lasttime);
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -115,10 +116,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_BEFORE_DELETE` BEFORE DELETE ON `user` FOR EACH ROW BEGIN
-insert into user_log values(null,'DELETE',concat(now(),'(UTC+8)'),old.uid,old.uname,old.upassword,old.upassword_salt,old.urealname,old.uemail,old.utelephone,old.uaddress,old.usex,old.udate,old.uidentity,old.uactive,old.ulevel,old.ucookie,old.ucookie_salt,old.uverify,old.statuss,old.message,old.lasttime);
+insert into user_log values(null,'DELETE',concat(now(),'(UTC+8)'),old.uid,old.uname,old.upassword,old.upassword_salt,old.urealname,old.uemail,old.utelephone,old.uaddress,old.usex,old.udate,old.uidentity,old.uactive,old.ulevel,old.ucookie,old.ucookie_salt,old.uverify,old.upic,old.statuss,old.message,old.lasttime);
 
 END */;;
 DELIMITER ;
@@ -136,4 +137,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-16 18:22:53
+-- Dump completed on 2023-02-20 18:24:13

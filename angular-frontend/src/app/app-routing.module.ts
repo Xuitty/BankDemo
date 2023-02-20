@@ -7,7 +7,8 @@ import { RegisterUserComponent } from './register-user/register-user.component';
 import { UnknownErrorComponent } from './error/unknown-error/unknown-error.component';
 import { MainComponent } from './main/main.component';
 import { CookieExpiredComponent } from './error/cookie-expired/cookie-expired.component';
-import { TransferComponent } from './transfer/transfer.component';
+import { TransferComponent } from './main/transfer/transfer.component';
+import { HistoryComponent } from './main/history/history.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -16,7 +17,10 @@ const routes: Routes = [
   {
     path: 'main',
     component: MainComponent,
-    children: [{ path: 'transfer', component: TransferComponent }],
+    children: [
+      { path: 'transfer', component: TransferComponent },
+      { path: 'history', component: HistoryComponent },
+    ],
   },
   {
     path: 'cookieExpired',

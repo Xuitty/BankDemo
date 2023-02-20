@@ -88,6 +88,7 @@ export class MainComponent implements OnInit, OnDestroy {
   transferAccount?: Account;
   currentUserUid?: number;
 
+  historyAccount?: Account;
   async ngOnInit() {
     this.message = '';
     // console.log(this.server);
@@ -262,23 +263,37 @@ export class MainComponent implements OnInit, OnDestroy {
         },
       },
     };
-    this.intervalCheck = setInterval(() => {
-      //auto logout function
-      this.checkCookieExpired().then(
-        (res) => {
-          console.log(res);
+    // this.intervalCheck = setInterval(() => {
+    //   //auto logout function
+    //   this.checkCookieExpired().then(
+    //     (res) => {
+    //       console.log(res);
 
-          if (!res) {
-            clearInterval(this.intervalCheck);
-            this.doCookieExpired();
-          }
-        },
-        (reject) => {
-          clearInterval(this.intervalCheck);
-          console.log(reject);
-          this.router.navigate(['500']);
+    //       if (!res) {
+    //         clearInterval(this.intervalCheck);
+    //         this.doCookieExpired();
+    //       }
+    //     },
+    //     (reject) => {
+    //       clearInterval(this.intervalCheck);
+    //       console.log(reject);
+    //       this.router.navigate(['500']);
+    //     }
+    //   );
+    // }, 30000);
+
+    this.intervalCheck = setInterval(async () => {
+      let result: boolean | object = await this.checkCookieExpired();
+      if (typeof result === typeof Boolean(true)) {
+        if (!result) {
+          this.cookie.deleteAll();
+          this.doCookieExpired();
+          return;
         }
-      );
+      } else {
+        this.router.navigate(['500']);
+        return;
+      }
     }, 30000);
 
     // if (result.lasttime == -1) {  **********counterUtil**********
@@ -302,63 +317,50 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   async goCreateAccount() {
-    let result: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result = res;
-      },
-      (reject) => {
-        console.log(reject);
-        this.router.navigate(['500']);
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
-
-    if (result) {
-      let user: User = new User();
-      user.uid = this.uid;
-      this.renewTime(user);
-      this.action = 'createAccount';
     } else {
-      this.router.navigate(['cookieExpired']);
+      this.router.navigate(['500']);
+      return;
     }
+
+    this.action = 'createAccount';
   }
   async goCreateCreditCard() {
-    let result: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result = res;
-      },
-      (reject) => {
-        console.log(reject);
-        this.router.navigate(['500']);
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
-    if (result) {
-      let user: User = new User();
-      user.uid = this.uid;
-      this.renewTime(user);
-      this.action = 'createCreditCard';
     } else {
-      this.router.navigate(['cookieExpired']);
+      this.router.navigate(['500']);
+      return;
     }
+
+    this.action = 'createCreditCard';
   }
 
   @ViewChild('accountType') accountType?: ElementRef;
   @ViewChild('accountCurrencyType') accountCurrencyType?: ElementRef;
   async doCreateAccount() {
-    let result: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result = res;
-      },
-      (reject) => {
-        console.log(reject);
-        this.router.navigate(['500']);
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
+    } else {
+      this.router.navigate(['500']);
+      return;
+    }
 
     if (result) {
       this.action = 'createAccount';
@@ -400,17 +402,17 @@ export class MainComponent implements OnInit, OnDestroy {
   }
   @ViewChild('averify') averify?: ElementRef;
   async doVerifyAccount() {
-    let result: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result = res;
-      },
-      (reject) => {
-        console.log(reject);
-        this.router.navigate(['500']);
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
+    } else {
+      this.router.navigate(['500']);
+      return;
+    }
     if (result) {
       let averify: string = this.averify?.nativeElement.value;
       if (averify == '' || averify.length != 6) {
@@ -469,31 +471,43 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   async goTransfer(acc: Account) {
-    let result: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result = res;
-      },
-      (reject) => {
-        console.log(reject);
-        this.router.navigate(['500']);
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
-
-    if (result) {
-      this.transferAccount = acc;
-      this.currentUserUid = this.uid;
-      let user: User = new User();
-      user.uid = this.uid;
-      this.renewTime(user);
-      clearInterval(this.intervalCheck);
-      // this.router.navigate(['main/transfer']);
-      this.action = 'transfer';
     } else {
-      clearInterval(this.intervalCheck);
-      this.router.navigate(['cookieExpired']);
+      this.router.navigate(['500']);
+      return;
     }
+
+    this.transferAccount = acc;
+    this.currentUserUid = this.uid;
+    clearInterval(this.intervalCheck);
+    // this.router.navigate(['main/transfer']);
+    this.action = 'transfer';
+  }
+
+  async goHistory(acc: Account) {
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
+        return;
+      }
+    } else {
+      this.router.navigate(['500']);
+      return;
+    }
+
+    this.historyAccount = acc;
+    this.currentUserUid = this.uid;
+    clearInterval(this.intervalCheck);
+    // this.router.navigate(['main/transfer']);
+    this.action = 'history';
   }
 
   async renewTime(user: User) {
@@ -513,11 +527,55 @@ export class MainComponent implements OnInit, OnDestroy {
     );
   }
 
-  checkCookieExpired() {
-    return lastValueFrom(
-      this.http.get<boolean>(
+  // checkCookieExpired() {
+  //   return lastValueFrom(
+  //     this.http.get<boolean>(
+  //       this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
+  //     )
+  //   );
+  // }
+  async checkCookieExpiredRenew() {
+    return await lastValueFrom(
+      this.http.get<boolean | object>(
         this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
       )
+    ).then(
+      (res) => {
+        console.log(res);
+        if (res) {
+          this.renewTime(new User(undefined, undefined, this.uid));
+        } else {
+          clearInterval(this.intervalCheck);
+        }
+        return Boolean(res);
+      },
+      (reject) => {
+        console.log(reject);
+        // this.router.navigate(['500']);
+        clearInterval(this.intervalCheck);
+        return Object(reject);
+      }
+    );
+  }
+  async checkCookieExpired() {
+    return await lastValueFrom(
+      this.http.get<boolean | object>(
+        this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
+      )
+    ).then(
+      (res) => {
+        console.log(res);
+        if (!res) {
+          clearInterval(this.intervalCheck);
+        }
+        return Boolean(res);
+      },
+      (reject) => {
+        console.log(reject);
+        clearInterval(this.intervalCheck);
+        // this.router.navigate(['500']);
+        return Object(reject);
+      }
     );
   }
 

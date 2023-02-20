@@ -3,11 +3,11 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import SERVER from '../../assets/json/config.json';
-import { Account } from '../entity/account';
-import { Status } from '../entity/status';
-import { Transfer } from '../entity/transfer';
-import { User } from '../entity/user';
+import SERVER from '../../../assets/json/config.json';
+import { Account } from '../../entity/account';
+import { Status } from '../../entity/status';
+import { Transfer } from '../../entity/transfer';
+import { User } from '../../entity/user';
 
 @Component({
   selector: 'app-transfer',
@@ -39,6 +39,7 @@ export class TransferComponent implements OnInit {
 
   async ngOnInit() {
     this.message = '';
+    this.calenderRestrictor();
     if (!this.cookie.check('username')) {
       // this.message = '請登入金發財，共享榮華富貴';
       let counter = 6;
@@ -59,28 +60,35 @@ export class TransferComponent implements OnInit {
 
       return;
     }
+    let result: boolean | object = await this.checkCookieExpired();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
+        return;
+      }
+    } else {
+      this.router.navigate(['500']);
+      return;
+    }
     let user: User = new User();
     user.uid = this.currentUserUid;
     this.currentBalance = this.transferAccount.abalance;
     this.renewTime(user);
     this.ucookie = this.cookie.get('username');
-    this.intervalCheck = setInterval(() => {
+    this.intervalCheck = setInterval(async () => {
       //auto logout function
-      this.checkCookieExpired().then(
-        (res) => {
-          console.log(res);
-
-          if (!res) {
-            clearInterval(this.intervalCheck);
-            this.doCookieExpired();
-          }
-        },
-        (reject) => {
-          clearInterval(this.intervalCheck);
-          console.log(reject);
-          this.router.navigate(['500']);
+      let result: boolean | object = await this.checkCookieExpired();
+      if (typeof result === typeof Boolean(true)) {
+        if (!result) {
+          this.cookie.deleteAll();
+          this.doCookieExpired();
+          return;
         }
-      );
+      } else {
+        this.router.navigate(['500']);
+        return;
+      }
     }, 30000);
   }
 
@@ -113,28 +121,16 @@ export class TransferComponent implements OnInit {
   @ViewChild('currencyType') currencyType?: ElementRef;
   @ViewChild('amountString') amountString?: ElementRef;
   async doTransfer() {
-    let result: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result = res;
-        console.log(res);
-        if (res) {
-          this.renewTime(new User(undefined, undefined, this.currentUserUid)); //manual update(onClick)
-        }
-        if (!res) {
-          clearInterval(this.intervalCheck);
-          this.doCookieExpired();
-          return;
-        }
-      },
-      (reject) => {
-        clearInterval(this.intervalCheck);
-        console.log(reject);
-        this.router.navigate(['500']);
+    this.message = '';
+    let result: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result === typeof Boolean(true)) {
+      if (!result) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
-    if (!result) {
+    } else {
+      this.router.navigate(['500']);
       return;
     }
     let check: boolean = this.formCheck();
@@ -205,6 +201,10 @@ export class TransferComponent implements OnInit {
             });
             return;
           }
+          if (res.message == 'scheduleTimeIllegal') {
+            this.message = '日期最小值為五分鐘後，最大值為三個月內';
+            return;
+          }
           this.router.navigate(['login']);
         } else if (res.statuss == 1) {
           this.transferingTid = Number.parseInt(res.message!);
@@ -237,26 +237,15 @@ export class TransferComponent implements OnInit {
   }
   @ViewChild('tverify') tverify?: ElementRef;
   async doVerify() {
-    let result1: boolean = false;
-    await this.checkCookieExpired().then(
-      (res) => {
-        result1 = res;
-        console.log(res);
-        this.renewTime(new User(undefined, undefined, this.currentUserUid)); //manual update(onClick)
-        if (!res) {
-          clearInterval(this.intervalCheck);
-          this.doCookieExpired();
-          return;
-        }
-      },
-      (reject) => {
-        clearInterval(this.intervalCheck);
-        console.log(reject);
-        this.router.navigate(['500']);
+    let result1: boolean | object = await this.checkCookieExpiredRenew();
+    if (typeof result1 === typeof Boolean(true)) {
+      if (!result1) {
+        this.cookie.deleteAll();
+        this.doCookieExpired();
         return;
       }
-    );
-    if (!result1) {
+    } else {
+      this.router.navigate(['500']);
       return;
     }
 
@@ -410,11 +399,57 @@ export class TransferComponent implements OnInit {
     );
   }
 
-  checkCookieExpired() {
-    return lastValueFrom(
-      this.http.get<boolean>(
+  // checkCookieExpired() {
+  //   return lastValueFrom(
+  //     this.http.get<boolean>(
+  //       this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
+  //     )
+  //   );
+  // }
+
+  async checkCookieExpired() {
+    return await lastValueFrom(
+      this.http.get<boolean | object>(
         this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
       )
+    ).then(
+      (res) => {
+        console.log(res);
+        if (!res) {
+          clearInterval(this.intervalCheck);
+        }
+        return Boolean(res);
+      },
+      (reject) => {
+        console.log(reject);
+        clearInterval(this.intervalCheck);
+        // this.router.navigate(['500']);
+        return Object(reject);
+      }
+    );
+  }
+
+  async checkCookieExpiredRenew() {
+    return await lastValueFrom(
+      this.http.get<boolean | object>(
+        this.server + 'checkCookieExpired?cookie=' + this.cookie.get('username')
+      )
+    ).then(
+      (res) => {
+        console.log(res);
+        if (res) {
+          this.renewTime(new User(undefined, undefined, this.currentUserUid));
+        } else {
+          clearInterval(this.intervalCheck);
+        }
+        return Boolean(res);
+      },
+      (reject) => {
+        console.log(reject);
+        clearInterval(this.intervalCheck);
+        // this.router.navigate(['500']);
+        return Object(reject);
+      }
     );
   }
 
@@ -452,6 +487,13 @@ export class TransferComponent implements OnInit {
       this.message = '轉帳金額格式錯誤';
       return false;
     }
+    if (
+      new Date(dateTime).getTime() > new Date(this.dateMaxMin[0]).getTime() ||
+      new Date(dateTime).getTime() < new Date(this.dateMaxMin[1]).getTime()
+    ) {
+      this.message = '日期最小值為五分鐘後，最大值為三個月內';
+      return false;
+    }
     return true;
   }
 
@@ -479,6 +521,7 @@ export class TransferComponent implements OnInit {
     this.router.navigate(['cookieExpired']);
   }
 
+  dateMaxMin!: string[];
   calenderRestrictor(): string[] | null {
     let timeMin: Date = new Date(Date.now());
     timeMin.setHours(timeMin.getHours() + 8);
@@ -506,7 +549,7 @@ export class TransferComponent implements OnInit {
           timeMin.toISOString().indexOf('T') + 1,
           timeMin.toISOString().indexOf('T') + 6
         );
-
+    this.dateMaxMin = [max, min];
     let result: string[] = [max, min];
 
     return result;
