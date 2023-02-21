@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { Account } from 'src/app/entity/account';
+import { Transfer } from 'src/app/entity/transfer';
 import { User } from 'src/app/entity/user';
 import SERVER from '../../../assets/json/config.json';
 
@@ -78,6 +79,26 @@ export class HistoryComponent implements OnInit {
         return;
       }
     }, 30000);
+
+    let history: Transfer[] | object = await lastValueFrom(
+      this.http.post<Transfer[]>(
+        this.server + 'doHistoryQuery',
+        this.historyAccount
+      )
+    ).then(
+      (res) => {
+        return res;
+      },
+      (reject) => {
+        console.log(reject);
+
+        this.router.navigate(['500']);
+        return reject;
+      }
+    );
+    if (typeof history === typeof Transfer) {
+    }
+    console.log(history);
   }
 
   async renewTime(user: User) {

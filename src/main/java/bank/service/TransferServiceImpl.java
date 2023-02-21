@@ -40,6 +40,19 @@ public class TransferServiceImpl implements TransferService {
 	public Transfer queryTransfer(Integer tid) {
 		return transferDAOInterface.findByTid(tid);
 	}
+	
+	@Override
+	@Transactional
+	public Transfer[] queryTransferByAccount(Account account) {
+		if(account==null||account.getAaccount()==null||account.getUid()==null||userService.queryUser(account.getUid())==null) {
+			return null;
+		}
+		ArrayList<Transfer> result = transferDAOInterface.findBySenderAccount(account.getAaccount());
+		if(result==null) {
+			return null;
+		}
+		return result.toArray(new Transfer[result.size()]);
+	}
 
 	@Override
 	@Transactional

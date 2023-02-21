@@ -160,6 +160,13 @@ public class TransferController {
 		return allActivedAccount.toArray(new Account[allActivedAccount.size()]);
 	}
 	
+	@PostMapping("doHistoryQuery")
+	public Transfer[] doHistoryQuery(@RequestBody Account account){
+//		System.out.println(account);
+		Transfer[] result = transferService.queryTransferByAccount(account);
+		return result==null?null:result;
+	}
+	
 
 //	@GetMapping("scheduleTest")
 //	public void scheduleTest() throws SchedulerException, ClassNotFoundException, NoSuchMethodException {
