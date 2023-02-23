@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
@@ -26,11 +26,17 @@ export class HistoryComponent implements OnInit {
 
   server: string = JSON.parse(JSON.stringify(SERVER)).url;
   @Input('historyAccount')
-  historyAccount?: Account;
+  historyAccount!: Account;
   @Input('currentUserUid')
-  currentUserUid?: number;
+  currentUserUid!: number;
   @Input('allActivedAccount')
-  allActivedAccount?: Account[];
+  allActivedAccount!: Account[];
+
+  historyList?: Transfer[];
+  historyListLength?: number;
+
+  height = window.screen.availHeight - 200 + 'px';
+  width = window.screen.availWidth - 500 + 'px';
 
   async ngOnInit() {
     if (!this.cookie.check('username')) {
@@ -80,7 +86,7 @@ export class HistoryComponent implements OnInit {
       }
     }, 30000);
 
-    let history: Transfer[] | object = await lastValueFrom(
+    let history: Transfer[] | boolean = await lastValueFrom(
       this.http.post<Transfer[]>(
         this.server + 'doHistoryQuery',
         this.historyAccount
@@ -93,12 +99,41 @@ export class HistoryComponent implements OnInit {
         console.log(reject);
 
         this.router.navigate(['500']);
-        return reject;
+        return false;
       }
     );
-    if (typeof history === typeof Transfer) {
+    if (history == false) {
+      return;
     }
-    console.log(history);
+    this.historyList = history as Transfer[];
+  }
+
+  @ViewChild('accountSelector') accountSelector?: ElementRef;
+  async selectAccount() {
+    this.historyList = undefined;
+    this.historyAccount = this.allActivedAccount?.find((item, index, array) => {
+      return item.aaccount == this.accountSelector?.nativeElement.value;
+    })!;
+    let history: Transfer[] | boolean = await lastValueFrom(
+      this.http.post<Transfer[]>(
+        this.server + 'doHistoryQuery',
+        this.historyAccount
+      )
+    ).then(
+      (res) => {
+        return res;
+      },
+      (reject) => {
+        console.log(reject);
+
+        this.router.navigate(['500']);
+        return false;
+      }
+    );
+    if (history == false) {
+      return;
+    }
+    this.historyList = history as Transfer[];
   }
 
   async renewTime(user: User) {

@@ -12,4 +12,6 @@ export class Transfer {
   scheduleTime?: string;
   operateTime?: string;
   verify?: string;
+  statuss?: number;
+  error?: number;
 }

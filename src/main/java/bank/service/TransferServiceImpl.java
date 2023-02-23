@@ -51,6 +51,9 @@ public class TransferServiceImpl implements TransferService {
 		if(result==null) {
 			return null;
 		}
+		for(Transfer y:result) {
+			y.setAmountString(y.getAmount().toString());
+		}
 		return result.toArray(new Transfer[result.size()]);
 	}
 

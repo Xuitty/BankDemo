@@ -52,7 +52,11 @@
               height: 500px;
             "
           >
-            <table *ngFor="let acc of allActivedAccount">
+            <table
+              class="mainAccountTable"
+              *ngFor="let acc of allActivedAccount"
+              style="margin-left: 80px"
+            >
               <thead>
                 <tr>
                   <th class="tableheadAccount">帳號</th>

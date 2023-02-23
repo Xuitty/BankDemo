@@ -112,8 +112,14 @@ export class TransferComponent implements OnInit {
       }
     )!;
     this.currentBalance = this.transferAccount.abalance;
-    console.log(this.accountSelector?.nativeElement);
-    console.log(this.transferAccount.abalance);
+  }
+  updateSelectAccount() {
+    this.transferAccount = this.allActivedAccount?.find(
+      (item, index, array) => {
+        return item.aaccount == this.transferAccount.aaccount;
+      }
+    )!;
+    this.currentBalance = this.transferAccount.abalance;
   }
 
   @ViewChild('receiverBankCode') receiverBankCode?: ElementRef;
@@ -509,6 +515,7 @@ export class TransferComponent implements OnInit {
         this.router.navigate(['500']);
       }
     );
+    this.updateSelectAccount();
   }
 
   doLogout() {

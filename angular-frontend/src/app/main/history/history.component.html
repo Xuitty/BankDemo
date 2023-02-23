@@ -5,28 +5,135 @@
 <p>{{ allActivedAccount }}</p> -->
 
 <div class="container-fluid">
-  <div class="row text-center">
+  <div class="row justify-content-center">
+    <div class="col-4">
+      <input
+        style="margin-top: 25px; margin-left: 50px"
+        type="button"
+        class="btn btn-lg btn-danger"
+        value="返回"
+        (click)="router.navigate(['login'])"
+      />
+    </div>
+    <div class="col-4 text-center">
+      <div>
+        選擇帳號:　<select
+          #accountSelector
+          class="form-select"
+          (input)="selectAccount()"
+        >
+          <ng-container *ngFor="let acc of allActivedAccount">
+            <option
+              *ngIf="acc.aid != historyAccount.aid"
+              label="{{ acc.aaccount }} ({{
+                acc.anickname == null ? '未命名' : acc.anickname
+              }})"
+              value="{{ acc.aaccount }}"
+            ></option>
+            <option
+              *ngIf="acc.aid === historyAccount.aid"
+              label="{{ acc.aaccount }} ({{
+                acc.anickname == null ? '未命名' : acc.anickname
+              }})"
+              value="{{ acc.aaccount }}"
+              selected
+            ></option>
+          </ng-container>
+          <!-- <option value="456"></option> -->
+        </select>
+        <br />
+      </div>
+    </div>
+    <div class="col-4 text-center"></div>
+  </div>
+  <div class="row text-center overflow-auto" [style.height]="height">
     <div class="col fw-bolder fs-5"></div>
+
     <div class="col fw-bolder fs-5">
-      <table *ngFor="">
-        <tr>
-          <th>轉出帳號</th>
-          <th>轉入帳號</th>
-          <th>金額</th>
-          <th>狀態</th>
-          <th>排程時間</th>
-          <th>執行時間</th>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
+      <div style="">
+        <table class="" [style.width]="width" *ngIf="historyListLength != 0">
+          <thead
+            style="
+              position: sticky;
+              top: 0;
+              background-color: rgb(140, 140, 137);
+            "
+          >
+            <tr>
+              <th class="tableheadBalance">轉出帳號</th>
+              <th class="tableheadBalance">轉入銀行代碼</th>
+              <th class="tableheadBalance">轉入帳號</th>
+              <th class="tableheadBalance">貨幣類型</th>
+              <th class="tableheadBalance">金額</th>
+              <th class="tableheadBalance">排程時間</th>
+              <th class="tableheadBalance">交易執行時間</th>
+              <th class="tableheadBalance">狀態</th>
+              <th class="tableheadBalance">錯誤緣由</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let history of historyList">
+            <tr
+              [ngStyle]="
+                history.statuss == 0
+                  ? { color: 'red' }
+                  : history.statuss == 1
+                  ? {}
+                  : history.statuss == 2
+                  ? { color: 'red' }
+                  : history.statuss == 3
+                  ? { color: 'brown' }
+                  : { color: 'red' }
+              "
+            >
+              <td style="height: 60px">
+                {{ history.senderAccount }}
+              </td>
+              <td>{{ history.receiverBankCode }}</td>
+              <td>{{ history.receiverAccount }}</td>
+              <td>{{ history.currencyType == 1 ? "台幣" : "美金" }}</td>
+              <td>{{ history.amountString }}</td>
+              <td>
+                {{ history.schedule == true ? history.scheduleTime : "" }}
+              </td>
+              <td>{{ history.operateTime }}</td>
+              <td>
+                {{
+                  history.statuss == 0
+                    ? "未驗證"
+                    : history.statuss == 1
+                    ? "交易完成"
+                    : history.statuss == 2
+                    ? "交易失敗"
+                    : history.statuss == 3
+                    ? "排程擱置中"
+                    : "未知的錯誤"
+                }}
+              </td>
+              <td>
+                {{
+                  history.error == null
+                    ? ""
+                    : history.error == 1
+                    ? "餘額不足"
+                    : history.error == 2
+                    ? "轉入帳號不存在"
+                    : history.error == 3
+                    ? "兩方有一帳號未啟用"
+                    : history.error == 4
+                    ? "貨幣單位錯誤"
+                    : history.error == 7
+                    ? "金額過小"
+                    : history.error == 8
+                    ? "轉帳給自己"
+                    : history.error == 9
+                    ? "預約轉帳時間不合法"
+                    : "未知的錯誤"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="col fw-bolder fs-5"></div>
   </div>

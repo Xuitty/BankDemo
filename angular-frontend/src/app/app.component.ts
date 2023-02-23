@@ -12,7 +12,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'angular-frontend';
   style = {
     'background-image': 'url("")',
-    height: window.screen.availHeight - 75 + 'px',
+    height: window.screen.availHeight - 80 + 'px',
     width: window.screen.availWidth - 50 + 'px',
   };
 

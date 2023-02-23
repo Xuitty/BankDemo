@@ -17,7 +17,7 @@
           轉出帳號:　<select
             #accountSelector
             class="form-select"
-            (click)="selectAccount()"
+            (input)="selectAccount()"
           >
             <ng-container *ngFor="let acc of allActivedAccount">
               <option
