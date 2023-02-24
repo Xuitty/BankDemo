@@ -1,4 +1,19 @@
-import { Component, OnInit, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Output,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  Event as RouterEvent,
+} from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BgServiceService } from './bg-service.service';
 
@@ -15,8 +30,40 @@ export class AppComponent implements OnInit, OnDestroy {
     height: window.screen.availHeight - 80 + 'px',
     width: window.screen.availWidth - 50 + 'px',
   };
+  loading: boolean = true;
 
-  constructor(private bgService: BgServiceService) {}
+  constructor(private bgService: BgServiceService, private router: Router) {
+    router.events.subscribe((event: RouterEvent) => {
+      console.log(event);
+
+      this.navigationInterceptor(event);
+    });
+  }
+  navigationInterceptor(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.loading = true;
+    }
+    if (event instanceof NavigationEnd) {
+      setTimeout(() => {
+        // here
+        this.loading = false;
+      }, 500);
+    }
+
+    // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    if (event instanceof NavigationCancel) {
+      setTimeout(() => {
+        // here
+        this.loading = false;
+      }, 500);
+    }
+    if (event instanceof NavigationError) {
+      setTimeout(() => {
+        // here
+        this.loading = false;
+      }, 500);
+    }
+  }
 
   ngOnInit(): void {
     this.bgSubscription = this.bgService.bgPath.subscribe((bgPath) => {
@@ -27,9 +74,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.bgService.bgPath.unsubscribe();
+    // AppComponent.loadingSwitchOn();
   }
-
-  test() {
-    alert('123');
+  loadingSwitch = 'none';
+  public loadingOn() {
+    this.loading = true;
+  }
+  public loadingOff() {
+    setTimeout(() => {
+      this.loading = false;
+    }, 500);
   }
 }

@@ -1,4 +1,5 @@
-declare module '*/assets/json/config.json' {
-  const value: string;
-  export default value;
+declare module 'SERVER' {
+  export const enum SERVER_PROPERTY {
+    SERVER_URL = 'http://127.0.0.1:8080/',
+  }
 }

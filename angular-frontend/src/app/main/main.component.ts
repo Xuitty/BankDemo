@@ -25,7 +25,8 @@ import { PointElement, Tooltip } from 'chart.js/dist';
 import Decimal from 'decimal.js';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
-import SERVER from '../../assets/json/config.json';
+import { SERVER_PROPERTY } from 'SERVER';
+import { AppComponent } from '../app.component';
 import { Account } from '../entity/account';
 import { Card } from '../entity/card';
 import { Info } from '../entity/Info';
@@ -41,14 +42,15 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private cookie: CookieService,
-    public router: Router
+    public router: Router,
+    private app: AppComponent
   ) {}
   ngOnDestroy(): void {
     clearInterval(this.intervalCheck);
   }
   intervalCheck: any;
 
-  server: string = JSON.parse(JSON.stringify(SERVER)).url;
+  server: string = SERVER_PROPERTY.SERVER_URL;
   login: boolean = false;
   action: string = '';
   message: string = '';
@@ -471,6 +473,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   async goTransfer(acc: Account) {
+    this.spinnerOn();
     let result: boolean | object = await this.checkCookieExpiredRenew();
     if (typeof result === typeof Boolean(true)) {
       if (!result) {
@@ -601,5 +604,12 @@ export class MainComponent implements OnInit, OnDestroy {
   ////
   async doAutoCheck() {
     console.log('autochecked');
+  }
+
+  public spinnerOn() {
+    this.app.loadingOn();
+  }
+  public spinnerOff() {
+    this.app.loadingOff();
   }
 }

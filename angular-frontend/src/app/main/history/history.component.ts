@@ -6,7 +6,8 @@ import { lastValueFrom } from 'rxjs';
 import { Account } from 'src/app/entity/account';
 import { Transfer } from 'src/app/entity/transfer';
 import { User } from 'src/app/entity/user';
-import SERVER from '../../../assets/json/config.json';
+import { SERVER_PROPERTY } from 'SERVER';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-history',
@@ -24,7 +25,7 @@ export class HistoryComponent implements OnInit {
 
   intervalCheck: any;
 
-  server: string = JSON.parse(JSON.stringify(SERVER)).url;
+  server: string = SERVER_PROPERTY.SERVER_URL;
   @Input('historyAccount')
   historyAccount!: Account;
   @Input('currentUserUid')

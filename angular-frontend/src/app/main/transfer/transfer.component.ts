@@ -3,7 +3,8 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import SERVER from '../../../assets/json/config.json';
+import { SERVER_PROPERTY } from 'SERVER';
+import { AppComponent } from 'src/app/app.component';
 import { Account } from '../../entity/account';
 import { Status } from '../../entity/status';
 import { Transfer } from '../../entity/transfer';
@@ -18,10 +19,11 @@ export class TransferComponent implements OnInit {
   constructor(
     private cookie: CookieService,
     private http: HttpClient,
-    public router: Router
+    public router: Router,
+    private app: AppComponent
   ) {}
 
-  server: string = JSON.parse(JSON.stringify(SERVER)).url;
+  server: string = SERVER_PROPERTY.SERVER_URL;
   message?: string = '';
   login: boolean = false;
   action?: string = 'transfer';
@@ -90,6 +92,7 @@ export class TransferComponent implements OnInit {
         return;
       }
     }, 30000);
+    this.spinnerOff();
   }
 
   @ViewChild('dateTime') dateTime?: ElementRef;
@@ -560,5 +563,12 @@ export class TransferComponent implements OnInit {
     let result: string[] = [max, min];
 
     return result;
+  }
+
+  spinnerOn() {
+    this.app.loadingOn();
+  }
+  spinnerOff() {
+    this.app.loadingOff();
   }
 }

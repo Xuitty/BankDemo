@@ -1,3 +1,9 @@
+<div class="loading" *ngIf="loading">
+  <span class="loader"></span>
+</div>
+<!-- <div #loading class="loading" [style.display]="loadingSwitch">
+  <span class="loader"></span>
+</div> -->
 <body [ngStyle]="style">
   <router-outlet></router-outlet>
 </body>

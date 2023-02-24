@@ -116,8 +116,12 @@ public class JavaMailTools {
 
 		String to = receiver;
 		String msg = "親愛的 " + name + "，您於 " + dateTime +" 向 ("+receiverBankCode+")-"+receiverAccount+" 轉帳 "+currencyType+amount+" 元\n"+"交易序號為 "+tid+"\n交易 "+result;
-		if(result.equals("失敗")) {
-			msg+="\n原因:"+reason;
+		
+		if(result.equals("成功")) {
+			msg+="\n餘額: "+reason+ "元";
+		}
+		else{
+			msg+="\n原因: "+reason;
 		}
 		final String from = "sopdf2@gmail.com";
 		final String password = BankDemoApplication.KEY;

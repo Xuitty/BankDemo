@@ -46,6 +46,10 @@ public class Transfer implements Serializable {
 	@Column(name = "operate_time")
 	private String operateTime;
 	@Column
+	private BigDecimal balance;
+	@Transient
+	private String balanceString;
+	@Column
 	private String verify;
 	@Column
 	private Integer statuss; // 0:Pending for verify 1:Successes 2:Failed 3:Pending for scheduled transfer
@@ -135,6 +139,22 @@ public class Transfer implements Serializable {
 		this.operateTime = operateTime;
 	}
 
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}
+
+	public String getBalanceString() {
+		return balanceString;
+	}
+
+	public void setBalanceString(String balanceString) {
+		this.balanceString = balanceString;
+	}
+
 	public String getVerify() {
 		return verify;
 	}
@@ -164,8 +184,8 @@ public class Transfer implements Serializable {
 		return "Transfer [tid=" + tid + ", senderAccount=" + senderAccount + ", receiverBankCode=" + receiverBankCode
 				+ ", receiverAccount=" + receiverAccount + ", amount=" + amount + ", amountString=" + amountString
 				+ ", currencyType=" + currencyType + ", schedule=" + schedule + ", scheduleTime=" + scheduleTime
-				+ ", operateTime=" + operateTime + ", verify=" + verify + ", statuss=" + statuss + ", error=" + error
-				+ "]";
+				+ ", operateTime=" + operateTime + ", balance=" + balance + ", balanceString=" + balanceString
+				+ ", verify=" + verify + ", statuss=" + statuss + ", error=" + error + "]";
 	}
 
 }

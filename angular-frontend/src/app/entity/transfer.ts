@@ -11,6 +11,8 @@ export class Transfer {
   schedule?: boolean;
   scheduleTime?: string;
   operateTime?: string;
+  balance?: Decimal; //do not use in front-end
+  balanceString?: string;
   verify?: string;
   statuss?: number;
   error?: number;

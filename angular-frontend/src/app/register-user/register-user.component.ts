@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Account } from '../entity/account';
 import { User } from '../entity/user';
 import { Decimal } from 'decimal.js';
-import SERVER from '../../assets/json/config.json';
+import { SERVER_PROPERTY } from 'SERVER';
 import { lastValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { Status } from '../entity/status';
@@ -33,7 +33,7 @@ export class RegisterUserComponent implements OnInit {
 
   @ViewChild('uverify') uverifyNative?: ElementRef;
 
-  server: string = JSON.parse(JSON.stringify(SERVER)).url;
+  server: string = SERVER_PROPERTY.SERVER_URL;
   action: string = 'register';
   message: string = '';
 

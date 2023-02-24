@@ -11,7 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Route, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../entity/user';
-import SERVER from '../../assets/json/config.json';
+import { SERVER_PROPERTY } from 'SERVER';
 import { lastValueFrom } from 'rxjs';
 import { Status } from '../entity/status';
 
@@ -35,7 +35,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
     bodyScrollToTop.scrollIntoView({ behavior: 'smooth' });
   }
 
-  server: string = JSON.parse(JSON.stringify(SERVER)).url;
+  server: string = SERVER_PROPERTY.SERVER_URL;
   message?: string = '　';
 
   registerSlogan: string = '立即加入領取神秘小禮物';

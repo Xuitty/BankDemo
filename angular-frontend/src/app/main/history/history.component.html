@@ -50,7 +50,7 @@
     <div class="col fw-bolder fs-5"></div>
 
     <div class="col fw-bolder fs-5">
-      <div style="">
+      <div>
         <table class="" [style.width]="width" *ngIf="historyListLength != 0">
           <thead
             style="
@@ -67,6 +67,7 @@
               <th class="tableheadBalance">金額</th>
               <th class="tableheadBalance">排程時間</th>
               <th class="tableheadBalance">交易執行時間</th>
+              <th class="tableheadBalance">剩餘餘額</th>
               <th class="tableheadBalance">狀態</th>
               <th class="tableheadBalance">錯誤緣由</th>
             </tr>
@@ -96,6 +97,7 @@
                 {{ history.schedule == true ? history.scheduleTime : "" }}
               </td>
               <td>{{ history.operateTime }}</td>
+              <td>{{ history.balanceString }}</td>
               <td>
                 {{
                   history.statuss == 0
