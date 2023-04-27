@@ -20,7 +20,7 @@ export class TransferComponent implements OnInit {
     private cookie: CookieService,
     private http: HttpClient,
     public router: Router,
-    private app: AppComponent
+    public app: AppComponent
   ) {}
 
   server: string = SERVER_PROPERTY.SERVER_URL;
@@ -92,7 +92,7 @@ export class TransferComponent implements OnInit {
         return;
       }
     }, 30000);
-    this.spinnerOff();
+    this.app.loadingOff();
   }
 
   @ViewChild('dateTime') dateTime?: ElementRef;
@@ -130,20 +130,24 @@ export class TransferComponent implements OnInit {
   @ViewChild('currencyType') currencyType?: ElementRef;
   @ViewChild('amountString') amountString?: ElementRef;
   async doTransfer() {
+    this.app.loadingOn();
     this.message = '';
     let result: boolean | object = await this.checkCookieExpiredRenew();
     if (typeof result === typeof Boolean(true)) {
       if (!result) {
         this.cookie.deleteAll();
         this.doCookieExpired();
+        this.app.loadingOff();
         return;
       }
     } else {
       this.router.navigate(['500']);
+      this.app.loadingOff();
       return;
     }
     let check: boolean = this.formCheck();
     if (!check) {
+      this.app.loadingOff();
       return;
     }
     // let transfer: Transfer = new Transfer();
@@ -190,6 +194,7 @@ export class TransferComponent implements OnInit {
                 counter--;
               }, 1000);
             });
+            this.app.loadingOff();
             return;
           }
           if (res.message == 'accountNotExist') {
@@ -208,16 +213,19 @@ export class TransferComponent implements OnInit {
                 counter--;
               }, 1000);
             });
+            this.app.loadingOff();
             return;
           }
           if (res.message == 'scheduleTimeIllegal') {
             this.message = '日期最小值為五分鐘後，最大值為三個月內';
+            this.app.loadingOff();
             return;
           }
           this.router.navigate(['login']);
         } else if (res.statuss == 1) {
           this.transferingTid = Number.parseInt(res.message!);
           this.action = 'verify';
+          this.app.loadingOff();
         } else {
           let counter: number = 5;
 
@@ -240,21 +248,25 @@ export class TransferComponent implements OnInit {
       (reject) => {
         console.log(reject);
         this.router.navigate(['500']);
+        this.app.loadingOff();
         return;
       }
     );
   }
   @ViewChild('tverify') tverify?: ElementRef;
   async doVerify() {
+    this.app.loadingOn();
     let result1: boolean | object = await this.checkCookieExpiredRenew();
     if (typeof result1 === typeof Boolean(true)) {
       if (!result1) {
         this.cookie.deleteAll();
         this.doCookieExpired();
+        this.app.loadingOff();
         return;
       }
     } else {
       this.router.navigate(['500']);
+      this.app.loadingOff();
       return;
     }
 
@@ -273,6 +285,7 @@ export class TransferComponent implements OnInit {
       },
       (reject) => {
         console.log(reject);
+        this.app.loadingOff();
         this.router.navigate(['500']);
       }
     );
@@ -281,6 +294,7 @@ export class TransferComponent implements OnInit {
         this.action = 'scheduledTransferResultSuccess';
         this.message =
           '將在您預定的時間轉帳，交易結果將寄出電子郵件通知，請留意收件匣';
+        this.app.loadingOff();
       } else if (result.statuss == 3) {
         if (result.errorCode == 6) {
           this.action = 'scheduledTransferResultFailed';
@@ -293,14 +307,17 @@ export class TransferComponent implements OnInit {
               this.router.navigate(['login']);
             }
           }, 1000);
+          this.app.loadingOff();
         } else if (result.errorCode == 5) {
           this.message =
             '<br>' +
             String(result.errorCode).padStart(3, '0') +
             ' - 驗證碼錯誤，請確認後重新輸入';
+          this.app.loadingOff();
         } else {
           this.action = 'scheduledTransferResultFailed';
           this.message = '未知的錯誤';
+          this.app.loadingOff();
         }
       }
     } else {
@@ -320,55 +337,65 @@ export class TransferComponent implements OnInit {
           this.transfer.amountString +
           '元<br><br>餘額:' +
           result.message;
+        this.app.loadingOff();
       } else if (result.errorCode == 1) {
         this.action = 'transferResultFailed';
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 帳戶餘額不足';
+        this.app.loadingOff();
       } else if (result.errorCode == 2) {
         this.action = 'transferResultFailed';
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 轉入帳戶不存在';
+        this.app.loadingOff();
       } else if (result.errorCode == 3) {
         this.action = 'transferResultFailed';
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 轉入帳戶未啟用';
+        this.app.loadingOff();
       } else if (result.errorCode == 4) {
         this.action = 'transferResultFailed';
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 台幣交易不可交易小於一元';
+        this.app.loadingOff();
       } else if (result.errorCode == 5) {
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 驗證碼錯誤，請確認後重新輸入';
+        this.app.loadingOff();
       } else if (result.errorCode == 6) {
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 此交易不存在，請重新操作';
+        this.app.loadingOff();
       } else if (result.errorCode == 7) {
         this.action = 'transferResultFailed';
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 交易金額小於等於0元';
+        this.app.loadingOff();
       } else if (result.errorCode == 8) {
         this.action = 'transferResultFailed';
         this.message =
           '<br>' +
           String(result.errorCode).padStart(3, '0') +
           ' - 轉入帳戶不得為轉出帳戶';
+        this.app.loadingOff();
       } else {
         this.action = 'scheduledTransferResultFailed';
         this.message = '未知的錯誤';
+        this.app.loadingOff();
       }
     }
     console.log(this.action);
@@ -563,12 +590,5 @@ export class TransferComponent implements OnInit {
     let result: string[] = [max, min];
 
     return result;
-  }
-
-  spinnerOn() {
-    this.app.loadingOn();
-  }
-  spinnerOff() {
-    this.app.loadingOff();
   }
 }

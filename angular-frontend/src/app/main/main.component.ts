@@ -473,7 +473,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   async goTransfer(acc: Account) {
-    this.spinnerOn();
+    this.app.loadingOn();
     let result: boolean | object = await this.checkCookieExpiredRenew();
     if (typeof result === typeof Boolean(true)) {
       if (!result) {
@@ -494,6 +494,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   async goHistory(acc: Account) {
+    this.app.loadingOn();
     let result: boolean | object = await this.checkCookieExpiredRenew();
     if (typeof result === typeof Boolean(true)) {
       if (!result) {
@@ -604,12 +605,5 @@ export class MainComponent implements OnInit, OnDestroy {
   ////
   async doAutoCheck() {
     console.log('autochecked');
-  }
-
-  public spinnerOn() {
-    this.app.loadingOn();
-  }
-  public spinnerOff() {
-    this.app.loadingOff();
   }
 }

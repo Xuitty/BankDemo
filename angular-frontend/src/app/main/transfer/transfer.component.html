@@ -160,11 +160,13 @@
       type="button"
       value="再轉一筆"
       (click)="
+        app.loadingOn();
         updateBalance(currentUserUid);
         calenderRestrictor();
         action = 'transfer';
         message = '';
-        renewTimeUid(currentUserUid)
+        renewTimeUid(currentUserUid);
+        app.loadingOff()
       "
     />
   </div> </ng-container

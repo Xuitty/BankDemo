@@ -51,6 +51,7 @@
 
     <div class="col fw-bolder fs-5">
       <div>
+        <div *ngIf="historyListLength == 0" class="message">查無交易紀錄!</div>
         <table class="" [style.width]="width" *ngIf="historyListLength != 0">
           <thead
             style="
@@ -86,18 +87,41 @@
                   : { color: 'red' }
               "
             >
-              <td style="height: 60px">
+              <td
+                style="height: 60px"
+                [ngStyle]="
+                  history.senderAccount == historyAccount.aaccount &&
+                  history.statuss == 1
+                    ? { color: 'blue' }
+                    : { color: 'auto' }
+                "
+              >
                 {{ history.senderAccount }}
               </td>
               <td>{{ history.receiverBankCode }}</td>
-              <td>{{ history.receiverAccount }}</td>
+              <td
+                [ngStyle]="
+                  history.receiverAccount == historyAccount.aaccount &&
+                  history.statuss == 1
+                    ? { color: 'blue' }
+                    : { color: 'auto' }
+                "
+              >
+                {{ history.receiverAccount }}
+              </td>
               <td>{{ history.currencyType == 1 ? "台幣" : "美金" }}</td>
               <td>{{ history.amountString }}</td>
               <td>
                 {{ history.schedule == true ? history.scheduleTime : "" }}
               </td>
               <td>{{ history.operateTime }}</td>
-              <td>{{ history.balanceString }}</td>
+              <td>
+                {{
+                  historyAccount.aaccount != history.senderAccount
+                    ? ""
+                    : history.balanceString
+                }}
+              </td>
               <td>
                 {{
                   history.statuss == 0
@@ -113,7 +137,8 @@
               </td>
               <td>
                 {{
-                  history.error == null
+                  history.error == null ||
+                  historyAccount.aaccount != history.senderAccount
                     ? ""
                     : history.error == 1
                     ? "餘額不足"

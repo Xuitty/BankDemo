@@ -18,7 +18,8 @@ export class HistoryComponent implements OnInit {
   constructor(
     private cookie: CookieService,
     private http: HttpClient,
-    public router: Router
+    public router: Router,
+    private app: AppComponent
   ) {}
 
   message: string = '';
@@ -40,6 +41,7 @@ export class HistoryComponent implements OnInit {
   width = window.screen.availWidth - 500 + 'px';
 
   async ngOnInit() {
+    this.app.loadingOff();
     if (!this.cookie.check('username')) {
       // this.message = '請登入金發財，共享榮華富貴';
       let counter = 6;
@@ -103,14 +105,17 @@ export class HistoryComponent implements OnInit {
         return false;
       }
     );
-    if (history == false) {
+    if (history === false) {
       return;
     }
+
     this.historyList = history as Transfer[];
+    this.historyListLength = this.historyList.length;
   }
 
   @ViewChild('accountSelector') accountSelector?: ElementRef;
   async selectAccount() {
+    this.app.loadingOn();
     this.historyList = undefined;
     this.historyAccount = this.allActivedAccount?.find((item, index, array) => {
       return item.aaccount == this.accountSelector?.nativeElement.value;
@@ -131,10 +136,15 @@ export class HistoryComponent implements OnInit {
         return false;
       }
     );
-    if (history == false) {
+    if (history === false) {
+      this.app.loadingOff();
       return;
     }
     this.historyList = history as Transfer[];
+    console.log(this.historyList.length);
+
+    this.historyListLength = this.historyList.length;
+    this.app.loadingOff();
   }
 
   async renewTime(user: User) {

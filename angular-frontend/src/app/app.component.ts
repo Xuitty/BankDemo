@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private bgService: BgServiceService, private router: Router) {
     router.events.subscribe((event: RouterEvent) => {
-      console.log(event);
+      // console.log(event);
 
       this.navigationInterceptor(event);
     });
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         // here
         this.loading = false;
-      }, 500);
+      }, 50);
     }
 
     // Set loading state to false in both of the below events to hide the spinner in case a request fails
@@ -55,13 +55,13 @@ export class AppComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         // here
         this.loading = false;
-      }, 500);
+      }, 50);
     }
     if (event instanceof NavigationError) {
       setTimeout(() => {
         // here
         this.loading = false;
-      }, 500);
+      }, 50);
     }
   }
 
@@ -83,6 +83,6 @@ export class AppComponent implements OnInit, OnDestroy {
   public loadingOff() {
     setTimeout(() => {
       this.loading = false;
-    }, 500);
+    }, 50);
   }
 }

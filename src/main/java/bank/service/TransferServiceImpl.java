@@ -49,7 +49,7 @@ public class TransferServiceImpl implements TransferService {
 				|| userService.queryUser(account.getUid()) == null) {
 			return null;
 		}
-		ArrayList<Transfer> result = transferDAOInterface.findBySenderAccount(account.getAaccount());
+		ArrayList<Transfer> result = transferDAOInterface.findBySenderAccountOrReceiverAccountOrderByOperateTimeDesc(account.getAaccount(), account.getAaccount());
 		if (result == null) {
 			return null;
 		}
