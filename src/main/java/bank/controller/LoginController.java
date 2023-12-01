@@ -2,6 +2,7 @@ package bank.controller;
 
 import java.math.BigDecimal;
 
+import bank.tools.MD5Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +25,10 @@ public class LoginController {
 
 	@PostMapping("userLogin")
 	public Status createAccount(@RequestBody User user) {
+		String password = user.getUpassword();
 		user = userService.queryUserByName(user.getUname());
 		Status result = new Status();
-		if (user == null) {
+		if (user == null || userService.checkUserPass(user, password) == false) {
 			result.setStatuss(3);
 			result.setMessage("accPassError");
 			return result;

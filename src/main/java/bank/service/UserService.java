@@ -12,6 +12,8 @@ public interface UserService {
 	public User queryUser(Integer uid);
 
 	public User queryUserByName(String uname);
+
+	public boolean checkUserPass(User user, String pass);
 	
 	public ArrayList<User> listUser();
 	

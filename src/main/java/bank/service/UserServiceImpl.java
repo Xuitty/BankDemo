@@ -54,6 +54,14 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
+	@Override
+	public boolean checkUserPass(User user, String pass) {
+		if(user.getUpassword().equals(md5Tools.string2MD5(pass + user.getUpassword_salt()))){
+			return true;
+		}
+		return false;
+	}
+
 	@Transactional
 	@Override
 	public ArrayList<User> listUser() {
